@@ -1,0 +1,10 @@
+aiogram
+spotipy
+ffmpeg
+speedtest
+yt-dlp
+mutagen
+requests
+python-dotenv
+psutil
+watchdog
