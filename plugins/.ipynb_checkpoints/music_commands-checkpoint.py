@@ -4,69 +4,85 @@ from aiogram.types import BufferedInputFile, InlineKeyboardMarkup, InlineKeyboar
 from handlers.utilities import YoutubeManager, sanitize_filename
 import asyncio
 import os
-import re
+import logging
+from datetime import datetime
+
+logger = logging.getLogger(__name__)
 
 def setup(context):
     dp = context.dp
     user_searches = context.user_searches
+    db = context.db
 
-    # Downloads qovluğunu yoxlamaq və yaratmaq
+    # Ensure downloads directory exists
     downloads_dir = "downloads"
     if not os.path.exists(downloads_dir):
         os.makedirs(downloads_dir)
-        print(f"'{downloads_dir}' qovluğu yaradıldı.")
+        logger.info(f"'{downloads_dir}' directory created.")
 
-    # YoutubeManager sinfini işə sal
-    youtube_manager = YoutubeManager(browser="firefox")
-
-    # URL tapmaq üçün regex
-    url_pattern = re.compile(r"https?://[^\s]+")
+    # Initialize YouTube Manager if not already in context
+    if not hasattr(context, 'youtube_manager'):
+        context.youtube_manager = YoutubeManager(browser="firefox")
 
     @dp.message(Command("music"))
     async def music_cmd(message: types.Message, command: CommandObject):
+        """Handle /music command with search query"""
         await handle_music_search(message, command.args)
 
-    @dp.message(F.text & ~F.text.startswith('/') & F.chat.type == "private")  
-    async def handle_text_message(message: types.Message):
-        # Mesajın link olub-olmadığını yoxla
-        if url_pattern.search(message.text):
-            await message.answer("⚠️ Şəxsi söhbətlərdə linklər üçün axtarış edilmir.")
-            return
-
-        await handle_music_search(message, message.text)
-
     async def handle_music_search(message: types.Message, search_query: str):
+        """Process music search and display results"""
         try:
             if not search_query:
                 usage_msg = await message.answer(
-                    "🎵 Musiqi axtarışı üçün istifadə qaydası:\n"
-                    "👉 /music <mahnı adı>\n"
-                    "Məsələn: /music Imagine Dragons Believer"
+                    "<b>🎵 Music search usage:</b>\n"
+                    "👉 <code>/music &lt;song name&gt;</code>\n\n"
+                    "<i>Example:</i> <code>/music Imagine Dragons Believer</code>",
+                    parse_mode="HTML"
                 )
-                await asyncio.sleep(5)
-                await usage_msg.delete()
+                await asyncio.sleep(20)
+                try:
+                    await usage_msg.delete()
+                except Exception as e:
+                    logger.error(f"Error deleting usage message: {e}")
                 return
             
-            search_msg = await message.answer("🔍 Axtarış edirəm...")
-            results = await youtube_manager.youtube_search(search_query)
+            user_id = message.from_user.id
+            username = message.from_user.username or "Unknown"
+            db.add_user(user_id, username)
+            db.increment_user_message_count(user_id)
+            db.log_command_usage(
+                command="/music",
+                user_id=user_id,
+                group_id=message.chat.id if message.chat.type != "private" else None
+            )
+
+            search_msg = await message.answer("<i>🔍 Searching...</i>", parse_mode="HTML")
+            results = await context.youtube_manager.youtube_search(search_query)
             
             if not results:
-                raise ValueError("Nəticə tapılmadı")
+                raise ValueError("No results found")
             
-            response = ["🎵 Tapılan Mahnılar:"] + [
-                f"{i+1}. {res['title']} ({res['duration']})" 
-                for i, res in enumerate(results[:5])
-            ]
+            response = ["<b>🎵 Found Songs:</b>", ""]
+            
+            for i, res in enumerate(results[:5]):
+                response.append(
+                    f"<b>{i+1}.</b> <a href='{res['url']}'>{res['title']}</a>\n"
+                    f"   ⏳ <i>{res['duration']}</i>"
+                )
             
             keyboard = InlineKeyboardMarkup(inline_keyboard=[
                 [InlineKeyboardButton(text=f"{i+1}", callback_data=f"choice_{i}") for i in range(len(results[:5]))],
-                [InlineKeyboardButton(text="❌ Cancel", callback_data="cancel")],
-                [InlineKeyboardButton(text="⬇️ Download All", callback_data="download_all")]
+                [
+                    InlineKeyboardButton(text="❌ Cancel", callback_data="cancel"),
+                    InlineKeyboardButton(text="⬇️ Download All", callback_data="download_all")
+                ]
             ])
             
             await search_msg.edit_text(
-                "\n".join(response) + "\n\n👉 Aşağıdakı düymələrdən birini seçin:",
-                reply_markup=keyboard
+                "\n".join(response),
+                reply_markup=keyboard,
+                parse_mode="HTML",
+                disable_web_page_preview=True
             )
             
             user_searches[message.from_user.id] = {
@@ -76,12 +92,24 @@ def setup(context):
             }
             
         except Exception as e:
-            error_msg = await message.answer(f"❌ Xəta: {str(e)}")
+            error_msg = await message.answer(
+                f"❌ <b>Error:</b> <code>{str(e)}</code>",
+                parse_mode="HTML"
+            )
+            db.log_error(
+                error_message=str(e),
+                user_id=message.from_user.id,
+                group_id=message.chat.id if message.chat.type != "private" else None
+            )
             await asyncio.sleep(5)
-            await error_msg.delete()
+            try:
+                await error_msg.delete()
+            except Exception as del_err:
+                logger.error(f"Error deleting error message: {del_err}")
 
     @dp.callback_query(F.data.startswith("choice_"))
     async def handle_choice(callback: types.CallbackQuery):
+        """Handle song selection from search results"""
         user_id = callback.from_user.id
         if user_id not in user_searches:
             return
@@ -96,28 +124,70 @@ def setup(context):
             await callback.message.bot.edit_message_text(
                 chat_id=callback.message.chat.id,
                 message_id=user_data['search_message_id'],
-                text=f"⏳ Mahnı yüklənilir: {selected['title']} ({selected['duration']})"
+                text=f"<i>⏳ Downloading:</i>\n <b>{selected['title']}</b> <i>({selected['duration']})</i>",
+                parse_mode="HTML"
             )
             
-            file_path = await youtube_manager.download_track(
+            file_path = await context.youtube_manager.download_track(
                 selected['url'], 
                 sanitize_filename(selected['title'])
             )
             
-            with open(file_path, 'rb') as f:
-                await callback.message.answer_audio(
-                    audio=BufferedInputFile(f.read(), filename=os.path.basename(file_path)),
-                    title=selected.get('title', '')[:64],
-                    performer="YouTube",
-                    duration=int(selected.get('raw_duration', 0)))
+            try:
+                with open(file_path, 'rb') as f:
+                    await callback.message.answer_audio(
+                        audio=BufferedInputFile(f.read(), filename=os.path.basename(file_path)),
+                        title=selected.get('title', '')[:64],
+                        performer="YouTube",
+                        duration=int(selected.get('raw_duration', 0)),
+                        parse_mode="HTML"
+                    )
+            except Exception as e:
+                if "not enough rights to send music" in str(e):
+                    await callback.message.answer(
+                        "⚠️ <b>Permission issue:</b> The bot needs to be admin with message send/delete rights to send music in this group.",
+                        parse_mode="HTML"
+                    )
+                    return
+                raise
+
+            db.add_song_download(
+                user_id=user_id,
+                song_title=selected['title'],
+                artist="YouTube",
+                source="youtube"
+            )
+            db.log_command_usage(
+                command="music_download",
+                user_id=user_id,
+                group_id=callback.message.chat.id if callback.message.chat.type != "private" else None
+            )
             
-            await callback.message.bot.delete_message(callback.message.chat.id, user_data['search_message_id'])
-            await callback.message.bot.delete_message(callback.message.chat.id, user_data['original_message_id'])
+            try:
+                await callback.message.bot.delete_message(callback.message.chat.id, user_data['search_message_id'])
+            except Exception as e:
+                logger.error(f"Error deleting search message (choice): {e}")
+
+            try:
+                await callback.message.bot.delete_message(callback.message.chat.id, user_data['original_message_id'])
+            except Exception as e:
+                logger.error(f"Error deleting original message (choice): {e}")
             
         except (IndexError, KeyError):
-            await callback.message.answer("❌ Yanlış seçim!")
+            await callback.message.answer("❌ <b>Invalid selection!</b>", parse_mode="HTML")
+            db.log_error(
+                error_message="Invalid song selection",
+                user_id=user_id
+            )
         except Exception as e:
-            await callback.message.answer(f"❌ Xəta: {str(e)}")
+            await callback.message.answer(
+                f"❌ <b>Error:</b> <code>{str(e)}</code>",
+                parse_mode="HTML"
+            )
+            db.log_error(
+                error_message=str(e),
+                user_id=user_id
+            )
         finally:
             if file_path and os.path.exists(file_path):
                 try:
@@ -128,24 +198,42 @@ def setup(context):
 
     @dp.callback_query(F.data == "cancel")
     async def handle_cancel(callback: types.CallbackQuery):
+        """Handle search cancellation"""
         user_id = callback.from_user.id
         if user_id not in user_searches:
             return
 
         user_data = user_searches[user_id]
         
-        cancel_msg = await callback.message.answer("❌ Axtarış ləğv edildi.")
+        cancel_msg = await callback.message.answer("❌ <b>Search canceled.</b>", parse_mode="HTML")
         
-        await callback.message.bot.delete_message(callback.message.chat.id, user_data['search_message_id'])
-        await callback.message.bot.delete_message(callback.message.chat.id, user_data['original_message_id'])
+        try:
+            await callback.message.bot.delete_message(callback.message.chat.id, user_data['search_message_id'])
+        except Exception as e:
+            logger.error(f"Error deleting search message (cancel): {e}")
+
+        try:
+            await callback.message.bot.delete_message(callback.message.chat.id, user_data['original_message_id'])
+        except Exception as e:
+            logger.error(f"Error deleting original message (cancel): {e}")
+        
+        db.log_command_usage(
+            command="music_cancel",
+            user_id=user_id,
+            group_id=callback.message.chat.id if callback.message.chat.type != "private" else None
+        )
         
         await asyncio.sleep(5)
-        await cancel_msg.delete()
+        try:
+            await cancel_msg.delete()
+        except Exception as e:
+            logger.error(f"Error deleting cancel message: {e}")
         
         user_searches.pop(user_id, None)
 
     @dp.callback_query(F.data == "download_all")
     async def handle_download_all(callback: types.CallbackQuery):
+        """Handle downloading all search results"""
         user_id = callback.from_user.id
         if user_id not in user_searches:
             return
@@ -153,18 +241,46 @@ def setup(context):
         user_data = user_searches[user_id]
         
         try:
+            username = callback.from_user.username or "Unknown"
+            db.add_user(user_id, username)
+            
+            await callback.message.bot.edit_message_text(
+                chat_id=callback.message.chat.id,
+                message_id=user_data['search_message_id'],
+                text="<i>⏳ Downloading all songs... This may take several minutes.</i>",
+                parse_mode="HTML"
+            )
+            
             for result in user_data['results'][:5]:  
-                file_path = await youtube_manager.download_track(
+                file_path = await context.youtube_manager.download_track(
                     result['url'], 
                     sanitize_filename(result['title'])
                 )
                 
-                with open(file_path, 'rb') as f:
-                    await callback.message.answer_audio(
-                        audio=BufferedInputFile(f.read(), filename=os.path.basename(file_path)),
-                        title=result.get('title', '')[:64],
-                        performer="YouTube",
-                        duration=int(result.get('raw_duration', 0)))
+                try:
+                    with open(file_path, 'rb') as f:
+                        await callback.message.answer_audio(
+                            audio=BufferedInputFile(f.read(), filename=os.path.basename(file_path)),
+                            title=result.get('title', '')[:64],
+                            performer="YouTube",
+                            duration=int(result.get('raw_duration', 0)),
+                            parse_mode="HTML"
+                        )
+                except Exception as e:
+                    if "not enough rights to send music" in str(e):
+                        await callback.message.answer(
+                            "⚠️ <b>Permission issue:</b> The bot needs to be admin with message send/delete rights to send music in this group.",
+                            parse_mode="HTML"
+                        )
+                        return
+                    raise
+                
+                db.add_song_download(
+                    user_id=user_id,
+                    song_title=result['title'],
+                    artist="YouTube",
+                    source="youtube"
+                )
                 
                 if os.path.exists(file_path):
                     try:
@@ -172,11 +288,63 @@ def setup(context):
                     except:
                         pass
             
-            await callback.message.answer("✅ Bütün mahnılar uğurla yükləndi!")
+            db.log_command_usage(
+                command="music_download_all",
+                user_id=user_id,
+                group_id=callback.message.chat.id if callback.message.chat.type != "private" else None
+            )
+            
+            await callback.message.answer("✅ <b>All songs downloaded successfully!</b>", parse_mode="HTML")
         
         except Exception as e:
-            await callback.message.answer(f"❌ Xəta: {str(e)}")
+            await callback.message.answer(
+                f"❌ <b>Error:</b> <code>{str(e)}</code>",
+                parse_mode="HTML"
+            )
+            db.log_error(
+                error_message=str(e),
+                user_id=user_id
+            )
         finally:
-            await callback.message.bot.delete_message(callback.message.chat.id, user_data['search_message_id'])
-            await callback.message.bot.delete_message(callback.message.chat.id, user_data['original_message_id'])
-            user_searches.pop(user_id, None),
+            try:
+                await callback.message.bot.delete_message(callback.message.chat.id, user_data['search_message_id'])
+            except Exception as e:
+                logger.error(f"Error deleting search message (download_all): {e}")
+
+            try:
+                await callback.message.bot.delete_message(callback.message.chat.id, user_data['original_message_id'])
+            except Exception as e:
+                logger.error(f"Error deleting original message (download_all): {e}")
+
+            user_searches.pop(user_id, None)
+
+    @dp.message(Command("my_songs"))
+    async def show_user_song_history(message: types.Message):
+        """Show user's download history"""
+        user_id = message.from_user.id
+        songs = db.get_user_song_history(user_id)
+        
+        if not songs:
+            await message.answer("📭 <b>You haven't downloaded any songs yet.</b>", parse_mode="HTML")
+            return
+        
+        response = [
+            "<b>📋 Your Download History:</b>",
+            "<i>Last 10 downloads:</i>",
+            ""
+        ]
+        
+        for i, song in enumerate(songs[:10], 1):
+            response.append(
+                f"<b>{i}.</b> {song['song_title']}\n"
+                f"   🎤 <i>Source:</i> {song['source']}\n"
+                f"   ⏳ <i>Date:</i> {song['download_date']}\n"
+            )
+        
+        await message.answer("\n".join(response), parse_mode="HTML")
+        
+        db.log_command_usage(
+            command="/my_songs",
+            user_id=user_id,
+            group_id=message.chat.id if message.chat.type != "private" else None
+        )

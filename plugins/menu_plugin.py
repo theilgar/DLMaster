@@ -5,7 +5,7 @@ from aiogram import F
 import inspect
 import os
 import logging
-from handlers.plugin_handlers import get_all_commands
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -17,6 +17,7 @@ def setup(context):
     dp = context.dp
     sudo_users = context.sudo_users
     creator_id = context.creator_id
+    db = context.db
 
     async def check_user_permission(user_id: int) -> bool:
         """
@@ -27,7 +28,7 @@ def setup(context):
     @dp.message(Command("menu"))
     async def list_commands(message: types.Message):
         """
-        /command komandasını yalnız sudo və creator istifadə edə bilər.
+        /menu komandasını yalnız sudo və creator istifadə edə bilər.
         """
         user_id = message.from_user.id
         if not await check_user_permission(user_id):
@@ -43,50 +44,42 @@ def setup(context):
             except:
                 continue
 
+        # Qrup ID-ni əlavə edirik
+        group_info = ""
+        if message.chat.type != "private":
+            group_info = f"\n👥 <b>Qrup ID:</b> <code>{message.chat.id}</code>"
+
         # İstifadəçiyə göstəriləcək mesajı hazırlayırıq
         response = [
-            f"🔌 **Aktiv Pluginlər ({len(plugins)}):**",
+            f"🔌 <b>Aktiv Pluginlər ({len(plugins)}):</b>",
             *[f"• {plugin.replace('_', ' ').title()}" for plugin in sorted(plugins)],
-            f"\n👨💻 **Sudo istifadəçiləri:** {len(sudo_users)}",
-            f"🆔 **Sizin ID:** {user_id}"
+            f"\n👨💻 <b>Sudo istifadəçiləri:</b> {len(sudo_users)}",
+            f"🆔 <b>Sizin ID:</b> <code>{user_id}</code>",
+            group_info
         ]
 
         # Düymələr yaradırıq
         builder = InlineKeyboardBuilder()
-        builder.button(text="📂 Dir", callback_data="dir_cmd")
-        builder.button(text="🔄 Alive", callback_data="alive_cmd")
-        builder.button(text="🚀 Speedtest", callback_data="speedtest_cmd")
-        builder.button(text="📜 Komandalar", callback_data="show_commands")
-        builder.button(text="📊 Stats", callback_data="show_stats")
-        builder.button(text="❌ Close", callback_data="close_window")
-        builder.adjust(2)
+        builder.button(text="📂 Fayl Sistemi", callback_data="dir_cmd")
+        builder.button(text="🔄 Sistem Statusu", callback_data="alive_cmd")
+        builder.button(text="🚀 Şəbəkə Testi", callback_data="speedtest_cmd")
+        builder.button(text="📊 Statistikalar", callback_data="show_stats")
+        builder.button(text="🎵 Mahnı Tarixçəsi", callback_data="song_history")
+        builder.button(text="❌ Bağla", callback_data="close_window")
+        builder.adjust(2, 2, 2, 1)
+
+        # Log qeydi
+        db.add_log(
+            level="INFO",
+            message=f"User {message.from_user.username or message.from_user.id} menyunu açdı",
+            user_id=user_id,
+            group_id=message.chat.id if message.chat.type != "private" else None,
+            command="/menu"
+        )
 
         await message.answer("\n".join(response),
-            reply_markup=builder.as_markup(resize_keyboard=True))
-
-    @dp.callback_query(F.data == "show_commands")
-    async def show_commands_callback(callback: types.CallbackQuery):
-        """
-        Komandaları göstərən callback. Yalnız sudo və creator istifadə edə bilər.
-        """
-        user_id = callback.from_user.id
-        if not await check_user_permission(user_id):
-            await callback.answer("❌ Bu əmri icra etmək üçün yetkiniz yoxdur.", show_alert=True)
-            return
-
-        # Bütün komandaları toplayırıq
-        commands = get_all_commands(dp)
-        logger.info(f"Tapılan komandalar: {commands}")
-
-        # Komandaları formatlaşdırırıq
-        if commands:
-            commands_text = "📜 **Mövcud Komandalar:**\n"
-            commands_text += "\n".join([f"• /{cmd}" for cmd in commands])
-        else:
-            commands_text = "❌ Heç bir komanda tapılmadı."
-
-        # Pop-up mətn olaraq göstəririk
-        await callback.answer(commands_text, show_alert=True)
+                            reply_markup=builder.as_markup(resize_keyboard=True),
+                            parse_mode="HTML")
 
     @dp.callback_query(F.data == "dir_cmd")
     async def dir_cmd_callback(callback: types.CallbackQuery):
@@ -103,23 +96,34 @@ def setup(context):
         files = os.listdir(current_dir)
 
         # Faylları və qovluqları formatlaşdırırıq
-        response = [f"📂 **Qovluq:** `{current_dir}`", "```"]
+        response = [f"📂 <b>Qovluq:</b> <code>{current_dir}</code>", "<pre>"]
         for file in files:
             file_path = os.path.join(current_dir, file)
             if os.path.isdir(file_path):
                 response.append(f"📁 {file}/")
             else:
-                response.append(f"📄 {file}")
-        response.append("```")
+                size = os.path.getsize(file_path)
+                response.append(f"📄 {file} ({size/1024:.1f} KB)")
+        response.append("</pre>")
 
         # Düymələri yaradırıq
         keyboard = InlineKeyboardBuilder()
-        keyboard.button(text="🔙 Command menyusu", callback_data="back_to_command")
-        keyboard.button(text="❌ Close", callback_data="close_window")
+        keyboard.button(text="🔙 Geri", callback_data="back_to_command")
+        keyboard.button(text="❌ Bağla", callback_data="close_window")
         keyboard.adjust(2)
 
+        # Log qeydi
+        db.add_log(
+            level="INFO",
+            message=f"User {callback.from_user.username or user_id} fayl sisteminə baxdı",
+            user_id=user_id,
+            command="dir_cmd"
+        )
+
         # Köhnə mesajı yenisi ilə əvəz edirik
-        await callback.message.edit_text("\n".join(response), reply_markup=keyboard.as_markup())
+        await callback.message.edit_text("\n".join(response), 
+                                       reply_markup=keyboard.as_markup(),
+                                       parse_mode="HTML")
         await callback.answer()
 
     @dp.callback_query(F.data == "back_to_command")
@@ -144,24 +148,26 @@ def setup(context):
 
         # İstifadəçiyə göstəriləcək mesajı hazırlayırıq
         response = [
-            f"🔌 **Aktiv Pluginlər ({len(plugins)}):**",
+            f"🔌 <b>Aktiv Pluginlər ({len(plugins)}):</b>",
             *[f"• {plugin.replace('_', ' ').title()}" for plugin in sorted(plugins)],
-            f"\n👨💻 **Sudo istifadəçiləri:** {len(sudo_users)}",
-            f"🆔 **Sizin ID:** {user_id}"
+            f"\n👨💻 <b>Sudo istifadəçiləri:</b> {len(sudo_users)}",
+            f"🆔 <b>Sizin ID:</b> <code>{user_id}</code>"
         ]
 
         # Düymələr yaradırıq
         builder = InlineKeyboardBuilder()
-        builder.button(text="📂 Dir", callback_data="dir_cmd")
-        builder.button(text="🔄 Alive", callback_data="alive_cmd")
-        builder.button(text="🚀 Speedtest", callback_data="speedtest_cmd")
-        builder.button(text="📜 Komandalar", callback_data="show_commands")
-        builder.button(text="📊 Stats", callback_data="show_stats")
-        builder.button(text="❌ Close", callback_data="close_window")
-        builder.adjust(2)
+        builder.button(text="📂 Fayl Sistemi", callback_data="dir_cmd")
+        builder.button(text="🔄 Sistem Statusu", callback_data="alive_cmd")
+        builder.button(text="🚀 Şəbəkə Testi", callback_data="speedtest_cmd")
+        builder.button(text="📊 Statistikalar", callback_data="show_stats")
+        builder.button(text="🎵 Mahnı Tarixçəsi", callback_data="song_history")
+        builder.button(text="❌ Bağla", callback_data="close_window")
+        builder.adjust(2, 2, 2, 1)
 
         # Köhnə mesajı yenisi ilə əvəz edirik
-        await callback.message.edit_text("\n".join(response), reply_markup=builder.as_markup())
+        await callback.message.edit_text("\n".join(response), 
+                                       reply_markup=builder.as_markup(),
+                                       parse_mode="HTML")
         await callback.answer()
 
     @dp.callback_query(F.data == "close_window")
@@ -174,6 +180,14 @@ def setup(context):
             await callback.answer("❌ Bu əmri icra etmək üçün yetkiniz yoxdur.", show_alert=True)
             return
 
+        # Log qeydi
+        db.add_log(
+            level="INFO",
+            message=f"User {callback.from_user.username or user_id} menyunu bağladı",
+            user_id=user_id,
+            command="close_window"
+        )
+
         # Pəncərəni bağlamaq üçün mesajı silirik
         await callback.message.delete()
         await callback.answer("✅ Pəncərə bağlandı.")
@@ -181,16 +195,111 @@ def setup(context):
     @dp.callback_query(F.data == "show_stats")
     async def show_stats_callback(callback: types.CallbackQuery):
         user_id = callback.from_user.id
-        if user_id not in sudo_users and user_id != creator_id:
+        if not await check_user_permission(user_id):
             await callback.answer("❌ Bu əmri icra etmək üçün yetkiniz yoxdur.", show_alert=True)
             return
 
-        users = context.db.get_all_users()
+        # İstifadəçi və mahnı statistikalarını əldə et
+        users = db.get_all_users()
+        songs = db.get_all_songs()
+        logs = db.get_logs()
+        
+        # Ümumi statistikalar
+        total_users = len(users)
+        total_songs = len(songs)
+        total_messages = sum(user['message_count'] for user in users)
+        total_commands = len([log for log in logs if log.get('command')])
+        
+        # Top 5 mahnılar
+        song_counter = {}
+        for song in songs:
+            key = f"{song['song_title']} - {song['artist']}"
+            song_counter[key] = song_counter.get(key, 0) + 1
+        top_songs = sorted(song_counter.items(), key=lambda x: x[1], reverse=True)[:5]
+        
+        # Top 5 aktiv istifadəçilər
+        top_users = sorted(users, key=lambda x: x['message_count'], reverse=True)[:5]
+        
+        stats_message = (
+            "<b>📊 Bot Statistikaları:</b>\n\n"
+            f"👥 <b>Ümumi istifadəçilər:</b> {total_users}\n"
+            f"🎵 <b>Ümumi yüklənən mahnılar:</b> {total_songs}\n"
+            f"✉️ <b>Ümumi mesajlar:</b> {total_messages}\n"
+            f"⚡ <b>Ümumi əmrlər:</b> {total_commands}\n\n"
+            "<b>🏆 Ən aktiv istifadəçilər:</b>\n"
+        )
+        
+        for i, user in enumerate(top_users, 1):
+            stats_message += f"{i}. {user['username']} - {user['message_count']} mesaj\n"
+        
+        stats_message += "\n<b>🎧 Ən çox yüklənən mahnılar:</b>\n"
+        for i, (song, count) in enumerate(top_songs, 1):
+            stats_message += f"{i}. {song} - {count} dəfə\n"
+        
+        keyboard = InlineKeyboardBuilder()
+        keyboard.button(text="📊 Detallı Statistikalar", callback_data="detailed_stats")
+        keyboard.button(text="🎵 Mahnı Tarixçəsi", callback_data="song_history")
+        keyboard.button(text="🔙 Geri", callback_data="back_to_command")
+        keyboard.button(text="❌ Bağla", callback_data="close_window")
+        keyboard.adjust(1, 2, 1)
+        
+        # Log qeydi
+        db.add_log(
+            level="INFO",
+            message=f"User {callback.from_user.username or user_id} statistikaları görüntülədi",
+            user_id=user_id,
+            command="show_stats"
+        )
+        
+        await callback.message.edit_text(stats_message, parse_mode="HTML", reply_markup=keyboard.as_markup())
+        await callback.answer()
+
+    @dp.callback_query(F.data == "detailed_stats")
+    async def show_detailed_stats(callback: types.CallbackQuery):
+        users = db.get_all_users()
         stats_message = get_stats_message(users)
         keyboard = get_pagination_keyboard(users)
 
-        logger.debug(f"Stats message: {stats_message}")  # Debugging line
         await callback.message.edit_text(stats_message, parse_mode="HTML", reply_markup=keyboard.as_markup())
+        await callback.answer()
+
+    @dp.callback_query(F.data == "song_history")
+    async def show_song_history(callback: types.CallbackQuery):
+        user_id = callback.from_user.id
+        if not await check_user_permission(user_id):
+            await callback.answer("❌ Bu əmri icra etmək üçün yetkiniz yoxdur.", show_alert=True)
+            return
+
+        songs = db.get_all_songs()
+        
+        if not songs:
+            await callback.answer("❌ Heç bir mahnı yüklənməyib.", show_alert=True)
+            return
+        
+        response = ["<b>🎵 Son yüklənən mahnılar:</b>\n"]
+        for song in songs[:10]:  # Son 10 mahnını göstər
+            response.append(
+                f"🎧 <b>{song['song_title']}</b> - {song['artist']}\n"
+                f"👤 İstifadəçi: {song.get('username', 'ID: '+str(song['user_id']))}\n"
+                f"⏳ Tarix: {song['download_date']}\n"
+                f"🔗 Mənbə: {song['source']}\n"
+            )
+        
+        keyboard = InlineKeyboardBuilder()
+        keyboard.button(text="📊 Statistikalar", callback_data="show_stats")
+        keyboard.button(text="🔙 Geri", callback_data="back_to_command")
+        keyboard.button(text="❌ Bağla", callback_data="close_window")
+        keyboard.adjust(1, 2)
+        
+        # Log qeydi
+        db.add_log(
+            level="INFO",
+            message=f"User {callback.from_user.username or user_id} mahnı tarixçəsini görüntülədi",
+            user_id=user_id,
+            command="song_history"
+        )
+        
+        await callback.message.edit_text("\n".join(response), parse_mode="HTML", reply_markup=keyboard.as_markup())
         await callback.answer()
 
     def get_stats_message(users):
@@ -198,7 +307,7 @@ def setup(context):
         total_pages = (len(users) + users_per_page - 1) // users_per_page
 
         stats_message = (
-            "<b>📊 Bot Statistikaları:</b>\n\n"
+            "<b>📊 Detallı İstifadəçi Statistikaları:</b>\n\n"
             f"• <b>İstifadəçi Sayısı:</b> {len(users)}\n\n"
             "<b>İstifadəçi Komanda Statistikaları:</b>\n"
         )
@@ -212,6 +321,7 @@ def setup(context):
                 f"  • Mahnı Yükləmə Sayısı: {user['song_download_count']}\n\n"
             )
 
+        stats_message += f"\n📄 Səhifə {current_page + 1}/{total_pages}"
         return stats_message
 
     def get_pagination_keyboard(users):
@@ -220,12 +330,10 @@ def setup(context):
 
         keyboard = InlineKeyboardBuilder()
         keyboard.button(text="⬅️ Geri", callback_data="prev_page")
-        keyboard.button(text=f"Səhifə {current_page + 1}/{total_pages}", callback_data="current_page")
+        keyboard.button(text=f"{current_page + 1}/{total_pages}", callback_data="current_page")
         keyboard.button(text="İrəli ➡️", callback_data="next_page")
-        keyboard.button(text="-10", callback_data="prev_10_pages")
-        keyboard.button(text="+10", callback_data="next_10_pages")
-        keyboard.button(text="🔙 Command menyusu", callback_data="back_to_command")
-        keyboard.button(text="❌ Close", callback_data="close_window")
+        keyboard.button(text="🔙 Ümumi Statistikalar", callback_data="show_stats")
+        keyboard.button(text="❌ Bağla", callback_data="close_window")
         keyboard.adjust(3, 2)
 
         return keyboard
@@ -237,41 +345,21 @@ def setup(context):
             current_page -= 1
             await update_stats_message(callback)
         else:
-            await callback.answer("Səhifə bitdi")
+            await callback.answer("❌ Artıq birinci səhifədəsiniz")
 
     @dp.callback_query(F.data == "next_page")
     async def handle_next_page(callback: types.CallbackQuery):
         global current_page
-        users = context.db.get_all_users()
+        users = db.get_all_users()
         total_pages = (len(users) + users_per_page - 1) // users_per_page
         if current_page < total_pages - 1:
             current_page += 1
             await update_stats_message(callback)
         else:
-            await callback.answer("Səhifə bitdi")
-
-    @dp.callback_query(F.data == "prev_10_pages")
-    async def handle_prev_10_pages(callback: types.CallbackQuery):
-        global current_page
-        if current_page >= 10:
-            current_page -= 10
-            await update_stats_message(callback)
-        else:
-            await callback.answer("Səhifə bitdi")
-
-    @dp.callback_query(F.data == "next_10_pages")
-    async def handle_next_10_pages(callback: types.CallbackQuery):
-        global current_page
-        users = context.db.get_all_users()
-        total_pages = (len(users) + users_per_page - 1) // users_per_page
-        if current_page + 10 < total_pages:
-            current_page += 10
-            await update_stats_message(callback)
-        else:
-            await callback.answer("Səhifə bitdi")
+            await callback.answer("❌ Artıq son səhifədəsiniz")
 
     async def update_stats_message(callback: types.CallbackQuery):
-        users = context.db.get_all_users()
+        users = db.get_all_users()
         stats_message = get_stats_message(users)
         keyboard = get_pagination_keyboard(users)
         await callback.message.edit_text(stats_message, parse_mode="HTML", reply_markup=keyboard.as_markup())

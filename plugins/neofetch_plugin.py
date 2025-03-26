@@ -60,4 +60,8 @@ def setup(context):
 
         # Köhnə mesajı yenisi ilə əvəz edirik (HTML parse_mode ilə)
         await callback.message.edit_text("\n".join(response), reply_markup=keyboard.as_markup(), parse_mode="HTML")
+<<<<<<< HEAD
         await callback.answer()
+=======
+        await callback.answer()
+>>>>>>> b2ab0ed (v1.3 tested update)

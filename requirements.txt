@@ -1,7 +1,7 @@
 aiogram
 spotipy
 ffmpeg
-speedtest
+speedtest-cli
 yt-dlp
 mutagen
 requests

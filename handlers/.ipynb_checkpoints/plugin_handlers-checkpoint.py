@@ -73,18 +73,6 @@ def load_plugins(context):
             except Exception as e:
                 logger.error(f"Plugin yüklənərkən xəta baş verdi: {module_name}. Xəta: {e}")
 
-def get_all_commands(dp):
-    """Bütün pluginlərdə olan komandaları toplayır."""
-    commands = set()
-    logger.info(f"Handlers siyahısının uzunluğu: {len(dp.message.handlers)}")
-    for handler in dp.message.handlers:
-        logger.info(f"Handler: {handler}")
-        for flt in handler.filters:
-            logger.info(f"Filtr: {flt}")
-            if isinstance(flt, Command):
-                logger.info(f"Command tapıldı: {flt.commands}")
-                commands.update(flt.commands)
-    return sorted(commands)
 
 def start_plugin_watcher(context, plugins_dir, bot: Bot, loop):
     """Start the plugin watcher to monitor changes in the plugins directory."""
