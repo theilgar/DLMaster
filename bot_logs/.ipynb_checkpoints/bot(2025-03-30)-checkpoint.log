@@ -1,0 +1,41 @@
+2025.03.30 06:42:41 __main__             INFO     🤖 Starting bot...
+2025.03.30 06:42:41 __main__             INFO     🚀 Starting bot initialization...
+2025.03.30 06:42:41 __main__             INFO     ✅ Database initialized successfully
+2025.03.30 06:42:41 core.spotify_handler INFO     Spotify API ilə əlaqə quruldu.
+2025.03.30 06:42:41 __main__             INFO     ✅ Spotify service initialized
+2025.03.30 06:42:41 core.youtube_handler INFO     firefox brauzerindən cookies istifadə edilir.
+2025.03.30 06:42:41 __main__             INFO     ✅ YouTube services initialized (firefox)
+2025.03.30 06:42:41 __main__             INFO     🔌 Loading plugins...
+2025.03.30 06:42:41 __main__             INFO     🔍 Scanning plugins in: plugins
+2025.03.30 06:42:41 __main__             INFO     🔄 Loading: plugins.spotify_plugin
+2025.03.30 06:42:41 __main__             INFO     ✅ Loaded (sync): plugins.spotify_plugin
+2025.03.30 06:42:41 __main__             INFO     🔄 Loading: plugins.menu_plugin
+2025.03.30 06:42:41 __main__             INFO     ✅ Loaded (sync): plugins.menu_plugin
+2025.03.30 06:42:41 __main__             INFO     🔄 Loading: plugins.sudo_plugin
+2025.03.30 06:42:41 __main__             INFO     ✅ Loaded (sync): plugins.sudo_plugin
+2025.03.30 06:42:41 __main__             INFO     🔄 Loading: plugins.youtube_plugin
+2025.03.30 06:42:41 __main__             INFO     ✅ Loaded (sync): plugins.youtube_plugin
+2025.03.30 06:42:41 __main__             INFO     🔄 Loading: plugins.neofetch_plugin
+2025.03.30 06:42:41 __main__             INFO     ✅ Loaded (sync): plugins.neofetch_plugin
+2025.03.30 06:42:41 __main__             INFO     🔄 Loading: plugins.report_plugin
+2025.03.30 06:42:41 __main__             INFO     ✅ Loaded (async): plugins.report_plugin
+2025.03.30 06:42:41 __main__             INFO     🔄 Loading: plugins.del_plugin
+2025.03.30 06:42:41 __main__             INFO     ✅ Loaded (sync): plugins.del_plugin
+2025.03.30 06:42:41 __main__             INFO     🔄 Loading: plugins.music_plugin
+2025.03.30 06:42:41 __main__             INFO     ✅ Loaded (sync): plugins.music_plugin
+2025.03.30 06:42:41 __main__             INFO     🔄 Loading: plugins.start_plugin
+2025.03.30 06:42:41 __main__             INFO     ✅ Loaded (async): plugins.start_plugin
+2025.03.30 06:42:41 __main__             INFO     🔄 Loading: plugins.broadcast_plugin
+2025.03.30 06:42:41 __main__             INFO     ✅ Loaded (sync): plugins.broadcast_plugin
+2025.03.30 06:42:41 __main__             INFO     🔄 Loading: plugins.speedtest_plugin
+2025.03.30 06:42:41 __main__             INFO     ✅ Loaded (sync): plugins.speedtest_plugin
+2025.03.30 06:42:41 __main__             INFO     🚀 Starting polling...
+2025.03.30 06:42:41 aiogram.dispatcher   INFO     Start polling
+2025.03.30 06:42:41 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8095621527 - 'DLLMaster for Music'
+2025.03.30 06:42:41 aiogram.event        INFO     Update id=511587463 is not handled. Duration 1 ms by bot id=8095621527
+2025.03.30 06:42:41 aiogram.event        INFO     Update id=511587464 is not handled. Duration 2 ms by bot id=8095621527
+2025.03.30 06:42:46 aiogram.event        INFO     Update id=511587465 is not handled. Duration 1 ms by bot id=8095621527
+2025.03.30 06:43:02 aiogram.event        INFO     Update id=511587466 is not handled. Duration 1 ms by bot id=8095621527
+2025.03.30 06:43:08 aiogram.event        INFO     Update id=511587467 is not handled. Duration 1 ms by bot id=8095621527
+2025.03.30 06:43:13 aiogram.event        INFO     Update id=511587468 is not handled. Duration 1 ms by bot id=8095621527
+2025.03.30 06:43:15 aiogram.event        INFO     Update id=511587469 is not handled. Duration 1 ms by bot id=8095621527

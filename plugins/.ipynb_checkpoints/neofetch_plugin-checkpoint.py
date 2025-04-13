@@ -9,11 +9,13 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Bütün pluginlərdə:
 def setup(context):
     dp = context.dp
-    sudo_users = context.sudo_users
+    db = context.db  # Əlavə edilir
+    sudo_users = db.get_sudo_users()  # Köhnə context.sudo_users əvəzinə
     creator_id = context.creator_id
-
+    
     @dp.callback_query(F.data == "alive_cmd")
     async def alive_cmd_callback(callback: types.CallbackQuery):
         user_id = callback.from_user.id

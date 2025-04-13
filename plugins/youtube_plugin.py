@@ -1,7 +1,7 @@
 from aiogram import types, F
 from aiogram.filters import Command
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from handlers.utilities import sanitize_filename, format_duration
+from core.utilities import sanitize_filename, format_duration
 import asyncio
 import os
 import logging
@@ -30,44 +30,31 @@ def setup(context):
     db = context.db
 
     async def track_download_handler(user_id: int, username: str, track_info: dict, source: str, chat_id=None):
-        """Handle track download process and record in database"""
+        """Handle track download process (simplified version without db logging)"""
         try:
-            # Add user to database
-            db.add_user(user_id, username)
-            db.increment_user_message_count(user_id)
-            
-            # Add song to database
-            song_title = track_info.get('title', track_info.get('name', 'Unknown'))
-            artist = track_info.get('artist', 
-                   track_info.get('artists', [{}])[0].get('name', 'Unknown'))
-            
-            db.add_song_download(
-                user_id=user_id,
-                song_title=song_title,
-                artist=artist,
-                source=source
-            )
-            
-            # Add log entry
-            db.add_log(
-                level="INFO",
-                message=f"User {username} downloaded {source} track: {song_title}",
-                user_id=user_id,
-                group_id=chat_id if chat_id else None,
-                command=f"/{source}_download"
-            )
-            
-            logger.info(f"{username} successfully recorded {source} track: {song_title}")
-            
+            if db:  # Only proceed if database exists
+                # Add user if not exists
+                db.add_user(user_id, username)
+                
+                # Record song download
+                song_title = track_info.get('title', track_info.get('name', 'Unknown'))
+                artist = track_info.get('artist', 
+                       track_info.get('artists', [{}])[0].get('name', 'Unknown'))
+                
+                db.add_song_download(
+                    user_id=user_id,
+                    song_title=song_title,
+                    artist=artist,
+                    source=source
+                )
+                
+                logger.info(f"{username} downloaded: {song_title} by {artist} from {source}")
+                
         except Exception as e:
-            logger.error(f"Database error: {str(e)}")
-            db.log_error(
-                error_message=f"Database error: {str(e)}",
-                user_id=user_id
-            )
+            logger.error(f"Error recording download: {str(e)}")
 
     async def process_youtube_playlist(message: types.Message, url: str):
-        """Process YouTube playlist"""
+        """Process YouTube playlist (without database logging)"""
         user_id = message.from_user.id
         username = message.from_user.username or "Unknown"
         chat_id = message.chat.id if message.chat.type != "private" else None
@@ -94,7 +81,10 @@ def setup(context):
             )
             
             if chat_id:
-                await bot.pin_chat_message(chat_id=chat_id, message_id=progress_msg.message_id)
+                try:
+                    await bot.pin_chat_message(chat_id=chat_id, message_id=progress_msg.message_id)
+                except Exception as e:
+                    logger.error(f"Couldn't pin message: {str(e)}")
 
             total_tracks = len(playlist['entries'])
             downloaded_tracks = 0
@@ -123,7 +113,7 @@ def setup(context):
                         duration=int(track.get('duration', 0))
                     )
 
-                    # Record download
+                    # Record download (simplified)
                     await track_download_handler(
                         user_id=user_id,
                         username=username,
@@ -135,7 +125,7 @@ def setup(context):
                     downloaded_tracks += 1
                     
                 except Exception as e:
-                    logger.error(f"Error downloading track {track['title']}: {str(e)}")
+                    logger.error(f"Error downloading {track['title']}: {str(e)}")
                     failed_tracks += 1
                     await message.answer(f"❌ Failed to download: {track['title']}")
                 finally:
@@ -144,44 +134,46 @@ def setup(context):
                         try:
                             os.remove(file_path)
                         except Exception as e:
-                            logger.error(f"Error deleting file {file_path}: {str(e)}")
+                            logger.error(f"Error deleting file: {str(e)}")
                 
                 # Update progress
                 if user_id not in active_tasks or not active_tasks[user_id].cancelled():
-                    await progress_msg.edit_text(
-                        f"📋 Playlist: {playlist['title']}\n"
-                        f"🎵 Total tracks: {playlist['total']}\n"
-                        f"⏱ Total duration: {playlist['duration']}\n\n"
-                        f"✅ Downloaded: {downloaded_tracks}\n"
-                        f"❌ Failed: {failed_tracks}\n"
-                        f"📥 Remaining: {total_tracks - downloaded_tracks - failed_tracks}\n\n"
-                        f"{creator_info}",
-                        reply_markup=keyboard.as_markup()
-                    )
+                    try:
+                        await progress_msg.edit_text(
+                            f"📋 Playlist: {playlist['title']}\n"
+                            f"🎵 Total tracks: {playlist['total']}\n"
+                            f"⏱ Total duration: {playlist['duration']}\n\n"
+                            f"✅ Downloaded: {downloaded_tracks}\n"
+                            f"❌ Failed: {failed_tracks}\n"
+                            f"📥 Remaining: {total_tracks - downloaded_tracks - failed_tracks}\n\n"
+                            f"{creator_info}",
+                            reply_markup=keyboard.as_markup()
+                        )
+                    except Exception as e:
+                        logger.error(f"Couldn't update progress: {str(e)}")
 
             # Final status
-            await progress_msg.edit_text(
-                f"🎉 Playlist download complete!\n"
-                f"📋 {playlist['title']}\n"
-                f"✅ Success: {downloaded_tracks}\n"
-                f"❌ Failed: {failed_tracks}\n\n"
-                f"{creator_info}"
-            )
+            try:
+                await progress_msg.edit_text(
+                    f"🎉 Playlist download complete!\n"
+                    f"📋 {playlist['title']}\n"
+                    f"✅ Success: {downloaded_tracks}\n"
+                    f"❌ Failed: {failed_tracks}\n\n"
+                    f"{creator_info}"
+                )
+            except Exception as e:
+                logger.error(f"Couldn't send completion message: {str(e)}")
             
         except Exception as e:
-            await message.answer(f"❌ Error processing playlist: {str(e)}")
-            db.log_error(
-                error_message=f"Playlist processing error: {str(e)}",
-                user_id=user_id
-            )
+            await message.answer(f"❌ Error processing playlist: {str(e)[:300]}")
+            logger.error(f"Playlist processing failed: {str(e)}")
         finally:
             active_tasks.pop(user_id, None)
             if chat_id and 'progress_msg' in locals():
                 try:
                     await bot.unpin_chat_message(chat_id, progress_msg.message_id)
                 except Exception as e:
-                    logger.error(f"Error unpinning message: {str(e)}")
-
+                    logger.error(f"Couldn't unpin message: {str(e)}")
 
     # Message handlers
     @dp.message(F.text.contains("youtube.com/playlist") | F.text.contains("youtu.be/playlist"))
@@ -199,12 +191,8 @@ def setup(context):
             await task
             
         except Exception as e:
-            await message.answer(f"❌ Error: {str(e)}")
-            db.log_error(
-                error_message=f"Youtube playlist handler error: {str(e)}",
-                user_id=user_id
-            )
-
+            await message.answer(f"❌ Error: {str(e)[:300]}")
+            logger.error(f"Playlist handler error: {str(e)}")
 
     @dp.callback_query(F.data.startswith("cancel_"))
     async def cancel_processing(callback: types.CallbackQuery):
@@ -218,15 +206,12 @@ def setup(context):
             try:
                 await bot.delete_message(callback.message.chat.id, callback.message.message_id)
             except Exception as e:
-                logger.error(f"Error deleting message: {str(e)}")
+                logger.error(f"Couldn't delete message: {str(e)}")
             
             await asyncio.sleep(5)
-            await bot.delete_message(stop_msg.chat.id, stop_msg.message_id)
+            try:
+                await bot.delete_message(stop_msg.chat.id, stop_msg.message_id)
+            except Exception as e:
+                logger.error(f"Couldn't delete stop message: {str(e)}")
             
-            # Log cancellation
-            db.add_log(
-                level="INFO",
-                message="Playlist download cancelled",
-                user_id=user_id,
-                group_id=callback.message.chat.id if callback.message.chat.type != "private" else None
-            )
+            logger.info(f"User {user_id} cancelled download")

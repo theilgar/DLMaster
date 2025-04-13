@@ -1,0 +1,812 @@
+2025.04.04 06:53:02 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 06:53:02 aiogram.event        INFO     Update id=511642551 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 06:53:26 aiogram.event        INFO     Update id=511642552 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 06:53:35 aiogram.event        INFO     Update id=511642553 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 06:54:03 aiogram.event        INFO     Update id=511642554 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 06:54:37 aiogram.event        INFO     Update id=511642555 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 06:54:37 aiogram.event        INFO     Update id=511642556 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 06:55:01 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 06:55:01 aiogram.event        INFO     Update id=511642557 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 06:56:22 aiogram.event        INFO     Update id=511642558 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 06:56:31 aiogram.event        INFO     Update id=511642559 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 06:56:36 aiogram.event        INFO     Update id=511642560 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 06:56:46 aiogram.event        INFO     Update id=511642561 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 06:57:03 aiogram.event        INFO     Update id=511642562 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 06:57:11 aiogram.event        INFO     Update id=511642563 is handled. Duration 11 ms by bot id=8095621527
+2025.04.04 06:57:16 aiogram.event        INFO     Update id=511642564 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 06:57:19 aiogram.event        INFO     Update id=511642565 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 06:57:22 aiogram.event        INFO     Update id=511642566 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 06:57:35 aiogram.event        INFO     Update id=511642567 is not handled. Duration 2 ms by bot id=8095621527
+2025.04.04 06:57:39 aiogram.event        INFO     Update id=511642568 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 06:57:41 aiogram.event        INFO     Update id=511642569 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 06:58:02 aiogram.event        INFO     Update id=511642570 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 06:59:25 aiogram.event        INFO     Update id=511642571 is not handled. Duration 1 ms by bot id=8095621527
+2025.04.04 06:59:27 aiogram.event        INFO     Update id=511642572 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 06:59:54 aiogram.event        INFO     Update id=511642573 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:00:13 aiogram.event        INFO     Update id=511642574 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:00:21 aiogram.event        INFO     Update id=511642575 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:00:35 aiogram.event        INFO     Update id=511642576 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:00:45 aiogram.event        INFO     Update id=511642577 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 07:00:45 aiogram.event        INFO     Update id=511642578 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 07:00:56 aiogram.event        INFO     Update id=511642579 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:01:12 aiogram.event        INFO     Update id=511642580 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:01:48 aiogram.event        INFO     Update id=511642581 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:02:31 aiogram.event        INFO     Update id=511642582 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 07:03:15 aiogram.event        INFO     Update id=511642583 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:04:15 aiogram.event        INFO     Update id=511642584 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:04:22 aiogram.event        INFO     Update id=511642585 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:04:31 aiogram.event        INFO     Update id=511642586 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:04:44 aiogram.event        INFO     Update id=511642587 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:05:15 aiogram.event        INFO     Update id=511642588 is handled. Duration 6 ms by bot id=8095621527
+2025.04.04 07:05:37 aiogram.event        INFO     Update id=511642589 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:05:47 aiogram.event        INFO     Update id=511642590 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 07:05:51 aiogram.event        INFO     Update id=511642591 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:05:57 aiogram.event        INFO     Update id=511642592 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 07:06:04 aiogram.event        INFO     Update id=511642593 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:06:06 aiogram.event        INFO     Update id=511642594 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:06:15 aiogram.event        INFO     Update id=511642595 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:06:21 aiogram.event        INFO     Update id=511642596 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:06:28 aiogram.event        INFO     Update id=511642597 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:07:32 aiogram.event        INFO     Update id=511642598 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:08:05 aiogram.event        INFO     Update id=511642599 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:09:36 aiogram.event        INFO     Update id=511642600 is not handled. Duration 0 ms by bot id=8095621527
+2025.04.04 07:09:59 aiogram.event        INFO     Update id=511642601 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 07:09:59 aiogram.event        INFO     Update id=511642602 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 07:10:34 aiogram.event        INFO     Update id=511642603 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:11:04 aiogram.event        INFO     Update id=511642604 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:12:51 aiogram.event        INFO     Update id=511642605 is not handled. Duration 0 ms by bot id=8095621527
+2025.04.04 07:12:57 aiogram.event        INFO     Update id=511642606 is handled. Duration 8 ms by bot id=8095621527
+2025.04.04 07:12:57 aiogram.event        INFO     Update id=511642607 is handled. Duration 8 ms by bot id=8095621527
+2025.04.04 07:12:57 aiogram.event        INFO     Update id=511642608 is handled. Duration 8 ms by bot id=8095621527
+2025.04.04 07:12:57 aiogram.event        INFO     Update id=511642609 is handled. Duration 8 ms by bot id=8095621527
+2025.04.04 07:12:58 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:12:58 aiogram.event        INFO     Update id=511642610 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:13:03 aiogram.event        INFO     Update id=511642611 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 07:13:03 aiogram.event        INFO     Update id=511642612 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 07:13:03 aiogram.event        INFO     Update id=511642613 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 07:13:03 aiogram.event        INFO     Update id=511642614 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 07:13:09 aiogram.event        INFO     Update id=511642615 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:13:39 aiogram.event        INFO     Update id=511642616 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:13:59 aiogram.event        INFO     Update id=511642617 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:14:02 aiogram.event        INFO     Update id=511642618 is handled. Duration 10 ms by bot id=8095621527
+2025.04.04 07:14:07 aiogram.event        INFO     Update id=511642619 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:14:19 aiogram.event        INFO     Update id=511642620 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:15:22 aiogram.event        INFO     Update id=511642621 is handled. Duration 10 ms by bot id=8095621527
+2025.04.04 07:15:22 aiogram.event        INFO     Update id=511642622 is handled. Duration 11 ms by bot id=8095621527
+2025.04.04 07:15:22 aiogram.event        INFO     Update id=511642623 is handled. Duration 11 ms by bot id=8095621527
+2025.04.04 07:15:22 aiogram.event        INFO     Update id=511642624 is handled. Duration 11 ms by bot id=8095621527
+2025.04.04 07:15:22 aiogram.event        INFO     Update id=511642625 is handled. Duration 11 ms by bot id=8095621527
+2025.04.04 07:15:22 aiogram.event        INFO     Update id=511642626 is handled. Duration 13 ms by bot id=8095621527
+2025.04.04 07:16:02 aiogram.event        INFO     Update id=511642627 is handled. Duration 30 ms by bot id=8095621527
+2025.04.04 07:16:02 aiogram.event        INFO     Update id=511642628 is handled. Duration 31 ms by bot id=8095621527
+2025.04.04 07:16:02 aiogram.event        INFO     Update id=511642629 is handled. Duration 26 ms by bot id=8095621527
+2025.04.04 07:16:02 aiogram.event        INFO     Update id=511642630 is handled. Duration 28 ms by bot id=8095621527
+2025.04.04 07:16:02 aiogram.event        INFO     Update id=511642631 is handled. Duration 27 ms by bot id=8095621527
+2025.04.04 07:16:02 aiogram.event        INFO     Update id=511642632 is handled. Duration 27 ms by bot id=8095621527
+2025.04.04 07:16:02 aiogram.event        INFO     Update id=511642633 is handled. Duration 27 ms by bot id=8095621527
+2025.04.04 07:16:02 aiogram.event        INFO     Update id=511642634 is handled. Duration 28 ms by bot id=8095621527
+2025.04.04 07:16:02 aiogram.event        INFO     Update id=511642635 is handled. Duration 28 ms by bot id=8095621527
+2025.04.04 07:16:02 aiogram.event        INFO     Update id=511642636 is handled. Duration 29 ms by bot id=8095621527
+2025.04.04 07:16:30 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:16:30 aiogram.event        INFO     Update id=511642637 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:16:35 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:16:35 aiogram.event        INFO     Update id=511642638 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:17:43 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:17:43 aiogram.event        INFO     Update id=511642639 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:17:54 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:17:54 aiogram.event        INFO     Update id=511642640 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:17:56 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:17:56 aiogram.event        INFO     Update id=511642641 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:18:03 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:18:03 aiogram.event        INFO     Update id=511642642 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:18:10 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:18:10 aiogram.event        INFO     Update id=511642643 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:18:12 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:18:12 aiogram.event        INFO     Update id=511642644 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:18:14 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:18:14 aiogram.event        INFO     Update id=511642645 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:18:16 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:18:16 aiogram.event        INFO     Update id=511642646 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:18:18 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:18:18 aiogram.event        INFO     Update id=511642647 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:18:26 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:18:26 aiogram.event        INFO     Update id=511642648 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 07:18:34 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:18:34 aiogram.event        INFO     Update id=511642649 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:18:41 aiogram.event        INFO     Update id=511642650 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:18:56 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:18:56 aiogram.event        INFO     Update id=511642651 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:18:58 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:18:58 aiogram.event        INFO     Update id=511642652 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:19:07 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:19:07 aiogram.event        INFO     Update id=511642653 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:19:11 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:19:11 aiogram.event        INFO     Update id=511642654 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:19:14 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:19:14 aiogram.event        INFO     Update id=511642655 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:19:19 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:19:19 aiogram.event        INFO     Update id=511642656 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:19:30 aiogram.event        INFO     Update id=511642657 is not handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:19:32 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:19:32 aiogram.event        INFO     Update id=511642658 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:19:45 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:19:45 aiogram.event        INFO     Update id=511642659 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:19:51 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:19:51 aiogram.event        INFO     Update id=511642660 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:20:00 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:20:00 aiogram.event        INFO     Update id=511642661 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:20:23 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:20:23 aiogram.event        INFO     Update id=511642662 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:20:26 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:20:26 aiogram.event        INFO     Update id=511642663 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:21:02 aiogram.event        INFO     Update id=511642664 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:21:15 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:21:15 aiogram.event        INFO     Update id=511642665 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:21:38 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:21:38 aiogram.event        INFO     Update id=511642666 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:21:42 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:21:42 aiogram.event        INFO     Update id=511642667 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 07:21:55 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:21:55 aiogram.event        INFO     Update id=511642668 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:22:08 aiogram.event        INFO     Update id=511642669 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 07:22:08 aiogram.event        INFO     Update id=511642670 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 07:22:08 aiogram.event        INFO     Update id=511642671 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 07:22:08 aiogram.event        INFO     Update id=511642672 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 07:22:08 aiogram.event        INFO     Update id=511642673 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 07:22:08 aiogram.event        INFO     Update id=511642674 is handled. Duration 8 ms by bot id=8095621527
+2025.04.04 07:22:08 aiogram.event        INFO     Update id=511642675 is handled. Duration 8 ms by bot id=8095621527
+2025.04.04 07:22:08 aiogram.event        INFO     Update id=511642676 is handled. Duration 8 ms by bot id=8095621527
+2025.04.04 07:22:08 aiogram.event        INFO     Update id=511642677 is handled. Duration 8 ms by bot id=8095621527
+2025.04.04 07:22:08 aiogram.event        INFO     Update id=511642678 is handled. Duration 9 ms by bot id=8095621527
+2025.04.04 07:22:11 aiogram.event        INFO     Update id=511642679 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:23:20 aiogram.event        INFO     Update id=511642680 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:23:20 aiogram.event        INFO     Update id=511642681 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:23:20 aiogram.event        INFO     Update id=511642682 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 07:23:20 aiogram.event        INFO     Update id=511642683 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 07:24:28 aiogram.event        INFO     Update id=511642684 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:24:30 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:24:30 aiogram.event        INFO     Update id=511642685 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:24:38 aiogram.event        INFO     Update id=511642686 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 07:24:38 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:24:38 aiogram.event        INFO     Update id=511642687 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:24:41 aiogram.event        INFO     Update id=511642688 is not handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:25:04 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:25:04 aiogram.event        INFO     Update id=511642689 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 07:25:18 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:25:18 aiogram.event        INFO     Update id=511642690 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:25:38 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:25:38 aiogram.event        INFO     Update id=511642691 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:25:45 aiogram.event        INFO     Update id=511642692 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:25:50 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:25:50 aiogram.event        INFO     Update id=511642693 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:26:53 aiogram.event        INFO     Update id=511642694 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 07:26:53 aiogram.event        INFO     Update id=511642695 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 07:27:02 aiogram.event        INFO     Update id=511642696 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:27:08 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:27:08 aiogram.event        INFO     Update id=511642697 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:28:16 aiogram.event        INFO     Update id=511642698 is not handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:28:17 aiogram.event        INFO     Update id=511642699 is not handled. Duration 0 ms by bot id=8095621527
+2025.04.04 07:30:19 aiogram.event        INFO     Update id=511642700 is handled. Duration 12 ms by bot id=8095621527
+2025.04.04 07:30:19 aiogram.event        INFO     Update id=511642701 is handled. Duration 12 ms by bot id=8095621527
+2025.04.04 07:30:19 aiogram.event        INFO     Update id=511642702 is handled. Duration 12 ms by bot id=8095621527
+2025.04.04 07:30:19 aiogram.event        INFO     Update id=511642703 is handled. Duration 13 ms by bot id=8095621527
+2025.04.04 07:30:19 aiogram.event        INFO     Update id=511642704 is handled. Duration 13 ms by bot id=8095621527
+2025.04.04 07:30:40 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:30:40 aiogram.event        INFO     Update id=511642705 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:31:50 aiogram.event        INFO     Update id=511642706 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:33:20 aiogram.event        INFO     Update id=511642707 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:33:56 aiogram.event        INFO     Update id=511642708 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:34:06 aiogram.event        INFO     Update id=511642709 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:39:45 aiogram.event        INFO     Update id=511642710 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:41:10 aiogram.event        INFO     Update id=511642711 is handled. Duration 0 ms by bot id=8095621527
+2025.04.04 07:41:10 core.spotify_handler INFO     Playlist məlumatları əldə edilir: 0VLazPW47Ioj4KUarzxK9e
+2025.04.04 07:41:11 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 07:41:11 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2025.04.04 07:41:11 aiogram.event        INFO     Update id=511642712 is not handled. Duration 85 ms by bot id=8095621527
+2025.04.04 07:41:16 core.spotify_handler INFO     Metadata uğurla əlavə edildi: download/download/Da Rockwilder.m4a
+2025.04.04 07:41:16 plugins.spotify_plugin INFO     ilgarrx tərəfindən spotify_playlist mahnısı uğurla qeyd edildi
+2025.04.04 07:41:16 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 07:41:16 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2025.04.04 07:41:22 core.spotify_handler INFO     Metadata uğurla əlavə edildi: download/download/Baknaffek.m4a
+2025.04.04 07:41:22 plugins.spotify_plugin INFO     ilgarrx tərəfindən spotify_playlist mahnısı uğurla qeyd edildi
+2025.04.04 07:41:22 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 07:41:22 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2025.04.04 07:41:26 core.spotify_handler INFO     Metadata uğurla əlavə edildi: download/download/Check It.m4a
+2025.04.04 07:41:27 plugins.spotify_plugin INFO     ilgarrx tərəfindən spotify_playlist mahnısı uğurla qeyd edildi
+2025.04.04 07:41:27 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 07:41:27 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2025.04.04 07:41:32 core.spotify_handler INFO     Metadata uğurla əlavə edildi: download/download/Twinz (feat. Fat Joe).m4a
+2025.04.04 07:41:32 plugins.spotify_plugin INFO     ilgarrx tərəfindən spotify_playlist mahnısı uğurla qeyd edildi
+2025.04.04 07:41:32 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 07:41:32 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2025.04.04 07:41:38 core.spotify_handler INFO     Metadata uğurla əlavə edildi: download/download/MUTANT.m4a
+2025.04.04 07:41:38 plugins.spotify_plugin INFO     ilgarrx tərəfindən spotify_playlist mahnısı uğurla qeyd edildi
+2025.04.04 07:41:38 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 07:41:38 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2025.04.04 07:41:43 core.spotify_handler INFO     Metadata uğurla əlavə edildi: download/download/N.Y. State of Mind.m4a
+2025.04.04 07:41:43 plugins.spotify_plugin INFO     ilgarrx tərəfindən spotify_playlist mahnısı uğurla qeyd edildi
+2025.04.04 07:41:43 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 07:41:43 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.04.04 07:41:49 core.spotify_handler INFO     Metadata uğurla əlavə edildi: download/download/Soyuqqanlı Olmaq Üşüdür.m4a
+2025.04.04 07:41:50 plugins.spotify_plugin INFO     ilgarrx tərəfindən spotify_playlist mahnısı uğurla qeyd edildi
+2025.04.04 07:41:50 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 07:41:50 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.04.04 07:41:55 core.spotify_handler INFO     Metadata uğurla əlavə edildi: download/download/Shook Ones, Pt. II.m4a
+2025.04.04 07:41:56 plugins.spotify_plugin INFO     ilgarrx tərəfindən spotify_playlist mahnısı uğurla qeyd edildi
+2025.04.04 07:41:56 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 07:41:56 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.04.04 07:42:01 core.spotify_handler INFO     Metadata uğurla əlavə edildi: download/download/Fillərə ithaf.m4a
+2025.04.04 07:42:01 plugins.spotify_plugin INFO     ilgarrx tərəfindən spotify_playlist mahnısı uğurla qeyd edildi
+2025.04.04 07:42:01 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 07:42:01 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2025.04.04 07:42:07 core.spotify_handler INFO     Metadata uğurla əlavə edildi: download/download/Suicidal Thoughts - 2005 Remaster.m4a
+2025.04.04 07:42:07 plugins.spotify_plugin INFO     ilgarrx tərəfindən spotify_playlist mahnısı uğurla qeyd edildi
+2025.04.04 07:42:07 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 07:42:07 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2025.04.04 07:42:12 core.spotify_handler INFO     Metadata uğurla əlavə edildi: download/download/Rhyme Sayıqlayıram.m4a
+2025.04.04 07:42:12 plugins.spotify_plugin INFO     ilgarrx tərəfindən spotify_playlist mahnısı uğurla qeyd edildi
+2025.04.04 07:42:12 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 07:42:12 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.04.04 07:42:17 core.spotify_handler INFO     Metadata uğurla əlavə edildi: download/download/Hypnotize - 2014 Remaster.m4a
+2025.04.04 07:42:18 plugins.spotify_plugin INFO     ilgarrx tərəfindən spotify_playlist mahnısı uğurla qeyd edildi
+2025.04.04 07:42:18 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 07:42:18 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2025.04.04 07:42:19 aiogram.event        INFO     Update id=511642713 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:42:25 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 07:42:25 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.04.04 07:42:26 aiogram.event        INFO     Update id=511642714 is handled. Duration 5167 ms by bot id=8095621527
+2025.04.04 07:42:27 aiogram.event        INFO     Update id=511642715 is handled. Duration 2391 ms by bot id=8095621527
+2025.04.04 07:42:29 aiogram.event        INFO     Update id=511642716 is handled. Duration 248 ms by bot id=8095621527
+2025.04.04 07:42:30 aiogram.event        INFO     Update id=511642717 is handled. Duration 163 ms by bot id=8095621527
+2025.04.04 07:42:31 aiogram.event        INFO     Update id=511642718 is handled. Duration 60 ms by bot id=8095621527
+2025.04.04 07:42:31 aiogram.event        INFO     Update id=511642719 is handled. Duration 46 ms by bot id=8095621527
+2025.04.04 07:42:32 aiogram.event        INFO     Update id=511642720 is handled. Duration 97 ms by bot id=8095621527
+2025.04.04 07:42:35 aiogram.event        INFO     Update id=511642721 is handled. Duration 46 ms by bot id=8095621527
+2025.04.04 07:42:36 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 07:42:36 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2025.04.04 07:42:41 aiogram.event        INFO     Update id=511642722 is handled. Duration 4420 ms by bot id=8095621527
+2025.04.04 07:44:17 aiogram.event        INFO     Update id=511642723 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:44:49 aiogram.event        INFO     Update id=511642724 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:45:03 aiogram.event        INFO     Update id=511642725 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:45:08 aiogram.event        INFO     Update id=511642726 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 07:45:13 aiogram.event        INFO     Update id=511642727 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:46:12 aiogram.event        INFO     Update id=511642728 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:47:54 aiogram.event        INFO     Update id=511642729 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:48:00 aiogram.event        INFO     Update id=511642730 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:48:43 aiogram.event        INFO     Update id=511642731 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:49:07 aiogram.event        INFO     Update id=511642732 is handled. Duration 6 ms by bot id=8095621527
+2025.04.04 07:49:29 aiogram.event        INFO     Update id=511642733 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:50:41 aiogram.event        INFO     Update id=511642734 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:50:51 aiogram.event        INFO     Update id=511642735 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:51:49 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:51:49 aiogram.event        INFO     Update id=511642736 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:51:55 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:51:55 aiogram.event        INFO     Update id=511642737 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 07:52:03 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 07:52:03 aiogram.event        INFO     Update id=511642738 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:52:36 aiogram.event        INFO     Update id=511642739 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:53:54 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 07:53:54 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.04.04 07:53:56 aiogram.event        INFO     Update id=511642740 is handled. Duration 2250 ms by bot id=8095621527
+2025.04.04 07:54:35 aiogram.event        INFO     Update id=511642741 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:54:36 aiogram.event        INFO     Update id=511642742 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 07:55:12 aiogram.event        INFO     Update id=511642743 is handled. Duration 5126 ms by bot id=8095621527
+2025.04.04 07:56:04 aiogram.event        INFO     Update id=511642744 is not handled. Duration 0 ms by bot id=8095621527
+2025.04.04 07:56:37 aiogram.event        INFO     Update id=511642745 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:56:37 aiogram.event        INFO     Update id=511642746 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 07:57:58 aiogram.event        INFO     Update id=511642747 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:00:16 aiogram.event        INFO     Update id=511642748 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 08:04:30 aiogram.event        INFO     Update id=511642749 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:04:30 aiogram.event        INFO     Update id=511642750 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:04:49 aiogram.event        INFO     Update id=511642751 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:04:52 aiogram.event        INFO     Update id=511642752 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:05:21 aiogram.event        INFO     Update id=511642753 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:05:32 aiogram.event        INFO     Update id=511642754 is not handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:06:03 aiogram.event        INFO     Update id=511642755 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:06:15 aiogram.event        INFO     Update id=511642756 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:06:32 aiogram.event        INFO     Update id=511642757 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:06:34 aiogram.event        INFO     Update id=511642758 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:06:35 aiogram.event        INFO     Update id=511642759 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:06:35 aiogram.event        INFO     Update id=511642760 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:06:42 aiogram.event        INFO     Update id=511642761 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:06:43 aiogram.event        INFO     Update id=511642762 is not handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:08:02 aiogram.event        INFO     Update id=511642763 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 08:08:48 aiogram.event        INFO     Update id=511642764 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:09:28 aiogram.event        INFO     Update id=511642765 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:10:32 aiogram.event        INFO     Update id=511642766 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:13:21 aiogram.event        INFO     Update id=511642767 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:13:24 aiogram.event        INFO     Update id=511642768 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 08:13:33 aiogram.event        INFO     Update id=511642769 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:14:58 aiogram.event        INFO     Update id=511642770 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:15:03 aiogram.event        INFO     Update id=511642771 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:15:03 aiogram.event        INFO     Update id=511642772 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:15:03 aiogram.event        INFO     Update id=511642773 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:15:12 aiogram.event        INFO     Update id=511642774 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:18:05 aiogram.event        INFO     Update id=511642775 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:18:36 aiogram.event        INFO     Update id=511642776 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:18:51 aiogram.event        INFO     Update id=511642777 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:21:25 aiogram.event        INFO     Update id=511642778 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:21:44 aiogram.event        INFO     Update id=511642779 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:22:29 aiogram.event        INFO     Update id=511642780 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:22:29 aiogram.event        INFO     Update id=511642781 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:23:41 aiogram.event        INFO     Update id=511642782 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:24:11 aiogram.event        INFO     Update id=511642783 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:24:15 aiogram.event        INFO     Update id=511642784 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:24:42 aiogram.event        INFO     Update id=511642785 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:25:03 aiogram.event        INFO     Update id=511642786 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:25:11 aiogram.event        INFO     Update id=511642787 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:25:23 aiogram.event        INFO     Update id=511642788 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:25:33 aiogram.event        INFO     Update id=511642789 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 08:25:50 aiogram.event        INFO     Update id=511642790 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:26:22 aiogram.event        INFO     Update id=511642791 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:26:24 aiogram.event        INFO     Update id=511642792 is handled. Duration 6 ms by bot id=8095621527
+2025.04.04 08:26:39 aiogram.event        INFO     Update id=511642793 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:28:36 aiogram.event        INFO     Update id=511642794 is handled. Duration 0 ms by bot id=8095621527
+2025.04.04 08:28:36 core.spotify_handler INFO     Playlist məlumatları əldə edilir: 0VLazPW47Ioj4KUarzxK9e
+2025.04.04 08:28:37 aiogram.event        INFO     Update id=511642795 is not handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:28:37 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 08:28:37 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2025.04.04 08:28:43 core.spotify_handler INFO     Metadata uğurla əlavə edildi: download/download/Da Rockwilder.m4a
+2025.04.04 08:28:43 plugins.spotify_plugin INFO     ilgarrx tərəfindən spotify_playlist mahnısı uğurla qeyd edildi
+2025.04.04 08:28:43 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 08:28:43 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.04.04 08:28:50 aiogram.event        INFO     Update id=511642796 is handled. Duration 5205 ms by bot id=8095621527
+2025.04.04 08:28:50 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 08:28:50 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2025.04.04 08:28:53 aiogram.event        INFO     Update id=511642797 is handled. Duration 2535 ms by bot id=8095621527
+2025.04.04 08:28:54 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 08:28:54 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.04.04 08:28:58 aiogram.event        INFO     Update id=511642798 is handled. Duration 3982 ms by bot id=8095621527
+2025.04.04 08:29:12 aiogram.event        INFO     Update id=511642799 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:29:20 aiogram.event        INFO     Update id=511642800 is handled. Duration 1095 ms by bot id=8095621527
+2025.04.04 08:30:03 aiogram.event        INFO     Update id=511642802 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:30:08 aiogram.event        INFO     Update id=511642803 is handled. Duration 1055 ms by bot id=8095621527
+2025.04.04 08:30:15 aiogram.event        INFO     Update id=511642804 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:30:18 aiogram.event        INFO     Update id=511642805 is handled. Duration 172 ms by bot id=8095621527
+2025.04.04 08:30:19 aiogram.event        INFO     Update id=511642801 is handled. Duration 20134 ms by bot id=8095621527
+2025.04.04 08:30:20 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 08:30:20 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.04.04 08:30:23 aiogram.event        INFO     Update id=511642806 is handled. Duration 2853 ms by bot id=8095621527
+2025.04.04 08:30:28 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 08:30:28 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2025.04.04 08:30:31 aiogram.event        INFO     Update id=511642807 is handled. Duration 2457 ms by bot id=8095621527
+2025.04.04 08:30:37 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 08:30:37 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2025.04.04 08:30:39 aiogram.event        INFO     Update id=511642809 is handled. Duration 244 ms by bot id=8095621527
+2025.04.04 08:30:42 aiogram.event        INFO     Update id=511642808 is handled. Duration 4636 ms by bot id=8095621527
+2025.04.04 08:30:44 aiogram.event        INFO     Update id=511642810 is handled. Duration 45 ms by bot id=8095621527
+2025.04.04 08:30:52 aiogram.event        INFO     Update id=511642811 is not handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:30:55 aiogram.event        INFO     Update id=511642812 is handled. Duration 121 ms by bot id=8095621527
+2025.04.04 08:30:57 aiogram.event        INFO     Update id=511642813 is not handled. Duration 149 ms by bot id=8095621527
+2025.04.04 08:30:57 aiogram.event        ERROR    Cause exception while process update id=511642813 by bot id=8095621527
+ConfigRetrievalError: HTTP Error 403: Forbidden
+Traceback (most recent call last):
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/DLMaster/middleware.py", line 11, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/home/admin/DLMaster/plugins/speedtest_plugin.py", line 26, in speedtest_cmd_callback
+    st = speedtest.Speedtest()
+         ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/speedtest.py", line 1095, in __init__
+    self.get_config()
+  File "/home/admin/.local/lib/python3.11/site-packages/speedtest.py", line 1127, in get_config
+    raise ConfigRetrievalError(e)
+speedtest.ConfigRetrievalError: HTTP Error 403: Forbidden
+2025.04.04 08:31:15 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 08:31:15 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.04.04 08:31:18 aiogram.event        INFO     Update id=511642814 is handled. Duration 3486 ms by bot id=8095621527
+2025.04.04 08:31:24 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 08:31:24 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2025.04.04 08:31:27 aiogram.event        INFO     Update id=511642815 is handled. Duration 2900 ms by bot id=8095621527
+2025.04.04 08:31:37 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 08:31:37 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2025.04.04 08:31:43 aiogram.event        INFO     Update id=511642816 is handled. Duration 5862 ms by bot id=8095621527
+2025.04.04 08:31:46 aiogram.event        INFO     Update id=511642817 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:32:32 aiogram.event        INFO     Update id=511642818 is handled. Duration 103 ms by bot id=8095621527
+2025.04.04 08:32:42 aiogram.event        INFO     Update id=511642819 is handled. Duration 236 ms by bot id=8095621527
+2025.04.04 08:32:59 aiogram.event        INFO     Update id=511642820 is not handled. Duration 35 ms by bot id=8095621527
+2025.04.04 08:33:02 aiogram.event        INFO     Update id=511642821 is handled. Duration 269 ms by bot id=8095621527
+2025.04.04 08:33:03 aiogram.event        INFO     Update id=511642822 is not handled. Duration 464 ms by bot id=8095621527
+2025.04.04 08:33:03 aiogram.event        ERROR    Cause exception while process update id=511642822 by bot id=8095621527
+ConfigRetrievalError: HTTP Error 403: Forbidden
+Traceback (most recent call last):
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/DLMaster/middleware.py", line 11, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/home/admin/DLMaster/plugins/speedtest_plugin.py", line 26, in speedtest_cmd_callback
+    st = speedtest.Speedtest()
+         ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/.local/lib/python3.11/site-packages/speedtest.py", line 1095, in __init__
+    self.get_config()
+  File "/home/admin/.local/lib/python3.11/site-packages/speedtest.py", line 1127, in get_config
+    raise ConfigRetrievalError(e)
+speedtest.ConfigRetrievalError: HTTP Error 403: Forbidden
+2025.04.04 08:33:06 aiogram.event        INFO     Update id=511642823 is handled. Duration 12 ms by bot id=8095621527
+2025.04.04 08:33:10 aiogram.event        INFO     Update id=511642824 is handled. Duration 14 ms by bot id=8095621527
+2025.04.04 08:33:20 aiogram.event        INFO     Update id=511642825 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 08:33:20 aiogram.event        INFO     Update id=511642826 is handled. Duration 6 ms by bot id=8095621527
+2025.04.04 08:33:26 aiogram.event        INFO     Update id=511642827 is handled. Duration 9 ms by bot id=8095621527
+2025.04.04 08:33:26 aiogram.event        INFO     Update id=511642828 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 08:33:33 aiogram.event        INFO     Update id=511642829 is handled. Duration 16 ms by bot id=8095621527
+2025.04.04 08:33:38 aiogram.event        INFO     Update id=511642830 is handled. Duration 10 ms by bot id=8095621527
+2025.04.04 08:33:40 aiogram.event        INFO     Update id=511642831 is handled. Duration 9 ms by bot id=8095621527
+2025.04.04 08:33:43 aiogram.event        INFO     Update id=511642832 is handled. Duration 8 ms by bot id=8095621527
+2025.04.04 08:33:46 aiogram.event        INFO     Update id=511642833 is handled. Duration 6 ms by bot id=8095621527
+2025.04.04 08:33:51 aiogram.event        INFO     Update id=511642834 is handled. Duration 8 ms by bot id=8095621527
+2025.04.04 08:33:56 aiogram.event        INFO     Update id=511642835 is handled. Duration 10 ms by bot id=8095621527
+2025.04.04 08:34:00 aiogram.event        INFO     Update id=511642836 is handled. Duration 12 ms by bot id=8095621527
+2025.04.04 08:34:01 aiogram.event        INFO     Update id=511642837 is handled. Duration 9 ms by bot id=8095621527
+2025.04.04 08:34:06 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 08:34:06 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.04.04 08:34:06 aiogram.event        INFO     Update id=511642839 is handled. Duration 122 ms by bot id=8095621527
+2025.04.04 08:34:07 aiogram.event        INFO     Update id=511642840 is handled. Duration 8 ms by bot id=8095621527
+2025.04.04 08:34:10 aiogram.event        INFO     Update id=511642838 is handled. Duration 4068 ms by bot id=8095621527
+2025.04.04 08:34:11 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 08:34:11 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2025.04.04 08:34:12 aiogram.event        INFO     Update id=511642842 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 08:34:16 aiogram.event        INFO     Update id=511642841 is handled. Duration 5376 ms by bot id=8095621527
+2025.04.04 08:34:17 aiogram.event        INFO     Update id=511642843 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 08:34:23 aiogram.event        INFO     Update id=511642844 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 08:34:28 aiogram.event        INFO     Update id=511642845 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 08:34:31 aiogram.event        INFO     Update id=511642846 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:34:33 aiogram.event        INFO     Update id=511642847 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:34:40 aiogram.event        INFO     Update id=511642848 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 08:34:43 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 08:34:43 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2025.04.04 08:34:46 aiogram.event        INFO     Update id=511642849 is handled. Duration 2921 ms by bot id=8095621527
+2025.04.04 08:34:48 aiogram.event        INFO     Update id=511642850 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 08:34:54 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.04.04 08:34:54 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2025.04.04 08:34:59 aiogram.event        INFO     Update id=511642851 is handled. Duration 4778 ms by bot id=8095621527
+2025.04.04 08:35:24 aiogram.event        INFO     Update id=511642852 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 08:37:11 aiogram.event        INFO     Update id=511642853 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:37:16 aiogram.event        INFO     Update id=511642854 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 08:37:25 aiogram.event        INFO     Update id=511642855 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:37:51 aiogram.event        INFO     Update id=511642856 is not handled. Duration 0 ms by bot id=8095621527
+2025.04.04 08:38:12 aiogram.event        INFO     Update id=511642857 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:42:16 aiogram.event        INFO     Update id=511642858 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 08:42:23 aiogram.event        INFO     Update id=511642859 is handled. Duration 86 ms by bot id=8095621527
+2025.04.04 08:42:26 aiogram.event        INFO     Update id=511642860 is handled. Duration 190 ms by bot id=8095621527
+2025.04.04 08:42:28 aiogram.event        INFO     Update id=511642861 is handled. Duration 168 ms by bot id=8095621527
+2025.04.04 08:42:29 aiogram.event        INFO     Update id=511642862 is handled. Duration 78 ms by bot id=8095621527
+2025.04.04 08:42:43 aiogram.event        INFO     Update id=511642863 is handled. Duration 87 ms by bot id=8095621527
+2025.04.04 08:42:49 aiogram.event        INFO     Update id=511642864 is handled. Duration 136 ms by bot id=8095621527
+2025.04.04 08:43:58 aiogram.event        INFO     Update id=511642865 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:46:01 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 08:46:01 aiogram.event        INFO     Update id=511642866 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:46:29 aiogram.event        INFO     Update id=511642867 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:47:02 aiogram.event        INFO     Update id=511642868 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:47:34 aiogram.event        INFO     Update id=511642869 is handled. Duration 196 ms by bot id=8095621527
+2025.04.04 08:47:36 aiogram.event        INFO     Update id=511642870 is handled. Duration 65 ms by bot id=8095621527
+2025.04.04 08:47:38 aiogram.event        INFO     Update id=511642871 is handled. Duration 61 ms by bot id=8095621527
+2025.04.04 08:48:00 aiogram.event        INFO     Update id=511642872 is handled. Duration 50 ms by bot id=8095621527
+2025.04.04 08:48:00 aiogram.event        INFO     Update id=511642873 is handled. Duration 35 ms by bot id=8095621527
+2025.04.04 08:48:01 aiogram.event        INFO     Update id=511642874 is handled. Duration 61 ms by bot id=8095621527
+2025.04.04 08:48:06 aiogram.event        INFO     Update id=511642875 is handled. Duration 36 ms by bot id=8095621527
+2025.04.04 08:48:09 aiogram.event        INFO     Update id=511642876 is handled. Duration 63 ms by bot id=8095621527
+2025.04.04 08:48:11 aiogram.event        INFO     Update id=511642877 is handled. Duration 113 ms by bot id=8095621527
+2025.04.04 08:48:12 aiogram.event        INFO     Update id=511642878 is handled. Duration 53 ms by bot id=8095621527
+2025.04.04 08:48:13 aiogram.event        INFO     Update id=511642879 is handled. Duration 33 ms by bot id=8095621527
+2025.04.04 08:48:14 aiogram.event        INFO     Update id=511642880 is handled. Duration 51 ms by bot id=8095621527
+2025.04.04 08:48:23 aiogram.event        INFO     Update id=511642881 is handled. Duration 48 ms by bot id=8095621527
+2025.04.04 08:48:24 aiogram.event        INFO     Update id=511642882 is handled. Duration 36 ms by bot id=8095621527
+2025.04.04 08:48:26 aiogram.event        INFO     Update id=511642883 is handled. Duration 38 ms by bot id=8095621527
+2025.04.04 08:48:28 aiogram.event        INFO     Update id=511642884 is handled. Duration 67 ms by bot id=8095621527
+2025.04.04 08:48:31 aiogram.event        INFO     Update id=511642885 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 08:51:26 aiogram.event        INFO     Update id=511642886 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:52:16 aiogram.event        INFO     Update id=511642887 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 08:52:19 aiogram.event        INFO     Update id=511642888 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:52:21 aiogram.event        INFO     Update id=511642889 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 08:52:24 aiogram.event        INFO     Update id=511642890 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 08:53:04 aiogram.event        INFO     Update id=511642891 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 08:53:13 aiogram.event        INFO     Update id=511642892 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:54:37 aiogram.event        INFO     Update id=511642893 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:55:19 aiogram.event        INFO     Update id=511642894 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:55:20 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 08:55:20 aiogram.event        INFO     Update id=511642895 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 08:55:37 aiogram.event        INFO     Update id=511642896 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:56:05 aiogram.event        INFO     Update id=511642897 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:56:34 aiogram.event        INFO     Update id=511642898 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:57:14 aiogram.event        INFO     Update id=511642899 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:57:23 aiogram.event        INFO     Update id=511642900 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:57:37 aiogram.event        INFO     Update id=511642901 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:58:05 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 08:58:05 aiogram.event        INFO     Update id=511642902 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:58:08 aiogram.event        INFO     Update id=511642903 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:58:13 aiogram.event        INFO     Update id=511642904 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:58:15 aiogram.event        INFO     Update id=511642905 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:58:18 aiogram.event        INFO     Update id=511642906 is not handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:58:19 aiogram.event        INFO     Update id=511642907 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:58:37 aiogram.event        INFO     Update id=511642908 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:58:45 aiogram.event        INFO     Update id=511642909 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:58:58 aiogram.event        INFO     Update id=511642910 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:59:19 aiogram.event        INFO     Update id=511642911 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:59:30 aiogram.event        INFO     Update id=511642912 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:59:32 aiogram.event        INFO     Update id=511642913 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 08:59:42 aiogram.event        INFO     Update id=511642914 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 08:59:46 aiogram.event        INFO     Update id=511642915 is not handled. Duration 2 ms by bot id=8095621527
+2025.04.04 08:59:52 aiogram.event        INFO     Update id=511642916 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:00:00 aiogram.event        INFO     Update id=511642917 is not handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:00:14 aiogram.event        INFO     Update id=511642918 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:00:33 aiogram.event        INFO     Update id=511642919 is not handled. Duration 3 ms by bot id=8095621527
+2025.04.04 09:00:49 aiogram.event        INFO     Update id=511642920 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:01:15 aiogram.event        INFO     Update id=511642921 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 09:02:14 aiogram.event        INFO     Update id=511642922 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 09:02:14 aiogram.event        INFO     Update id=511642923 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 09:02:14 aiogram.event        INFO     Update id=511642924 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 09:02:14 aiogram.event        INFO     Update id=511642925 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 09:03:19 aiogram.event        INFO     Update id=511642926 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 09:03:19 aiogram.event        INFO     Update id=511642927 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 09:03:41 aiogram.event        INFO     Update id=511642928 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 09:03:41 aiogram.event        INFO     Update id=511642929 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 09:03:41 aiogram.event        INFO     Update id=511642930 is handled. Duration 6 ms by bot id=8095621527
+2025.04.04 09:03:41 aiogram.event        INFO     Update id=511642931 is handled. Duration 6 ms by bot id=8095621527
+2025.04.04 09:03:41 aiogram.event        INFO     Update id=511642932 is handled. Duration 6 ms by bot id=8095621527
+2025.04.04 09:03:45 aiogram.event        INFO     Update id=511642933 is handled. Duration 13 ms by bot id=8095621527
+2025.04.04 09:03:45 aiogram.event        INFO     Update id=511642934 is handled. Duration 12 ms by bot id=8095621527
+2025.04.04 09:03:45 aiogram.event        INFO     Update id=511642935 is handled. Duration 13 ms by bot id=8095621527
+2025.04.04 09:03:45 aiogram.event        INFO     Update id=511642936 is handled. Duration 13 ms by bot id=8095621527
+2025.04.04 09:04:04 aiogram.event        INFO     Update id=511642937 is handled. Duration 25 ms by bot id=8095621527
+2025.04.04 09:04:04 aiogram.event        INFO     Update id=511642938 is handled. Duration 16 ms by bot id=8095621527
+2025.04.04 09:04:04 aiogram.event        INFO     Update id=511642939 is handled. Duration 13 ms by bot id=8095621527
+2025.04.04 09:04:04 aiogram.event        INFO     Update id=511642940 is handled. Duration 11 ms by bot id=8095621527
+2025.04.04 09:04:04 aiogram.event        INFO     Update id=511642941 is handled. Duration 10 ms by bot id=8095621527
+2025.04.04 09:04:04 aiogram.event        INFO     Update id=511642942 is handled. Duration 10 ms by bot id=8095621527
+2025.04.04 09:04:04 aiogram.event        INFO     Update id=511642943 is handled. Duration 10 ms by bot id=8095621527
+2025.04.04 09:04:04 aiogram.event        INFO     Update id=511642944 is handled. Duration 11 ms by bot id=8095621527
+2025.04.04 09:04:04 aiogram.event        INFO     Update id=511642945 is handled. Duration 9 ms by bot id=8095621527
+2025.04.04 09:04:04 aiogram.event        INFO     Update id=511642946 is handled. Duration 9 ms by bot id=8095621527
+2025.04.04 09:05:03 aiogram.event        INFO     Update id=511642947 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 09:05:03 aiogram.event        INFO     Update id=511642948 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 09:05:03 aiogram.event        INFO     Update id=511642949 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 09:05:13 aiogram.event        INFO     Update id=511642950 is handled. Duration 6 ms by bot id=8095621527
+2025.04.04 09:05:13 aiogram.event        INFO     Update id=511642951 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 09:05:13 aiogram.event        INFO     Update id=511642952 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 09:05:22 aiogram.event        INFO     Update id=511642953 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:08:36 aiogram.event        INFO     Update id=511642955 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 09:08:36 aiogram.event        INFO     Update id=511642954 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 09:08:36 aiogram.event        INFO     Update id=511642956 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 09:08:39 aiogram.event        INFO     Update id=511642958 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:08:39 aiogram.event        INFO     Update id=511642957 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 09:08:39 aiogram.event        INFO     Update id=511642959 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 09:10:11 aiogram.event        INFO     Update id=511642960 is handled. Duration 21 ms by bot id=8095621527
+2025.04.04 09:10:11 aiogram.event        INFO     Update id=511642961 is handled. Duration 22 ms by bot id=8095621527
+2025.04.04 09:10:11 aiogram.event        INFO     Update id=511642962 is handled. Duration 20 ms by bot id=8095621527
+2025.04.04 09:10:11 aiogram.event        INFO     Update id=511642963 is handled. Duration 20 ms by bot id=8095621527
+2025.04.04 09:10:11 aiogram.event        INFO     Update id=511642964 is handled. Duration 21 ms by bot id=8095621527
+2025.04.04 09:10:11 aiogram.event        INFO     Update id=511642965 is handled. Duration 21 ms by bot id=8095621527
+2025.04.04 09:10:11 aiogram.event        INFO     Update id=511642966 is handled. Duration 21 ms by bot id=8095621527
+2025.04.04 09:10:11 aiogram.event        INFO     Update id=511642967 is handled. Duration 22 ms by bot id=8095621527
+2025.04.04 09:10:11 aiogram.event        INFO     Update id=511642968 is handled. Duration 22 ms by bot id=8095621527
+2025.04.04 09:10:59 aiogram.event        INFO     Update id=511642969 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:10:59 aiogram.event        INFO     Update id=511642970 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:11:07 aiogram.event        INFO     Update id=511642971 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:11:28 aiogram.event        INFO     Update id=511642972 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 09:11:43 aiogram.event        INFO     Update id=511642973 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:12:25 aiogram.event        INFO     Update id=511642974 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:13:58 aiogram.event        INFO     Update id=511642975 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:14:39 aiogram.event        INFO     Update id=511642976 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:15:19 aiogram.event        INFO     Update id=511642977 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:15:23 aiogram.event        INFO     Update id=511642979 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 09:15:23 aiogram.event        INFO     Update id=511642978 is handled. Duration 6 ms by bot id=8095621527
+2025.04.04 09:15:23 aiogram.event        INFO     Update id=511642980 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 09:15:23 aiogram.event        INFO     Update id=511642981 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 09:15:34 aiogram.event        INFO     Update id=511642983 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 09:15:34 aiogram.event        INFO     Update id=511642982 is handled. Duration 6 ms by bot id=8095621527
+2025.04.04 09:15:34 aiogram.event        INFO     Update id=511642984 is handled. Duration 6 ms by bot id=8095621527
+2025.04.04 09:15:34 aiogram.event        INFO     Update id=511642985 is handled. Duration 6 ms by bot id=8095621527
+2025.04.04 09:16:02 aiogram.event        INFO     Update id=511642986 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:16:11 aiogram.event        INFO     Update id=511642987 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:16:15 aiogram.event        INFO     Update id=511642988 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:16:37 aiogram.event        INFO     Update id=511642989 is not handled. Duration 0 ms by bot id=8095621527
+2025.04.04 09:18:08 aiogram.event        INFO     Update id=511642990 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 09:18:08 aiogram.event        INFO     Update id=511642991 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 09:18:28 aiogram.event        INFO     Update id=511642992 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 09:18:28 aiogram.event        INFO     Update id=511642993 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 09:18:28 aiogram.event        INFO     Update id=511642994 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 09:18:51 aiogram.event        INFO     Update id=511642995 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:18:51 aiogram.event        INFO     Update id=511642996 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:18:51 aiogram.event        INFO     Update id=511642997 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:18:55 aiogram.event        INFO     Update id=511642998 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:19:10 aiogram.event        INFO     Update id=511642999 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:19:11 aiogram.event        INFO     Update id=511643000 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 09:19:11 aiogram.event        INFO     Update id=511643001 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 09:19:29 middleware           INFO     🚫 Blocked request from suspended chat -1002527509114
+2025.04.04 09:19:29 aiogram.event        INFO     Update id=511643002 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:19:40 aiogram.event        INFO     Update id=511643003 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:20:18 aiogram.event        INFO     Update id=511643004 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:20:54 aiogram.event        INFO     Update id=511643005 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:21:09 aiogram.event        INFO     Update id=511643006 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:22:40 aiogram.event        INFO     Update id=511643007 is not handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:22:44 aiogram.event        INFO     Update id=511643008 is handled. Duration 23 ms by bot id=8095621527
+2025.04.04 09:22:44 aiogram.event        INFO     Update id=511643009 is handled. Duration 22 ms by bot id=8095621527
+2025.04.04 09:22:44 aiogram.event        INFO     Update id=511643010 is handled. Duration 23 ms by bot id=8095621527
+2025.04.04 09:22:44 aiogram.event        INFO     Update id=511643011 is handled. Duration 23 ms by bot id=8095621527
+2025.04.04 09:22:44 aiogram.event        INFO     Update id=511643012 is handled. Duration 23 ms by bot id=8095621527
+2025.04.04 09:22:44 aiogram.event        INFO     Update id=511643013 is handled. Duration 23 ms by bot id=8095621527
+2025.04.04 09:22:44 aiogram.event        INFO     Update id=511643014 is handled. Duration 23 ms by bot id=8095621527
+2025.04.04 09:22:44 aiogram.event        INFO     Update id=511643015 is handled. Duration 24 ms by bot id=8095621527
+2025.04.04 09:22:44 aiogram.event        INFO     Update id=511643016 is handled. Duration 24 ms by bot id=8095621527
+2025.04.04 09:22:44 aiogram.event        INFO     Update id=511643017 is handled. Duration 24 ms by bot id=8095621527
+2025.04.04 09:22:47 aiogram.event        INFO     Update id=511643018 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:23:01 aiogram.event        INFO     Update id=511643019 is not handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:23:04 aiogram.event        INFO     Update id=511643020 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:23:36 aiogram.event        INFO     Update id=511643021 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:24:28 aiogram.event        INFO     Update id=511643022 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:24:58 aiogram.event        INFO     Update id=511643023 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:27:02 aiogram.event        INFO     Update id=511643024 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:27:13 aiogram.event        INFO     Update id=511643025 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:27:28 aiogram.event        INFO     Update id=511643026 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:27:31 aiogram.event        INFO     Update id=511643027 is not handled. Duration 3 ms by bot id=8095621527
+2025.04.04 09:27:35 aiogram.event        INFO     Update id=511643028 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:27:35 aiogram.event        INFO     Update id=511643029 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 09:27:35 aiogram.event        INFO     Update id=511643030 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 09:27:35 aiogram.event        INFO     Update id=511643031 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 09:27:35 aiogram.event        INFO     Update id=511643032 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 09:27:35 aiogram.event        INFO     Update id=511643033 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 09:27:35 aiogram.event        INFO     Update id=511643034 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 09:27:35 aiogram.event        INFO     Update id=511643035 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 09:27:35 aiogram.event        INFO     Update id=511643036 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 09:27:35 aiogram.event        INFO     Update id=511643037 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 09:27:35 aiogram.event        INFO     Update id=511643038 is handled. Duration 7 ms by bot id=8095621527
+2025.04.04 09:27:39 aiogram.event        INFO     Update id=511643039 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:27:43 aiogram.event        INFO     Update id=511643040 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:27:45 aiogram.event        INFO     Update id=511643041 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:27:56 aiogram.event        INFO     Update id=511643042 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 09:28:03 aiogram.event        INFO     Update id=511643043 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:29:33 aiogram.event        INFO     Update id=511643044 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:29:34 aiogram.event        INFO     Update id=511643045 is not handled. Duration 5 ms by bot id=8095621527
+2025.04.04 09:29:37 aiogram.event        INFO     Update id=511643046 is handled. Duration 14 ms by bot id=8095621527
+2025.04.04 09:29:45 aiogram.event        INFO     Update id=511643047 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:29:56 aiogram.event        INFO     Update id=511643048 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 09:30:02 aiogram.event        INFO     Update id=511643049 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:30:32 aiogram.event        INFO     Update id=511643050 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:30:39 aiogram.event        INFO     Update id=511643051 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:30:42 aiogram.event        INFO     Update id=511643052 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:30:46 aiogram.event        INFO     Update id=511643053 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:31:22 aiogram.event        INFO     Update id=511643054 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:31:24 aiogram.event        INFO     Update id=511643055 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:31:34 aiogram.event        INFO     Update id=511643056 is handled. Duration 9 ms by bot id=8095621527
+2025.04.04 09:31:34 aiogram.event        INFO     Update id=511643057 is handled. Duration 10 ms by bot id=8095621527
+2025.04.04 09:31:34 aiogram.event        INFO     Update id=511643058 is handled. Duration 9 ms by bot id=8095621527
+2025.04.04 09:31:34 aiogram.event        INFO     Update id=511643059 is handled. Duration 10 ms by bot id=8095621527
+2025.04.04 09:31:34 aiogram.event        INFO     Update id=511643060 is handled. Duration 10 ms by bot id=8095621527
+2025.04.04 09:31:34 aiogram.event        INFO     Update id=511643061 is handled. Duration 10 ms by bot id=8095621527
+2025.04.04 09:31:34 aiogram.event        INFO     Update id=511643062 is handled. Duration 10 ms by bot id=8095621527
+2025.04.04 09:31:34 aiogram.event        INFO     Update id=511643063 is handled. Duration 10 ms by bot id=8095621527
+2025.04.04 09:31:34 aiogram.event        INFO     Update id=511643064 is handled. Duration 10 ms by bot id=8095621527
+2025.04.04 09:31:34 aiogram.event        INFO     Update id=511643065 is handled. Duration 11 ms by bot id=8095621527
+2025.04.04 09:31:34 aiogram.event        INFO     Update id=511643066 is handled. Duration 11 ms by bot id=8095621527
+2025.04.04 09:31:34 aiogram.event        INFO     Update id=511643067 is handled. Duration 11 ms by bot id=8095621527
+2025.04.04 09:31:34 aiogram.event        INFO     Update id=511643068 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:31:38 aiogram.event        INFO     Update id=511643069 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:31:43 aiogram.event        INFO     Update id=511643070 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 09:31:47 aiogram.event        INFO     Update id=511643071 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:31:48 aiogram.event        INFO     Update id=511643072 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:31:50 aiogram.event        INFO     Update id=511643073 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 09:31:51 aiogram.event        INFO     Update id=511643074 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:31:55 aiogram.event        INFO     Update id=511643075 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:32:03 aiogram.event        INFO     Update id=511643076 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:32:05 aiogram.event        INFO     Update id=511643077 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:32:16 aiogram.event        INFO     Update id=511643078 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 09:32:33 aiogram.event        INFO     Update id=511643079 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:32:44 aiogram.event        INFO     Update id=511643080 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:32:46 aiogram.event        INFO     Update id=511643081 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:32:47 aiogram.event        INFO     Update id=511643082 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:32:51 aiogram.event        INFO     Update id=511643083 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 09:33:02 aiogram.event        INFO     Update id=511643084 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:33:11 aiogram.event        INFO     Update id=511643085 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:33:11 aiogram.event        INFO     Update id=511643086 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:33:16 aiogram.event        INFO     Update id=511643087 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 09:33:17 aiogram.event        INFO     Update id=511643088 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 09:33:20 aiogram.event        INFO     Update id=511643089 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:33:20 aiogram.event        INFO     Update id=511643090 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:33:26 aiogram.event        INFO     Update id=511643091 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:33:27 aiogram.event        INFO     Update id=511643092 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:33:32 aiogram.event        INFO     Update id=511643093 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:33:47 aiogram.event        INFO     Update id=511643094 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:35:38 aiogram.event        INFO     Update id=511643095 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:37:08 aiogram.event        INFO     Update id=511643096 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 09:37:08 aiogram.event        INFO     Update id=511643097 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 09:37:08 aiogram.event        INFO     Update id=511643098 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 09:37:08 aiogram.event        INFO     Update id=511643099 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 09:37:08 aiogram.event        INFO     Update id=511643100 is handled. Duration 5 ms by bot id=8095621527
+2025.04.04 09:38:12 aiogram.event        INFO     Update id=511643101 is not handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:41:21 aiogram.event        INFO     Update id=511643102 is handled. Duration 8 ms by bot id=8095621527
+2025.04.04 09:43:12 aiogram.event        INFO     Update id=511643103 is not handled. Duration 0 ms by bot id=8095621527
+2025.04.04 09:46:45 aiogram.event        INFO     Update id=511643104 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:46:48 aiogram.event        INFO     Update id=511643105 is handled. Duration 3 ms by bot id=8095621527
+2025.04.04 09:47:13 aiogram.event        INFO     Update id=511643106 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:49:05 aiogram.event        INFO     Update id=511643107 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:49:07 aiogram.event        INFO     Update id=511643108 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:49:11 aiogram.event        INFO     Update id=511643109 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:49:21 aiogram.event        INFO     Update id=511643110 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:49:39 aiogram.event        INFO     Update id=511643111 is not handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:49:43 aiogram.event        INFO     Update id=511643112 is handled. Duration 2 ms by bot id=8095621527
+2025.04.04 09:49:48 aiogram.event        INFO     Update id=511643113 is handled. Duration 4 ms by bot id=8095621527
+2025.04.04 09:49:53 aiogram.event        INFO     Update id=511643114 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:49:57 aiogram.event        INFO     Update id=511643115 is handled. Duration 1 ms by bot id=8095621527
+2025.04.04 09:50:09 aiogram.event        INFO     Update id=511643116 is not handled. Duration 4 ms by bot id=8095621527
+2025.04.04 09:52:55 aiogram.dispatcher   WARNING  Received SIGINT signal
+2025.04.04 09:52:55 aiogram.dispatcher   INFO     Polling stopped for bot @dllmasterbot id=8095621527 - 'DLLMaster for Music'
+2025.04.04 09:52:55 aiogram.dispatcher   INFO     Polling stopped
+2025.04.04 09:52:55 __main__             INFO     🛑 Polling stopped
+2025.04.04 09:52:55 __main__             INFO     🔴 Bot stopped

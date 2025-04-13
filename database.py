@@ -6,10 +6,8 @@ from typing import Optional, List, Dict, Any
 
 class Database:
     def __init__(self):
-        # Qovluqları yoxla və yoxdursa yarat
-        self.logs_dir = "logs"
+        # Qovluqları yoxla və yoxdursa yarat"
         self.stats_dir = "stats"
-        os.makedirs(self.logs_dir, exist_ok=True)
         os.makedirs(self.stats_dir, exist_ok=True)
 
         # Stats verilənlər bazası (stats.db)
@@ -18,19 +16,9 @@ class Database:
         self._initialize_stats_tables()
         self.create_songs_table()
 
-        # Log verilənlər bazası (logs-il-ay-gün.db)
-        self.logs_db_path = self._get_logs_db_path()
-        self.logs_conn = self._create_connection(self.logs_db_path)
-        self._initialize_logs_tables()
-
     def _create_connection(self, db_path: str) -> sqlite3.Connection:
         """SQLite verilənlər bazası ilə əlaqə yaradır."""
         return sqlite3.connect(db_path)
-
-    def _get_logs_db_path(self) -> str:
-        """Hər gün üçün yeni bir log verilənlər bazası yolu yaradır."""
-        today = datetime.now().strftime("%Y-%m-%d")
-        return os.path.join(self.logs_dir, f"logs-{today}.db")
 
     def _initialize_stats_tables(self):
         """Stats verilənlər bazası üçün cədvəlləri yaradır."""
@@ -68,6 +56,13 @@ class Database:
             )
         ''')
 
+        # sudo_users cədvəlini düzəldin (əlavə vergini silin)
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS sudo_users (
+                user_id INTEGER PRIMARY KEY
+            )
+        ''')
+        
         # Sütunları avtomatik yoxla və əlavə et
         self._ensure_columns_exist("users", [
             ("message_count", "INTEGER DEFAULT 0"),
@@ -80,6 +75,29 @@ class Database:
 
         self.stats_conn.commit()
 
+    def add_sudo_user(self, user_id: int):
+        cursor = self.stats_conn.cursor()
+        cursor.execute("INSERT OR IGNORE INTO sudo_users (user_id) VALUES (?)", (user_id,))
+        self.stats_conn.commit()
+
+    def remove_sudo_user(self, user_id: int):
+        cursor = self.stats_conn.cursor()
+        cursor.execute("DELETE FROM sudo_users WHERE user_id = ?", (user_id,))
+        self.stats_conn.commit()
+
+    def get_sudo_users(self) -> List[int]:
+        cursor = self.stats_conn.cursor()
+        cursor.execute("SELECT user_id FROM sudo_users")
+        return [row[0] for row in cursor.fetchall()]
+
+
+    def get_user_info(self, user_id: int) -> Optional[Dict[str, Any]]:
+        """İstifadəçi məlumatlarını qaytarar"""
+        cursor = self.stats_conn.cursor()
+        cursor.execute("SELECT username FROM users WHERE user_id = ?", (user_id,))
+        result = cursor.fetchone()
+        return {"username": result[0]} if result else None
+    
     def create_songs_table(self):
         """Mahnı yükləmələri üçün cədvəl yaradır."""
         cursor = self.stats_conn.cursor()
@@ -95,32 +113,6 @@ class Database:
             )
         ''')
         self.stats_conn.commit()
-
-    def _initialize_logs_tables(self):
-        """Log verilənlər bazası üçün cədvəlləri yaradır."""
-        cursor = self.logs_conn.cursor()
-
-        # logs cədvəlini yaradın
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS logs (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                timestamp TEXT,
-                level TEXT,
-                message TEXT,
-                user_id INTEGER,
-                group_id INTEGER,
-                command TEXT
-            )
-        ''')
-
-        # Sütunları avtomatik yoxla və əlavə et
-        self._ensure_columns_exist("logs", [
-            ("user_id", "INTEGER"),
-            ("group_id", "INTEGER"),
-            ("command", "TEXT")
-        ])
-
-        self.logs_conn.commit()
 
     def _ensure_columns_exist(self, table_name: str, columns: List[tuple]):
         """Verilən cədvəldə sütunların olub-olmadığını yoxlayır və yoxdursa əlavə edir."""
@@ -180,45 +172,6 @@ class Database:
         self.increment_user_song_download_count(user_id)
         self.stats_conn.commit()
 
-    def add_log(self, level: str, message: str, user_id: Optional[int] = None, 
-               group_id: Optional[int] = None, command: Optional[str] = None):
-        """Botda baş verən hadisəni log verilənlər bazasına əlavə edir."""
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        cursor = self.logs_conn.cursor()
-        cursor.execute(
-            "INSERT INTO logs (timestamp, level, message, user_id, group_id, command) VALUES (?, ?, ?, ?, ?, ?)",
-            (timestamp, level, message, user_id, group_id, command)
-        )
-        self.logs_conn.commit()
-
-    def log_command_usage(self, command: str, user_id: Optional[int] = None, group_id: Optional[int] = None):
-        """İstifadə edilən əmri qeyd edir."""
-        self.add_log(
-            level="INFO",
-            message=f"Command used: {command}",
-            user_id=user_id,
-            group_id=group_id,
-            command=command
-        )
-
-    def log_error(self, error_message: str, user_id: Optional[int] = None, group_id: Optional[int] = None):
-        """Xəta mesajını qeyd edir."""
-        self.add_log(
-            level="ERROR",
-            message=error_message,
-            user_id=user_id,
-            group_id=group_id
-        )
-
-    def log_bot_event(self, event: str, details: str = "", user_id: Optional[int] = None, group_id: Optional[int] = None):
-        """Bot hadisəsini qeyd edir."""
-        self.add_log(
-            level="INFO",
-            message=f"Event: {event}. Details: {details}",
-            user_id=user_id,
-            group_id=group_id
-        )
-
     def get_all_groups(self) -> List[Dict[str, Any]]:
         """Bütün qrupları stats verilənlər bazasından qaytarır."""
         cursor = self.stats_conn.cursor()
@@ -259,20 +212,6 @@ class Database:
             "download_date": row[4]
         } for row in cursor.fetchall()]
 
-    def get_logs(self) -> List[Dict[str, Any]]:
-        """Bütün logları log verilənlər bazasından qaytarır."""
-        cursor = self.logs_conn.cursor()
-        cursor.execute("SELECT timestamp, level, message, user_id, group_id, command FROM logs")
-        return [{
-            "timestamp": row[0],
-            "level": row[1],
-            "message": row[2],
-            "user_id": row[3],
-            "group_id": row[4],
-            "command": row[5]
-        } for row in cursor.fetchall()]
-
     def close(self):
         """Bütün verilənlər bazası əlaqələrini bağlayır."""
         self.stats_conn.close()
-        self.logs_conn.close()

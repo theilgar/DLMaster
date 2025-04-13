@@ -9,11 +9,13 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Bütün pluginlərdə:
 def setup(context):
     dp = context.dp
-    sudo_users = context.sudo_users
+    db = context.db  # Əlavə edilir
+    sudo_users = db.get_sudo_users()  # Köhnə context.sudo_users əvəzinə
     creator_id = context.creator_id
-
+    
     @dp.callback_query(F.data == "alive_cmd")
     async def alive_cmd_callback(callback: types.CallbackQuery):
         user_id = callback.from_user.id
@@ -60,8 +62,4 @@ def setup(context):
 
         # Köhnə mesajı yenisi ilə əvəz edirik (HTML parse_mode ilə)
         await callback.message.edit_text("\n".join(response), reply_markup=keyboard.as_markup(), parse_mode="HTML")
-<<<<<<< HEAD
         await callback.answer()
-=======
-        await callback.answer()
->>>>>>> b2ab0ed (v1.3 tested update)
