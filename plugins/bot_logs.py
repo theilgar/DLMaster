@@ -39,13 +39,6 @@ async def send_log_command(message: types.Message):
                 caption=f"📅 Log faylı: {os.path.basename(latest_file)}"
             )
             
-        if context.db:
-            context.db.add_log(
-                level="INFO",
-                user_id=message.from_user.id,
-                message=f"/log əmri istifadə edildi. Fayl: {latest_file}"
-            )
-
     except Exception as e:
         logger.error(f"Log göndərilmədi: {str(e)}", exc_info=True)
         await message.reply(f"❌ Xəta: {str(e)}")

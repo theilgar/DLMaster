@@ -103,15 +103,19 @@ class AppContext:
         self.spotify = None
         self.youtube = None
         self.youtube_playlist = None
+        self.bot.data = {'app_context': self}  # Add this line
+        self.sudo_users = []
 
 
         # Database initialization
         try:
             self.db = Database()
             logger.info("✅ Database initialized successfully")
+            self.sudo_users = self.db.get_sudo_users()
         except Exception as e:
             logger.error(f"❌ Database initialization failed: {str(e)}")
             self.db = None
+            self.sudo_users = []  # Fallback to empty list
 
         # Create download directory if not exists
         os.makedirs("download", exist_ok=True)
