@@ -1,9 +1,11 @@
 import re
 import os
-import asyncio
 import logging
-from yt_dlp import YoutubeDL
-from core.webprofile import get_cookies_from_browser, get_random_user_agent
+import importlib
+import asyncio
+from aiogram import BaseMiddleware
+from aiogram.types import Message
+from typing import Callable, Dict, Any
 
 logger = logging.getLogger(__name__)
 
@@ -27,60 +29,73 @@ def format_duration(seconds: int, is_ms: bool = False) -> str:
         logger.error(f"Vaxt formatlama xətası: {e}")
         return "00:00"
 
-class YoutubeManager:
-    def __init__(self, browser: str = "firefox"):
-        self.browser = browser
+def clean_song_title(title: str) -> str:
+    noise_keywords = [
+        r'official(?:\s+(audio|video|music\s*video|visualizer))?',
+        r'video', r'music', r'lyrics?', r'audio', r'hq', r'hd',
+        r'4k', r'8k', r'1080p', r'720p', r'live', r'extended', r'version', r'edit', r'mix', r'ultra',
+        r'performance', r'cover', r'session', r'karaoke', r'instrumental'
+    ]
+    # Mötərizədəki sözləri sil
+    title = re.sub(
+        rf'(?i)[\[\(\{{]?\s*(?:{"|".join(noise_keywords)})\s*[\]\)\}}]?',
+        '',
+        title
+    )
 
-    def get_ydl_opts(self):
-        return {
-            'format': 'bestaudio',
-            'extract_flat': True,
-            'quiet': True,
-            'socket_timeout': 30,
-            'cookiesfrombrowser': get_cookies_from_browser(self.browser),
-            'proxy': 'socks5://127.0.0.1:9050',
-            'headers': {
-                'User-Agent': get_random_user_agent()
-            }
-        }
+    # Mötərizədəki digər sözləri də sil (ümumi təmizlik üçün)
+    title = re.sub(r'[\[\(\{].*?[\]\)\}]', '', title)
 
-    async def youtube_search(self, query: str) -> list:
-        """
-        YouTube-da axtarış edir və nəticələri qaytarır.
-        """
+    # İlləri sil (1900–2099 arası)
+    title = re.sub(r'\b(19|20)\d{2}\b', '', title)
+
+    # Ayırıcıları boşluqla əvəz et
+    title = re.sub(r'\s*[\|]+\s*', ' ', title)
+
+    # Çoxlu boşluqları tək boşluqla əvəz et
+    title = re.sub(r'\s{2,}', ' ', title).strip()
+
+    return title
+
+async def load_plugins(context):
+    plugins_dir = "plugins"
+    logger.info(f"🔍 Scanning plugins in: {plugins_dir}")
+    
+    for filename in os.listdir(plugins_dir):
+        if filename.endswith(".py") and filename != "__init__.py":
+            module_name = f"{plugins_dir}.{filename[:-3]}"
+            logger.info(f"🔄 Loading: {module_name}")
+            
+            try:
+                module = importlib.import_module(module_name)
+                if hasattr(module, "setup"):
+                    if asyncio.iscoroutinefunction(module.setup):
+                        await module.setup(context)
+                        logger.info(f"✅ Loaded (async): {module_name}")
+                    else:
+                        module.setup(context)
+                        logger.info(f"✅ Loaded (sync): {module_name}")
+                else:
+                    logger.warning(f"⚠️ No setup() in: {module_name}")
+            except Exception as e:
+                logger.error(f"❌ Failed to load {module_name}: {str(e)}", exc_info=True)
+
+async def cleanup_downloads():
+    for filename in os.listdir("download"):
+        file_path = os.path.join("download", filename)
         try:
-            with YoutubeDL(self.get_ydl_opts()) as ydl:
-                info = await asyncio.to_thread(ydl.extract_info, f"ytsearch25:{query}", download=False)
-                return [{
-                    'title': entry.get('title', 'Naməlum Mahnı'),
-                    'url': entry.get('url', ''),
-                    'duration': format_duration(entry.get('duration', 0)),
-                    'raw_duration': entry.get('duration', 0)
-                } for entry in info.get('entries', []) if entry]
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
         except Exception as e:
-            logger.error(f"Axtarış xətası: {e}")
-            raise RuntimeError(f"Axtarış xətası: {str(e)}")
+            logger.error(f"Failed to delete {file_path}: {e}")
 
-    async def download_track(self, query: str, base_name: str) -> str:
-        ydl_opts = {
-            "format": "bestaudio[ext=m4a]",
-            "outtmpl": os.path.join("download", f"{base_name}.%(ext)s"),  # Updated path
-            "nopart": True,
-            "retries": 3,
-            "cookiesfrombrowser": get_cookies_from_browser(self.browser),
-            'proxy': 'socks5://127.0.0.1:9050',
-            "headers": {
-                'User-Agent': get_random_user_agent()
-            }
-        }
-        try:
-            with YoutubeDL(ydl_opts) as ydl:
-                await asyncio.to_thread(ydl.download, [query])
-                file_path = os.path.join("download", f"{base_name}.m4a")  # Updated path
-                if not os.path.exists(file_path):
-                    raise FileNotFoundError("Fayl yaradıla bilmədi")
-                return file_path
-        except Exception as e:
-            logger.error(f"Yükləmə xətası: {e}")
-            raise RuntimeError(f"Yükləmə xətası: {str(e)}")
-
+class CommandLoggerMiddleware(BaseMiddleware):
+    async def __call__(
+        self,
+        handler: Callable,
+        event: Message,
+        data: Dict[str, Any]
+    ) -> Any:
+        if event.text and event.text.startswith("/"):
+            logger.info(f"User {event.from_user.id} executed command: {event.text}")
+        return await handler(event, data)

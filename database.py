@@ -1,4 +1,3 @@
-# database.py
 import sqlite3
 import os
 from datetime import datetime
@@ -6,7 +5,7 @@ from typing import Optional, List, Dict, Any
 
 class Database:
     def __init__(self):
-        # Qovluqları yoxla və yoxdursa yarat"
+        # Qovluqları yoxla və yoxdursa yarat
         self.stats_dir = "stats"
         os.makedirs(self.stats_dir, exist_ok=True)
 
@@ -31,7 +30,8 @@ class Database:
                 user_id INTEGER UNIQUE,
                 username TEXT,
                 message_count INTEGER DEFAULT 0,
-                song_download_count INTEGER DEFAULT 0
+                song_download_count INTEGER DEFAULT 0,
+                is_premium INTEGER DEFAULT 0
             )
         ''')
 
@@ -56,7 +56,7 @@ class Database:
             )
         ''')
 
-        # sudo_users cədvəlini düzəldin (əlavə vergini silin)
+        # sudo_users cədvəlini düzəldin
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS sudo_users (
                 user_id INTEGER PRIMARY KEY
@@ -66,7 +66,8 @@ class Database:
         # Sütunları avtomatik yoxla və əlavə et
         self._ensure_columns_exist("users", [
             ("message_count", "INTEGER DEFAULT 0"),
-            ("song_download_count", "INTEGER DEFAULT 0")
+            ("song_download_count", "INTEGER DEFAULT 0"),
+            ("is_premium", "INTEGER DEFAULT 0")
         ])
 
         self._ensure_columns_exist("groups", [
@@ -90,13 +91,35 @@ class Database:
         cursor.execute("SELECT user_id FROM sudo_users")
         return [row[0] for row in cursor.fetchall()]
 
+    def set_premium_user(self, user_id: int, is_premium: bool = True):
+        """İstifadəçinin premium statusunu təyin edir"""
+        cursor = self.stats_conn.cursor()
+        cursor.execute(
+            "UPDATE users SET is_premium = ? WHERE user_id = ?",
+            (1 if is_premium else 0, user_id)
+        )
+        self.stats_conn.commit()
+
+    def get_premium_users(self) -> List[int]:
+        """Premium istifadəçilərin siyahısını qaytarır"""
+        cursor = self.stats_conn.cursor()
+        cursor.execute("SELECT user_id FROM users WHERE is_premium = 1")
+        return [row[0] for row in cursor.fetchall()]
 
     def get_user_info(self, user_id: int) -> Optional[Dict[str, Any]]:
         """İstifadəçi məlumatlarını qaytarar"""
         cursor = self.stats_conn.cursor()
-        cursor.execute("SELECT username FROM users WHERE user_id = ?", (user_id,))
+        cursor.execute(
+            "SELECT username, is_premium FROM users WHERE user_id = ?", 
+            (user_id,)
+        )
         result = cursor.fetchone()
-        return {"username": result[0]} if result else None
+        if result:
+            return {
+                "username": result[0],
+                "is_premium": bool(result[1])
+            }
+        return None
     
     def create_songs_table(self):
         """Mahnı yükləmələri üçün cədvəl yaradır."""
@@ -181,8 +204,14 @@ class Database:
     def get_all_users(self) -> List[Dict[str, Any]]:
         """Bütün userləri stats verilənlər bazasından qaytarır."""
         cursor = self.stats_conn.cursor()
-        cursor.execute("SELECT user_id, username, message_count, song_download_count FROM users")
-        return [{"user_id": row[0], "username": row[1], "message_count": row[2], "song_download_count": row[3]} for row in cursor.fetchall()]
+        cursor.execute("SELECT user_id, username, message_count, song_download_count, is_premium FROM users")
+        return [{
+            "user_id": row[0], 
+            "username": row[1], 
+            "message_count": row[2], 
+            "song_download_count": row[3],
+            "is_premium": bool(row[4])
+        } for row in cursor.fetchall()]
 
     def get_user_song_history(self, user_id: int) -> List[Dict[str, Any]]:
         """İstifadəçinin yüklədiyi mahnıların tarixçəsini qaytarır."""
