@@ -21,7 +21,7 @@ class YoutubeManagerPlaylist:
             'quiet': True,
             'socket_timeout': 15,
             'cookiesfrombrowser': (self.browser,),  # self.browser istifadə edirik
-            'proxy': 'socks5://127.0.0.1:9050',
+            #'proxy': 'socks5://127.0.0.1:9050',
             'headers': {
                 'User-Agent': get_random_user_agent()
             }
@@ -63,7 +63,7 @@ class YoutubeManagerPlaylist:
             'noplaylist': True,
             'retries': 3,
             'cookiesfrombrowser': (self.browser,),  # self.browser istifadə edirik
-            'proxy': 'socks5://127.0.0.1:9050',
+            #'proxy': 'socks5://127.0.0.1:9050',
             'headers': {
                 'User-Agent': get_random_user_agent()
             }
@@ -99,7 +99,7 @@ class YoutubeManager:
             'quiet': True,
             'socket_timeout': 30,
             'cookiesfrombrowser': get_cookies_from_browser(self.browser),
-            'proxy': 'socks5://127.0.0.1:9050',
+            #'proxy': 'socks5://127.0.0.1:9050',
             'headers': {
                 'User-Agent': get_random_user_agent()
             }
@@ -129,7 +129,7 @@ class YoutubeManager:
             "nopart": True,
             "retries": 3,
             "cookiesfrombrowser": get_cookies_from_browser(self.browser),
-            'proxy': 'socks5://127.0.0.1:9050',
+            #'proxy': 'socks5://127.0.0.1:9050',
             "headers": {
                 'User-Agent': get_random_user_agent()
             }

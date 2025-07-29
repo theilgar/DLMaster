@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 def setup(context):
     dp = context.dp
     user_searches = context.user_searches
-    db = context.db
 
     if not hasattr(context, 'youtube_manager'):
         context.youtube_manager = YoutubeManager(browser="firefox")
@@ -36,7 +35,6 @@ def setup(context):
                 return
             
             user_id = message.from_user.id
-            username = message.from_user.username or "Naməlum"
 
             search_msg = await message.answer("<i>🔍 Axtarılır...</i>", parse_mode="HTML")
             results = await context.youtube_manager.youtube_search(search_query)
@@ -213,13 +211,9 @@ def setup(context):
                     'images': []
                 }
             }
-
+            
             with open(file_path, 'rb') as f:
-                # Check user status for caption
-                sudo_users = db.get_sudo_users()
-                creator_id = context.creator_id
-                current_user_id = callback.from_user.id
-                caption = "<i>via @dllmasterbot</i>" if current_user_id not in sudo_users and current_user_id != creator_id else None
+                caption = "<i>via @dllmasterbot</i>"
 
                 await callback.message.answer_audio(
                     audio=BufferedInputFile(f.read(), filename=os.path.basename(file_path)),
@@ -230,13 +224,6 @@ def setup(context):
                     caption=caption
                 )
 
-            db.add_song_download(
-                user_id=user_id,
-                song_title=track_data['name'],
-                artist=", ".join([a['name'] for a in track_data['artists']]),
-                source="youtube"
-            )
-            
             try:
                 await callback.message.bot.delete_message(callback.message.chat.id, user_data['search_message_id'])
             except Exception as e:

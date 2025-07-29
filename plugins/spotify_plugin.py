@@ -7,6 +7,7 @@ import os
 import logging
 
 logger = logging.getLogger(__name__)
+caption = "<i>via @dllmasterbot</i>"
 
 async def send_audio_with_retry(message, file_path, title, performer, duration, thumbnail_url, creator_info, max_retries=3):
     retries = 0
@@ -17,7 +18,9 @@ async def send_audio_with_retry(message, file_path, title, performer, duration, 
                 title=title[:64],
                 performer=performer[:64],
                 duration=duration,
-                thumbnail=types.URLInputFile(thumbnail_url) if thumbnail_url else None
+                thumbnail=types.URLInputFile(thumbnail_url) if thumbnail_url else None,
+                parse_mode="HTML",
+                caption=caption
             )
             return True
         except TelegramRetryAfter as e:
@@ -74,7 +77,7 @@ def setup(context):
     spotify = context.spotify
     active_tasks = context.active_tasks
     creator_info = context.creator_info
-    db = context.db
+
 
     async def process_spotify_playlist(message: types.Message, playlist_id: str, status_msg: types.Message = None, delay_task = None):
         user_id = message.from_user.id

@@ -15,28 +15,17 @@ logger = logging.getLogger(__name__)
 router = Router()
 CALLBACK_PREFIX = "start_"
 
-COMMANDS_TEXT = """
-🚀 <b>Əsas Komandalarım:</b>
-
-1. Spotify/Youtube playlist linki göndər - Playlistdən mahnıları yüklə
-2. <code>/music &lt;mahnı adı&gt;</code> - YouTubedən mahnı yüklə
-3. <code>/report &lt;mesaj&gt;</code> - Təklif və xətaları bildir
-
-📝 <i>Linklər və komandalar düzgün formatda olmalıdır!</i>
-"""
-
 GROUP_WELCOME_MESSAGE = """
-<b>Salam! 👋 Mən DLLMasterBot</b>
+<b>Salam! 👋 Mən DLLMaster Bot</b>
 
 • Youtube/Spotify playlistləri yükləyirəm
-• Fərdi mahnıları endirirəm
 
 🔧 <b>Tələb olunan yetkilər:</b>
 1. Mesaj silmə
 2. Media yükləmə
 3. Mesaj pinləmə
 
-Bot @ilgarrx tərəfindən yaradılmışdır 🚀
+Bot @illgaarr tərəfindən yaradılmışdır 🚀
 """
 
 async def setup(context):
@@ -58,14 +47,6 @@ async def send_start_message(message: types.Message, text: str, bot: Bot):
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="🤖 Botu qrupa əlavə et", 
               url=f"https://t.me/{bot_username}?startgroup=true")],
-            [InlineKeyboardButton(text="💬 Dəstək qrupu", 
-              url="https://t.me/dllmastercommunity")],
-            [InlineKeyboardButton(text="📋 Komandalar", 
-              callback_data=f"{CALLBACK_PREFIX}show_commands")],
-            [InlineKeyboardButton(text="📢 Yeniliklər", 
-              url="https://t.me/dllmasterupdates")],
-            [InlineKeyboardButton(text="🎵 Playlistlər", 
-              url="https://t.me/loudbaku")]
         ])
         
         gif_path = Path(__file__).parent/"patrick.gif"
@@ -87,27 +68,21 @@ async def send_start_message(message: types.Message, text: str, bot: Bot):
 async def start_command(message: types.Message):
     context = message.bot.data.get('app_context')
     bot = context.bot
-    db = context.db
     
     user_name = message.from_user.first_name or "Dostum"
     START_TEXT = f"""
-<b>Salam {user_name}! 👋 Mən DLLMasterBotam!</b>
+<b>Salam {user_name}! 👋 Mən DLLMaster Bot!</b>
 
 🎵 <b>Nələr edə bilirəm?</b>
 • YouTube/Spotify-dan mahnılar endirirəm
-• Playlistləri tam şəkildə yükləyirəm
-• Sürətli və keyfiyyətli yükləmə
 
 ⚡ <b>Necə istifadə edim?</b>
 1. Mahnı adı yaz və ya link göndər
 2. Playlist linki at (YouTube/Spotify)
 3. <code>/music &lt;mahnı adı&gt;</code> yaz
 
-Bot @ilgarrx tərəfindən yaradılmışdır 🚀
+Bot @illgaarr tərəfindən yaradılmışdır 🚀
 """
-    if hasattr(message, "rebooted"):
-        START_TEXT += "\n\n🔄 Bot yeniləndi!"
-
     if message.chat.type == "private":
         await send_start_message(message, START_TEXT, bot)
     else:
@@ -116,55 +91,10 @@ Bot @ilgarrx tərəfindən yaradılmışdır 🚀
             welcome_msg += "\n\n⚠️ <b>XƏBƏRDARLIQ:</b> Admin yetkiləri verilməyib!"
         await message.reply(welcome_msg, parse_mode="HTML")
 
-    try:
-        user = message.from_user
-        db.add_user(user.id, user.username or user.first_name or "Anonim")
-        if message.chat.type != "private":
-            db.add_group(message.chat.id, message.chat.title)
-            db.add_group_user(message.chat.id, user.id)
-    except Exception as e:
-        logger.error(f"DB xətası: {e}")
-
-@router.callback_query(F.data == f"{CALLBACK_PREFIX}show_commands")
-async def show_commands(callback: CallbackQuery):
-    try:
-        keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="🔙 Əsas menyu", 
-              callback_data=f"{CALLBACK_PREFIX}back_to_start")]
-        ])
-        await callback.message.edit_text(COMMANDS_TEXT, parse_mode="HTML", reply_markup=keyboard)
-        await callback.answer()
-    except Exception as e:
-        logger.error(f"Komandalar xətası: {e}")
-        await callback.answer("❌ Xəta baş verdi!", show_alert=True)
-
-@router.callback_query(F.data == f"{CALLBACK_PREFIX}back_to_start")
-async def back_to_start(callback: CallbackQuery):
-    context = callback.bot.data.get('app_context')
-    user_name = callback.from_user.first_name or "Dostum"
-    START_TEXT = f"""
-<b>Salam {user_name}! 👋 Mən DLLMasterBotam!</b>
-
-🎵 <b>Nələr edə bilirəm?</b>
-• YouTube/Spotify-dan mahnılar endirirəm
-• Playlistləri tam şəkildə yükləyirəm
-• Sürətli və keyfiyyətli yükləmə
-
-⚡ <b>Necə istifadə edim?</b>
-1. Mahnı adı yaz və ya link göndər
-2. Playlist linki at (YouTube/Spotify)
-3. <code>/music &lt;mahnı adı&gt;</code> yaz
-
-Bot @ilgarrx tərəfindən yaradılmışdır 🚀
-"""
-    await send_start_message(callback.message, START_TEXT, context.bot)
-    await callback.answer()
-
 @router.my_chat_member(ChatMemberUpdatedFilter(member_status_changed=True))
 async def on_bot_added(event: ChatMemberUpdated):
     context = event.bot.data.get('app_context')
     bot = context.bot
-    db = context.db
     
     # Only handle group/supergroup events
     if event.chat.type not in ["group", "supergroup"]:
@@ -192,7 +122,7 @@ Mən DLLMasterBot, qrupunuzda:
 2. Media yükləmə
 3. Mesaj pinləmə
 
-Bot @ilgarrx tərəfindən yaradılmışdır 🚀
+Bot @illgaarr tərəfindən yaradılmışdır 🚀
 """
             if new_status != ChatMemberStatus.ADMINISTRATOR:
                 welcome_msg += "\n\n⚠️ <b>İŞLƏMƏK ÜÇÜN ADMIN VERİN!</b>"
@@ -203,21 +133,7 @@ Bot @ilgarrx tərəfindən yaradılmışdır 🚀
                 parse_mode="HTML"
             )
             logger.info(f"✅ Qrup salam mesajı göndərildi: {event.chat.title}")
-            
-            # Add to database
-            db.add_group(event.chat.id, event.chat.title)
-            logger.info(f"📥 Qrup DB-ə əlavə edildi: {event.chat.id}")
 
         except Exception as e:
             logger.error(f"❌ Qrup salam mesajı göndərilmədi: {str(e)}")
             logger.debug(f"Xəta detalları: Chat ID: {event.chat.id}, Status: {new_status}")
-
-    # Bot removed from group
-    elif (old_status in {ChatMemberStatus.MEMBER, ChatMemberStatus.ADMINISTRATOR} 
-          and new_status in {ChatMemberStatus.LEFT, ChatMemberStatus.KICKED}):
-        logger.warning(f"🔴 Bot qrupdan çıxarıldı: {event.chat.title} ({event.chat.id})")
-        try:
-            db.remove_group(event.chat.id)
-            logger.info(f"🗑️ Qrup DB-dən silindi: {event.chat.id}")
-        except Exception as e:
-            logger.error(f"❌ Qrup silinmə xətası: {e}")

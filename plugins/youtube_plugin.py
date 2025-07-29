@@ -27,31 +27,6 @@ def setup(context):
     youtube_playlist = context.youtube_playlist
     active_tasks = context.active_tasks
     creator_info = context.creator_info
-    db = context.db
-
-    async def track_download_handler(user_id: int, username: str, track_info: dict, source: str, chat_id=None):
-        """Handle track download process (simplified version without db logging)"""
-        try:
-            if db:  # Only proceed if database exists
-                # Add user if not exists
-                db.add_user(user_id, username)
-                
-                # Record song download
-                song_title = track_info.get('title', track_info.get('name', 'Unknown'))
-                artist = track_info.get('artist', 
-                       track_info.get('artists', [{}])[0].get('name', 'Unknown'))
-                
-                db.add_song_download(
-                    user_id=user_id,
-                    song_title=song_title,
-                    artist=artist,
-                    source=source
-                )
-                
-                logger.info(f"{username} downloaded: {song_title} by {artist} from {source}")
-                
-        except Exception as e:
-            logger.error(f"Error recording download: {str(e)}")
 
     async def process_youtube_playlist(message: types.Message, url: str):
         """Process YouTube playlist (without database logging)"""

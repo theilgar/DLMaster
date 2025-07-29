@@ -1,0 +1,183 @@
+2025.07.22 21:59:34 dotenv.main          WARNING  python-dotenv could not parse statement starting at line 5
+2025.07.22 21:59:34 __main__             INFO     🤖 Starting bot...
+2025.07.22 21:59:34 __main__             INFO     🚀 Starting bot initialization...
+2025.07.22 21:59:34 __main__             INFO     ✅ Database initialized successfully
+2025.07.22 21:59:35 core.spotify_handler INFO     Spotify API connection established.
+2025.07.22 21:59:35 __main__             INFO     ✅ Spotify service initialized
+2025.07.22 21:59:35 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2025.07.22 21:59:35 core.youtube_handler INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 21:59:35 __main__             INFO     ✅ YouTube services initialized (firefox)
+2025.07.22 21:59:35 __main__             INFO     🔌 Loading plugins...
+2025.07.22 21:59:35 core.utilities       INFO     🔍 Scanning plugins in: plugins
+2025.07.22 21:59:35 core.utilities       INFO     🔄 Loading: plugins.spotify_plugin
+2025.07.22 21:59:35 core.utilities       INFO     ✅ Loaded (sync): plugins.spotify_plugin
+2025.07.22 21:59:35 core.utilities       INFO     🔄 Loading: plugins.menu_plugin
+2025.07.22 21:59:35 plugins.menu_plugin  INFO     ✅ Menu plugin yükləndi
+2025.07.22 21:59:35 core.utilities       INFO     ✅ Loaded (async): plugins.menu_plugin
+2025.07.22 21:59:35 core.utilities       INFO     🔄 Loading: plugins.sudo_plugin
+2025.07.22 21:59:35 core.utilities       INFO     ✅ Loaded (sync): plugins.sudo_plugin
+2025.07.22 21:59:35 core.utilities       INFO     🔄 Loading: plugins.youtube_plugin
+2025.07.22 21:59:35 core.utilities       INFO     ✅ Loaded (sync): plugins.youtube_plugin
+2025.07.22 21:59:35 core.utilities       INFO     🔄 Loading: plugins.neofetch_plugin
+2025.07.22 21:59:35 core.utilities       INFO     ✅ Loaded (sync): plugins.neofetch_plugin
+2025.07.22 21:59:35 core.utilities       INFO     🔄 Loading: plugins.id_command
+2025.07.22 21:59:35 plugins.id_command   INFO     ✅ info_command plugin successfully loaded
+2025.07.22 21:59:35 core.utilities       INFO     ✅ Loaded (async): plugins.id_command
+2025.07.22 21:59:35 core.utilities       INFO     🔄 Loading: plugins.report_plugin
+2025.07.22 21:59:35 core.utilities       INFO     ✅ Loaded (async): plugins.report_plugin
+2025.07.22 21:59:35 core.utilities       INFO     🔄 Loading: plugins.del_plugin
+2025.07.22 21:59:35 core.utilities       INFO     ✅ Loaded (sync): plugins.del_plugin
+2025.07.22 21:59:35 core.utilities       INFO     🔄 Loading: plugins.mutagen
+2025.07.22 21:59:35 plugins.mutagen      INFO     ✅ Mutagen plugin yükləndi
+2025.07.22 21:59:35 core.utilities       INFO     ✅ Loaded (async): plugins.mutagen
+2025.07.22 21:59:35 core.utilities       INFO     🔄 Loading: plugins.music_plugin
+2025.07.22 21:59:35 core.utilities       INFO     ✅ Loaded (sync): plugins.music_plugin
+2025.07.22 21:59:35 core.utilities       INFO     🔄 Loading: plugins.start_plugin
+2025.07.22 21:59:35 plugins.start_plugin INFO     ✅ Start plugin yükləndi
+2025.07.22 21:59:35 core.utilities       INFO     ✅ Loaded (async): plugins.start_plugin
+2025.07.22 21:59:35 core.utilities       INFO     🔄 Loading: plugins.stats_plugin
+2025.07.22 21:59:35 core.utilities       INFO     ✅ Loaded (sync): plugins.stats_plugin
+2025.07.22 21:59:35 core.utilities       INFO     🔄 Loading: plugins.dir_plugin
+2025.07.22 21:59:35 core.utilities       INFO     ✅ Loaded (sync): plugins.dir_plugin
+2025.07.22 21:59:35 core.utilities       INFO     🔄 Loading: plugins.broadcast_plugin
+2025.07.22 21:59:35 core.utilities       INFO     ✅ Loaded (sync): plugins.broadcast_plugin
+2025.07.22 21:59:35 core.utilities       INFO     🔄 Loading: plugins.speedtest_plugin
+2025.07.22 21:59:35 core.utilities       INFO     ✅ Loaded (sync): plugins.speedtest_plugin
+2025.07.22 21:59:35 core.utilities       INFO     🔄 Loading: plugins.profile
+2025.07.22 21:59:35 plugins.profile      INFO     ✅ Profile plugin loaded
+2025.07.22 21:59:35 core.utilities       INFO     ✅ Loaded (async): plugins.profile
+2025.07.22 21:59:35 core.utilities       INFO     🔄 Loading: plugins.bot_logs
+2025.07.22 21:59:35 plugins.bot_logs     INFO     ✅ Logs plugin loaded
+2025.07.22 21:59:35 core.utilities       INFO     ✅ Loaded (async): plugins.bot_logs
+2025.07.22 21:59:35 __main__             INFO     🚀 Starting polling...
+2025.07.22 21:59:35 aiogram.dispatcher   INFO     Start polling
+2025.07.22 21:59:35 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=7599030242 - 'DLLMaster'
+2025.07.22 21:59:56 aiogram.event        INFO     Update id=708350456 is handled. Duration 49 ms by bot id=7599030242
+2025.07.22 21:59:56 core.spotify_handler INFO     Fetching playlist data: 3A5CcEW9PeB7r7DMKSmRVO
+2025.07.22 21:59:58 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 21:59:58 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2025.07.22 22:00:07 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b273b15c0c5096e99e248d8d8853
+2025.07.22 22:00:07 core.spotify_handler INFO     Metadata applied: download/download/STRUCT - Tiktok Version.m4a
+2025.07.22 22:00:09 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:00:09 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2025.07.22 22:00:14 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:00:14 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2025.07.22 22:00:15 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b273fb1746355ca4f7c99a8b6bef
+2025.07.22 22:00:15 core.spotify_handler INFO     Metadata applied: download/download/MOVIMENTA - Super Slowed.m4a
+2025.07.22 22:00:17 aiogram.event        INFO     Update id=708350457 is handled. Duration 3282 ms by bot id=7599030242
+2025.07.22 22:00:17 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:00:17 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2025.07.22 22:00:18 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:00:18 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.07.22 22:00:23 aiogram.event        INFO     Update id=708350458 is handled. Duration 4915 ms by bot id=7599030242
+2025.07.22 22:00:23 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b2735bad2c6b740b8dadd6f6995c
+2025.07.22 22:00:23 core.spotify_handler INFO     Metadata applied: download/download/Nasty Jamz - Slowed.m4a
+2025.07.22 22:00:25 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:00:25 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2025.07.22 22:00:30 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b2738dfac2a6680b99425d25a139
+2025.07.22 22:00:30 core.spotify_handler INFO     Metadata applied: download/download/Montagem Lunar Celestia 1.0 (SUPER SLOWED).m4a
+2025.07.22 22:00:32 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:00:32 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2025.07.22 22:00:38 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b273bbbc4a93db6613d124a974c1
+2025.07.22 22:00:38 core.spotify_handler INFO     Metadata applied: download/download/I Could Be.m4a
+2025.07.22 22:00:40 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:00:40 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.07.22 22:00:45 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b273b955ede0032e56dc086322e2
+2025.07.22 22:00:45 core.spotify_handler INFO     Metadata applied: download/download/desolate - Slowed.m4a
+2025.07.22 22:00:47 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:00:47 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2025.07.22 22:00:52 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b2734337c4fca6872383c6e11123
+2025.07.22 22:00:52 core.spotify_handler INFO     Metadata applied: download/download/XLOWLY - SUPER SLOWED.m4a
+2025.07.22 22:00:54 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:00:54 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2025.07.22 22:00:59 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b273c2fb591144bc640dc5b0fc01
+2025.07.22 22:00:59 core.spotify_handler INFO     Metadata applied: download/download/hit - super slowed.m4a
+2025.07.22 22:01:01 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:01:01 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2025.07.22 22:01:07 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b273ccac9a954a09c82a6304c1c4
+2025.07.22 22:01:07 core.spotify_handler INFO     Metadata applied: download/download/Midnight Autobahn (Slowed).m4a
+2025.07.22 22:01:09 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:01:09 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.07.22 22:01:19 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b273f6922d7ff9a947bbb6ffda12
+2025.07.22 22:01:19 core.spotify_handler INFO     Metadata applied: download/download/VOLKSWAGEN FUNK - slowed.m4a
+2025.07.22 22:01:20 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:01:20 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2025.07.22 22:01:29 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b273b15c0c5096e99e248d8d8853
+2025.07.22 22:01:29 core.spotify_handler INFO     Metadata applied: download/download/VISION - Slowed.m4a
+2025.07.22 22:01:31 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:01:31 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.07.22 22:01:38 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b2739c71880c0a8c7fede1633ffd
+2025.07.22 22:01:38 core.spotify_handler INFO     Metadata applied: download/download/Forget - Slowed.m4a
+2025.07.22 22:01:40 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:01:40 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2025.07.22 22:01:46 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b27304cda94b8c5321e49e15f0cd
+2025.07.22 22:01:46 core.spotify_handler INFO     Metadata applied: download/download/AUTOMOTIVO MAGICO WORLD - SLOWED.m4a
+2025.07.22 22:01:48 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:01:48 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2025.07.22 22:01:55 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b2730f6e51d4c34210d0c8b43a5e
+2025.07.22 22:01:55 core.spotify_handler INFO     Metadata applied: download/download/In And Out Of Love.m4a
+2025.07.22 22:01:57 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:01:57 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.07.22 22:02:06 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b273982320da137d0de34410df61
+2025.07.22 22:02:06 core.spotify_handler INFO     Metadata applied: download/download/Timeless (feat Playboi Carti).m4a
+2025.07.22 22:02:08 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:02:08 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.07.22 22:02:14 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b273200e2b6526846c59789c92e6
+2025.07.22 22:02:14 core.spotify_handler INFO     Metadata applied: download/download/PELIGROSA.m4a
+2025.07.22 22:02:16 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:02:16 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.07.22 22:02:22 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b273504f87d5902412a66bf86fe8
+2025.07.22 22:02:22 core.spotify_handler INFO     Metadata applied: download/download/MONTAGEM DO DIAMANTE MÁGICO - SLOWED.m4a
+2025.07.22 22:02:24 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:02:24 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2025.07.22 22:02:29 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b273b15c0c5096e99e248d8d8853
+2025.07.22 22:02:29 core.spotify_handler INFO     Metadata applied: download/download/STRUCT - Slowed.m4a
+2025.07.22 22:02:31 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:02:31 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2025.07.22 22:02:36 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b273aa739a5e844220bb44a64adc
+2025.07.22 22:02:36 core.spotify_handler INFO     Metadata applied: download/download/Lollipop.m4a
+2025.07.22 22:02:37 core.utilities       INFO     User 7570255525 executed command: /menu
+2025.07.22 22:02:37 aiogram.event        INFO     Update id=708350459 is handled. Duration 36 ms by bot id=7599030242
+2025.07.22 22:02:38 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:02:38 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2025.07.22 22:02:39 aiogram.event        INFO     Update id=708350460 is handled. Duration 175 ms by bot id=7599030242
+2025.07.22 22:02:44 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b273a23466c42b2a5d5708738aff
+2025.07.22 22:02:44 core.spotify_handler INFO     Metadata applied: download/download/Mirándote.m4a
+2025.07.22 22:02:46 aiogram.event        INFO     Update id=708350461 is handled. Duration 156 ms by bot id=7599030242
+2025.07.22 22:02:46 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:02:46 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2025.07.22 22:02:52 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b273a4bc71d87401102f82c431e3
+2025.07.22 22:02:52 core.spotify_handler INFO     Metadata applied: download/download/Last Night.m4a
+2025.07.22 22:02:52 aiogram.event        INFO     Update id=708350462 is handled. Duration 173 ms by bot id=7599030242
+2025.07.22 22:02:54 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.22 22:02:54 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2025.07.22 22:02:59 core.spotify_handler INFO     Added Spotify thumbnail: https://i.scdn.co/image/ab67616d0000b2739b18753eb7552e25b7f134c4
+2025.07.22 22:02:59 core.spotify_handler INFO     Metadata applied: download/download/You & Me - Rivo Remix.m4a
+2025.07.22 22:03:14 aiogram.event        INFO     Update id=708350463 is handled. Duration 27 ms by bot id=7599030242
+2025.07.22 22:03:14 core.spotify_handler INFO     Fetching playlist data: 37i9dQZF1E8OeK7eqc8sJc
+2025.07.22 22:03:15 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/playlists/37i9dQZF1E8OeK7eqc8sJc with Params: {'fields': None, 'market': None, 'additional_types': 'track'} returned 404 due to Resource not found
+2025.07.22 22:03:15 core.spotify_handler ERROR    Spotify API error: http status: 404, code: -1 - https://api.spotify.com/v1/playlists/37i9dQZF1E8OeK7eqc8sJc?additional_types=track:
+ Resource not found, reason: None
+2025.07.22 22:03:15 plugins.spotify_plugin ERROR    Spotify playlist error: Spotify API error: http status: 404, code: -1 - https://api.spotify.com/v1/playlists/37i9dQZF1E8OeK7eqc8sJc?additional_types=track:
+ Resource not found, reason: None
+2025.07.23 03:03:04 core.utilities       INFO     User 7570255525 executed command: /menu
+2025.07.23 03:03:04 aiogram.event        INFO     Update id=708350464 is handled. Duration 84 ms by bot id=7599030242
+2025.07.23 03:03:08 aiogram.event        INFO     Update id=708350465 is handled. Duration 123 ms by bot id=7599030242
+2025.07.23 21:03:10 aiogram.event        INFO     Update id=708350466 is handled. Duration 181 ms by bot id=7599030242
+2025.07.23 21:03:12 core.utilities       INFO     User 7570255525 executed command: /menu
+2025.07.23 21:03:12 aiogram.event        INFO     Update id=708350467 is handled. Duration 76 ms by bot id=7599030242
+2025.07.23 21:03:14 aiogram.event        INFO     Update id=708350468 is handled. Duration 286 ms by bot id=7599030242
+2025.07.23 21:03:17 aiogram.event        INFO     Update id=708350469 is handled. Duration 68 ms by bot id=7599030242
+2025.07.23 21:04:24 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.23 21:04:24 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2025.07.23 21:04:27 aiogram.event        INFO     Update id=708350470 is handled. Duration 2857 ms by bot id=7599030242
+2025.07.23 21:04:34 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2025.07.23 21:04:34 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2025.07.23 21:04:40 aiogram.event        INFO     Update id=708350471 is handled. Duration 6558 ms by bot id=7599030242
+2025.07.23 21:28:40 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+2025.07.23 21:28:43 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7599030242)
+2025.07.23 21:29:41 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 7599030242)
+2025.07.23 21:59:31 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+2025.07.23 21:59:40 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7599030242)
+2025.07.23 22:01:22 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+2025.07.23 22:01:36 aiogram.dispatcher   WARNING  Sleep for 1.526945 seconds and try again... (tryings = 1, bot id = 7599030242)

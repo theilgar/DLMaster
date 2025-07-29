@@ -6,7 +6,6 @@ import logging
 from aiogram import Bot, Dispatcher, Router, BaseMiddleware
 from dotenv import load_dotenv
 from collections import defaultdict
-from database import Database
 from core.youtube_handler import YoutubeManagerPlaylist, YoutubeManager
 from aiogram.exceptions import TelegramRetryAfter
 from core.logger import setup_logging
@@ -38,19 +37,6 @@ class AppContext:
         self.youtube = None
         self.youtube_playlist = None
         self.bot.data = {'app_context': self}
-        self.sudo_users = []
-        self.premium_users = []  # New attribute for premium users
-
-        try:
-            self.db = Database()
-            logger.info("✅ Database initialized successfully")
-            self.sudo_users = self.db.get_sudo_users()
-            self.premium_users = self.db.get_premium_users()  # Load premium users
-        except Exception as e:
-            logger.error(f"❌ Database initialization failed: {str(e)}")
-            self.db = None
-            self.sudo_users = []
-            self.premium_users = []
 
         os.makedirs("download", exist_ok=True)
 
@@ -73,10 +59,6 @@ class AppContext:
         except Exception as e:
             logger.error(f"❌ Service initialization failed: {str(e)}", exc_info=True)
             raise
-
-    def is_premium_user(self, user_id: int) -> bool:
-        """Check if user is premium"""
-        return user_id in self.premium_users or user_id in self.sudo_users or user_id == self.creator_id
 
 async def safe_send_media_group(bot, chat_id, media_group, retry_count=3):
     try:
@@ -114,8 +96,6 @@ async def main():
         logger.critical(f"💥 Fatal error: {str(e)}", exc_info=True)
     finally:
         logger.info("🔴 Bot stopped")
-        if 'context' in locals() and context.db:
-            context.db.close()
             
         await cleanup_downloads()
 

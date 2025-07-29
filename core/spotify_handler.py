@@ -1,7 +1,7 @@
 # spotify_handler.py
 import spotipy
 import mutagen
-from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
 from core.utilities import format_duration
 import logging
 import requests
@@ -19,7 +19,9 @@ class SpotifyManager:
         try:
             self.sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
                 client_id=client_id,
-                client_secret=client_secret
+                client_secret=client_secret,
+                #redirect_uri="http://127.0.0.1:8000/callback",
+                #scope="user-read-private playlist-read-private" 
             ))
             logger.info("Spotify API connection established.")
         except Exception as e:

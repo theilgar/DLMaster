@@ -1,9 +1,0 @@
-aiogram
-spotipy
-ffmpeg
-speedtest-cli
-yt-dlp
-mutagen
-requests
-python-dotenv
-psutil
