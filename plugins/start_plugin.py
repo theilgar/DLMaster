@@ -18,14 +18,10 @@ CALLBACK_PREFIX = "start_"
 GROUP_WELCOME_MESSAGE = """
 <b>Salam! 👋 Mən DLLMaster Bot</b>
 
-• Youtube/Spotify playlistləri yükləyirəm
-
 🔧 <b>Tələb olunan yetkilər:</b>
 1. Mesaj silmə
 2. Media yükləmə
 3. Mesaj pinləmə
-
-Bot @illgaarr tərəfindən yaradılmışdır 🚀
 """
 
 async def setup(context):
@@ -73,15 +69,12 @@ async def start_command(message: types.Message):
     START_TEXT = f"""
 <b>Salam {user_name}! 👋 Mən DLLMaster Bot!</b>
 
-🎵 <b>Nələr edə bilirəm?</b>
-• YouTube/Spotify-dan mahnılar endirirəm
-
 ⚡ <b>Necə istifadə edim?</b>
 1. Mahnı adı yaz və ya link göndər
 2. Playlist linki at (YouTube/Spotify)
 3. <code>/music &lt;mahnı adı&gt;</code> yaz
 
-Bot @illgaarr tərəfindən yaradılmışdır 🚀
+Bot @ilgarww tərəfindən yaradılmışdır 🚀
 """
     if message.chat.type == "private":
         await send_start_message(message, START_TEXT, bot)
@@ -113,16 +106,12 @@ async def on_bot_added(event: ChatMemberUpdated):
             welcome_msg = f"""
 <b>Salam {event.chat.title}! 👋</b>
 
-Mən DLLMasterBot, qrupunuzda:
-• Mahnı və playlistlər yükləyə bilərəm
-• Sürətli və asan istifadə
-
 🔧 <b>Zəhmət olmasa bu yetkiləri verin:</b>
 1. Mesaj silmə
 2. Media yükləmə
 3. Mesaj pinləmə
 
-Bot @illgaarr tərəfindən yaradılmışdır 🚀
+Bot @ilgarww tərəfindən yaradılmışdır 🚀
 """
             if new_status != ChatMemberStatus.ADMINISTRATOR:
                 welcome_msg += "\n\n⚠️ <b>İŞLƏMƏK ÜÇÜN ADMIN VERİN!</b>"

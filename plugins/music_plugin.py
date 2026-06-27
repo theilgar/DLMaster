@@ -1,7 +1,7 @@
 from aiogram import types, F
 from aiogram.filters import Command, CommandObject
 from aiogram.types import BufferedInputFile, InlineKeyboardMarkup, InlineKeyboardButton
-from core.utilities import sanitize_filename, clean_song_title
+from core.utilities import sanitize_filename
 from core.youtube_handler import YoutubeManager
 import asyncio
 import os
@@ -45,7 +45,6 @@ def setup(context):
             # Clean titles in search results
             for result in results:
                 result['original_title'] = result['title']
-                result['title'] = clean_song_title(result['title'])
             
             total_pages = (len(results) + 4) // 5
             current_page = 0

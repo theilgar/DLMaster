@@ -1,0 +1,179 @@
+2026.06.06 07:08:44 __main__             INFO     🤖 Starting bot...
+2026.06.06 07:08:44 __main__             INFO     🚀 Starting bot initialization...
+2026.06.06 07:08:44 core.spotify_handler INFO     Spotify API connection established.
+2026.06.06 07:08:44 __main__             INFO     ✅ Spotify service initialized
+2026.06.06 07:08:44 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.06.06 07:08:44 core.youtube_handler INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.06 07:08:44 __main__             INFO     ✅ YouTube services initialized (firefox)
+2026.06.06 07:08:44 __main__             INFO     🔌 Loading plugins...
+2026.06.06 07:08:44 core.utilities       INFO     🔍 Scanning plugins in: plugins
+2026.06.06 07:08:44 core.utilities       INFO     🔄 Loading: plugins.music_plugin
+2026.06.06 07:08:44 core.utilities       INFO     ✅ Loaded (sync): plugins.music_plugin
+2026.06.06 07:08:44 core.utilities       INFO     🔄 Loading: plugins.start_plugin
+2026.06.06 07:08:44 plugins.start_plugin INFO     ✅ Start plugin yükləndi
+2026.06.06 07:08:44 core.utilities       INFO     ✅ Loaded (async): plugins.start_plugin
+2026.06.06 07:08:44 core.utilities       INFO     🔄 Loading: plugins.spotify_plugin
+2026.06.06 07:08:44 core.utilities       INFO     ✅ Loaded (sync): plugins.spotify_plugin
+2026.06.06 07:08:44 core.utilities       INFO     🔄 Loading: plugins.youtube_plugin
+2026.06.06 07:08:44 core.utilities       INFO     ✅ Loaded (sync): plugins.youtube_plugin
+2026.06.06 07:08:44 __main__             INFO     🚀 Starting polling...
+2026.06.06 07:08:44 aiogram.dispatcher   INFO     Start polling
+2026.06.06 07:08:44 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.06.06 07:09:00 core.utilities       INFO     User 8502974425 executed command: /music ömür kitaba bənzəyir
+2026.06.06 07:09:00 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.06 07:09:00 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.06.06 07:09:02 aiogram.event        INFO     Update id=875899159 is handled. Duration 1606 ms by bot id=8976652462
+2026.06.06 07:09:06 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.06 07:09:06 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.06.06 07:09:08 core.youtube_handler ERROR    Yükləmə xətası: [0;31mERROR:[0m [youtube] TYWYxKZXaRQ: Requested format is not available. Use --list-formats for a list of available formats
+2026.06.06 07:09:08 aiogram.event        INFO     Update id=875899160 is handled. Duration 1704 ms by bot id=8976652462
+2026.06.06 07:13:23 aiogram.dispatcher   WARNING  Received SIGINT signal
+2026.06.06 07:13:23 aiogram.dispatcher   INFO     Polling stopped for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.06.06 07:13:23 aiogram.dispatcher   INFO     Polling stopped
+2026.06.06 07:13:24 __main__             INFO     🛑 Polling stopped
+2026.06.06 07:13:24 __main__             INFO     🔴 Bot stopped
+2026.06.06 07:21:34 __main__             INFO     🤖 Starting bot...
+2026.06.06 07:21:34 __main__             INFO     🚀 Starting bot initialization...
+2026.06.06 07:21:35 core.spotify_handler INFO     Spotify API connection established.
+2026.06.06 07:21:35 __main__             INFO     ✅ Spotify service initialized
+2026.06.06 07:21:35 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.06.06 07:21:35 core.youtube_handler INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.06 07:21:35 __main__             INFO     ✅ YouTube services initialized (firefox)
+2026.06.06 07:21:35 __main__             INFO     🔌 Loading plugins...
+2026.06.06 07:21:35 core.utilities       INFO     🔍 Scanning plugins in: plugins
+2026.06.06 07:21:35 core.utilities       INFO     🔄 Loading: plugins.music_plugin
+2026.06.06 07:21:35 core.utilities       INFO     ✅ Loaded (sync): plugins.music_plugin
+2026.06.06 07:21:35 core.utilities       INFO     🔄 Loading: plugins.start_plugin
+2026.06.06 07:21:35 plugins.start_plugin INFO     ✅ Start plugin yükləndi
+2026.06.06 07:21:35 core.utilities       INFO     ✅ Loaded (async): plugins.start_plugin
+2026.06.06 07:21:35 core.utilities       INFO     🔄 Loading: plugins.spotify_plugin
+2026.06.06 07:21:35 core.utilities       INFO     ✅ Loaded (sync): plugins.spotify_plugin
+2026.06.06 07:21:35 core.utilities       INFO     🔄 Loading: plugins.youtube_plugin
+2026.06.06 07:21:35 core.utilities       INFO     ✅ Loaded (sync): plugins.youtube_plugin
+2026.06.06 07:21:35 __main__             INFO     🚀 Starting polling...
+2026.06.06 07:21:35 aiogram.dispatcher   INFO     Start polling
+2026.06.06 07:21:35 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.06.06 07:21:45 core.utilities       INFO     User 8502974425 executed command: /music ömür kitaba bənzəyir
+2026.06.06 07:21:45 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.06 07:21:45 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.06.06 07:21:47 aiogram.event        INFO     Update id=875899161 is handled. Duration 1593 ms by bot id=8976652462
+2026.06.06 07:21:49 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.06 07:21:49 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.06.06 07:21:50 core.youtube_handler ERROR    Yükləmə xətası: [0;31mERROR:[0m [youtube] wn5xWcvhDWE: Requested format is not available. Use --list-formats for a list of available formats
+2026.06.06 07:21:50 aiogram.event        INFO     Update id=875899162 is handled. Duration 1797 ms by bot id=8976652462
+2026.06.06 07:22:12 aiogram.dispatcher   WARNING  Received SIGINT signal
+2026.06.06 07:22:12 aiogram.dispatcher   INFO     Polling stopped for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.06.06 07:22:12 aiogram.dispatcher   INFO     Polling stopped
+2026.06.06 07:22:12 __main__             INFO     🛑 Polling stopped
+2026.06.06 07:22:12 __main__             INFO     🔴 Bot stopped
+2026.06.06 07:24:03 __main__             INFO     🤖 Starting bot...
+2026.06.06 07:24:03 __main__             INFO     🚀 Starting bot initialization...
+2026.06.06 07:24:03 core.spotify_handler INFO     Spotify API connection established.
+2026.06.06 07:24:03 __main__             INFO     ✅ Spotify service initialized
+2026.06.06 07:24:03 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.06.06 07:24:03 core.youtube_handler INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.06 07:24:03 __main__             INFO     ✅ YouTube services initialized (firefox)
+2026.06.06 07:24:03 __main__             INFO     🔌 Loading plugins...
+2026.06.06 07:24:03 core.utilities       INFO     🔍 Scanning plugins in: plugins
+2026.06.06 07:24:03 core.utilities       INFO     🔄 Loading: plugins.music_plugin
+2026.06.06 07:24:03 core.utilities       INFO     ✅ Loaded (sync): plugins.music_plugin
+2026.06.06 07:24:03 core.utilities       INFO     🔄 Loading: plugins.start_plugin
+2026.06.06 07:24:03 plugins.start_plugin INFO     ✅ Start plugin yükləndi
+2026.06.06 07:24:03 core.utilities       INFO     ✅ Loaded (async): plugins.start_plugin
+2026.06.06 07:24:03 core.utilities       INFO     🔄 Loading: plugins.spotify_plugin
+2026.06.06 07:24:03 core.utilities       INFO     ✅ Loaded (sync): plugins.spotify_plugin
+2026.06.06 07:24:03 core.utilities       INFO     🔄 Loading: plugins.youtube_plugin
+2026.06.06 07:24:03 core.utilities       INFO     ✅ Loaded (sync): plugins.youtube_plugin
+2026.06.06 07:24:03 __main__             INFO     🚀 Starting polling...
+2026.06.06 07:24:03 aiogram.dispatcher   INFO     Start polling
+2026.06.06 07:24:04 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.06.06 07:24:11 core.utilities       INFO     User 8502974425 executed command: /music ömür kitaba bənzəyir
+2026.06.06 07:24:11 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.06 07:24:11 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.06.06 07:24:12 aiogram.event        INFO     Update id=875899163 is handled. Duration 1337 ms by bot id=8976652462
+2026.06.06 07:24:14 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.06 07:24:14 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.06.06 07:24:16 core.youtube_handler ERROR    Yükləmə xətası: [0;31mERROR:[0m [youtube] TYWYxKZXaRQ: Requested format is not available. Use --list-formats for a list of available formats
+2026.06.06 07:24:16 aiogram.event        INFO     Update id=875899164 is handled. Duration 1837 ms by bot id=8976652462
+2026.06.06 07:24:38 core.utilities       INFO     User 8502974425 executed command: /music ömür kitaba bənzəyir
+2026.06.06 07:24:38 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.06 07:24:38 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.06.06 07:24:39 aiogram.event        INFO     Update id=875899165 is handled. Duration 1176 ms by bot id=8976652462
+2026.06.06 07:24:48 aiogram.event        INFO     Update id=875899166 is handled. Duration 50 ms by bot id=8976652462
+2026.06.06 07:24:51 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.06 07:24:51 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.06.06 07:24:53 core.youtube_handler ERROR    Yükləmə xətası: [0;31mERROR:[0m [youtube] jRn_2Nso38k: Requested format is not available. Use --list-formats for a list of available formats
+2026.06.06 07:24:53 aiogram.event        INFO     Update id=875899167 is handled. Duration 1717 ms by bot id=8976652462
+2026.06.06 07:25:21 aiogram.dispatcher   WARNING  Received SIGINT signal
+2026.06.06 07:25:21 aiogram.dispatcher   INFO     Polling stopped for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.06.06 07:25:21 aiogram.dispatcher   INFO     Polling stopped
+2026.06.06 07:25:22 __main__             INFO     🛑 Polling stopped
+2026.06.06 07:25:22 __main__             INFO     🔴 Bot stopped
+2026.06.06 07:31:48 __main__             INFO     🤖 Starting bot...
+2026.06.06 07:31:48 __main__             INFO     🚀 Starting bot initialization...
+2026.06.06 07:31:49 core.spotify_handler INFO     Spotify API connection established.
+2026.06.06 07:31:49 __main__             INFO     ✅ Spotify service initialized
+2026.06.06 07:31:49 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.06.06 07:31:49 core.youtube_handler INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.06 07:31:49 __main__             INFO     ✅ YouTube services initialized (firefox)
+2026.06.06 07:31:49 __main__             INFO     🔌 Loading plugins...
+2026.06.06 07:31:49 core.utilities       INFO     🔍 Scanning plugins in: plugins
+2026.06.06 07:31:49 core.utilities       INFO     🔄 Loading: plugins.music_plugin
+2026.06.06 07:31:49 core.utilities       INFO     ✅ Loaded (sync): plugins.music_plugin
+2026.06.06 07:31:49 core.utilities       INFO     🔄 Loading: plugins.start_plugin
+2026.06.06 07:31:49 plugins.start_plugin INFO     ✅ Start plugin yükləndi
+2026.06.06 07:31:49 core.utilities       INFO     ✅ Loaded (async): plugins.start_plugin
+2026.06.06 07:31:49 core.utilities       INFO     🔄 Loading: plugins.spotify_plugin
+2026.06.06 07:31:49 core.utilities       INFO     ✅ Loaded (sync): plugins.spotify_plugin
+2026.06.06 07:31:49 core.utilities       INFO     🔄 Loading: plugins.youtube_plugin
+2026.06.06 07:31:49 core.utilities       INFO     ✅ Loaded (sync): plugins.youtube_plugin
+2026.06.06 07:31:49 __main__             INFO     🚀 Starting polling...
+2026.06.06 07:31:49 aiogram.dispatcher   INFO     Start polling
+2026.06.06 07:31:49 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.06.06 07:32:01 core.utilities       INFO     User 8502974425 executed command: /music men onda röyada idim
+2026.06.06 07:32:01 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.06 07:32:01 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.06.06 07:32:02 aiogram.event        INFO     Update id=875899168 is handled. Duration 1656 ms by bot id=8976652462
+2026.06.06 07:32:05 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.06 07:32:05 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.06.06 07:32:06 core.youtube_handler ERROR    Yükləmə xətası: [0;31mERROR:[0m [youtube] GsFijCYsJFE: Requested format is not available. Use --list-formats for a list of available formats
+2026.06.06 07:32:06 aiogram.event        INFO     Update id=875899169 is handled. Duration 1701 ms by bot id=8976652462
+2026.06.06 07:33:22 aiogram.dispatcher   WARNING  Received SIGINT signal
+2026.06.06 07:33:22 aiogram.dispatcher   INFO     Polling stopped for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.06.06 07:33:22 aiogram.dispatcher   INFO     Polling stopped
+2026.06.06 07:33:22 __main__             INFO     🛑 Polling stopped
+2026.06.06 07:33:22 __main__             INFO     🔴 Bot stopped
+2026.06.06 07:34:11 __main__             INFO     🤖 Starting bot...
+2026.06.06 07:34:11 __main__             INFO     🚀 Starting bot initialization...
+2026.06.06 07:34:11 core.spotify_handler INFO     Spotify API connection established.
+2026.06.06 07:34:11 __main__             INFO     ✅ Spotify service initialized
+2026.06.06 07:34:11 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.06.06 07:34:11 core.youtube_handler INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.06 07:34:11 __main__             INFO     ✅ YouTube services initialized (firefox)
+2026.06.06 07:34:11 __main__             INFO     🔌 Loading plugins...
+2026.06.06 07:34:11 core.utilities       INFO     🔍 Scanning plugins in: plugins
+2026.06.06 07:34:11 core.utilities       INFO     🔄 Loading: plugins.music_plugin
+2026.06.06 07:34:11 core.utilities       INFO     ✅ Loaded (sync): plugins.music_plugin
+2026.06.06 07:34:11 core.utilities       INFO     🔄 Loading: plugins.start_plugin
+2026.06.06 07:34:11 plugins.start_plugin INFO     ✅ Start plugin yükləndi
+2026.06.06 07:34:11 core.utilities       INFO     ✅ Loaded (async): plugins.start_plugin
+2026.06.06 07:34:11 core.utilities       INFO     🔄 Loading: plugins.spotify_plugin
+2026.06.06 07:34:11 core.utilities       INFO     ✅ Loaded (sync): plugins.spotify_plugin
+2026.06.06 07:34:11 core.utilities       INFO     🔄 Loading: plugins.youtube_plugin
+2026.06.06 07:34:11 core.utilities       INFO     ✅ Loaded (sync): plugins.youtube_plugin
+2026.06.06 07:34:11 __main__             INFO     🚀 Starting polling...
+2026.06.06 07:34:11 aiogram.dispatcher   INFO     Start polling
+2026.06.06 07:34:11 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.06.06 07:34:22 core.utilities       INFO     User 8502974425 executed command: /music men onda röyada idim
+2026.06.06 07:34:22 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.06 07:34:22 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.06.06 07:34:24 aiogram.event        INFO     Update id=875899170 is handled. Duration 1373 ms by bot id=8976652462
+2026.06.06 07:34:26 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.06 07:34:26 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.06.06 07:34:27 core.youtube_handler ERROR    Yükləmə xətası: [0;31mERROR:[0m [youtube] BQLlkL-OIrM: Requested format is not available. Use --list-formats for a list of available formats
+2026.06.06 07:34:27 aiogram.event        INFO     Update id=875899171 is handled. Duration 1549 ms by bot id=8976652462
+2026.06.06 07:36:41 aiogram.dispatcher   WARNING  Received SIGINT signal
+2026.06.06 07:36:41 aiogram.dispatcher   INFO     Polling stopped for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.06.06 07:36:41 aiogram.dispatcher   INFO     Polling stopped
+2026.06.06 07:36:41 __main__             INFO     🛑 Polling stopped
+2026.06.06 07:36:41 __main__             INFO     🔴 Bot stopped

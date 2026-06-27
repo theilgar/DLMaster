@@ -6,6 +6,8 @@ from yt_dlp import YoutubeDL
 from core.utilities import format_duration, sanitize_filename
 from core.webprofile import get_random_user_agent, get_cookies_from_browser
 
+os.environ["YT_DLP_JS_RUNTIMES"] = "deno"
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -62,6 +64,7 @@ class YoutubeManagerPlaylist:
             'outtmpl': os.path.join("download", f"{filename}.%(ext)s"),  # Updated path,
             'noplaylist': True,
             'retries': 3,
+            "javascript_runtimes": ["node"],
             'cookiesfrombrowser': (self.browser,),  # self.browser istifadə edirik
             #'proxy': 'socks5://127.0.0.1:9050',
             'headers': {
@@ -94,10 +97,11 @@ class YoutubeManager:
 
     def get_ydl_opts(self):
         return {
-            'format': 'bestaudio',
+            'format': 'bestaudio[ext=m4a]',
             'extract_flat': True,
             'quiet': True,
             'socket_timeout': 30,
+            "javascript_runtimes": ["node"],
             'cookiesfrombrowser': get_cookies_from_browser(self.browser),
             #'proxy': 'socks5://127.0.0.1:9050',
             'headers': {
@@ -124,10 +128,11 @@ class YoutubeManager:
 
     async def download_track(self, query: str, base_name: str) -> str:
         ydl_opts = {
-            "format": "bestaudio[ext=m4a]",
+            'format': 'bestaudio[ext=m4a]',
             "outtmpl": os.path.join("download", f"{base_name}.%(ext)s"),  # Updated path
             "nopart": True,
             "retries": 3,
+            "javascript_runtimes": ["node"],
             "cookiesfrombrowser": get_cookies_from_browser(self.browser),
             #'proxy': 'socks5://127.0.0.1:9050',
             "headers": {
@@ -144,3 +149,4 @@ class YoutubeManager:
         except Exception as e:
             logger.error(f"Yükləmə xətası: {e}")
             raise RuntimeError(f"Yükləmə xətası: {str(e)}")
+

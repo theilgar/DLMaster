@@ -29,34 +29,6 @@ def format_duration(seconds: int, is_ms: bool = False) -> str:
         logger.error(f"Vaxt formatlama xətası: {e}")
         return "00:00"
 
-def clean_song_title(title: str) -> str:
-    noise_keywords = [
-        r'official(?:\s+(audio|video|music\s*video|visualizer))?',
-        r'video', r'music', r'lyrics?', r'audio', r'hq', r'hd',
-        r'4k', r'8k', r'1080p', r'720p', r'live', r'extended', r'version', r'edit', r'mix', r'ultra',
-        r'performance', r'cover', r'session', r'karaoke', r'instrumental'
-    ]
-    # Mötərizədəki sözləri sil
-    title = re.sub(
-        rf'(?i)[\[\(\{{]?\s*(?:{"|".join(noise_keywords)})\s*[\]\)\}}]?',
-        '',
-        title
-    )
-
-    # Mötərizədəki digər sözləri də sil (ümumi təmizlik üçün)
-    title = re.sub(r'[\[\(\{].*?[\]\)\}]', '', title)
-
-    # İlləri sil (1900–2099 arası)
-    title = re.sub(r'\b(19|20)\d{2}\b', '', title)
-
-    # Ayırıcıları boşluqla əvəz et
-    title = re.sub(r'\s*[\|]+\s*', ' ', title)
-
-    # Çoxlu boşluqları tək boşluqla əvəz et
-    title = re.sub(r'\s{2,}', ' ', title).strip()
-
-    return title
-
 async def load_plugins(context):
     plugins_dir = "plugins"
     logger.info(f"🔍 Scanning plugins in: {plugins_dir}")

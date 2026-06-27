@@ -1,0 +1,379 @@
+2026.06.18 12:13:22 __main__             INFO     🤖 Starting bot...
+2026.06.18 12:13:22 __main__             INFO     🚀 Starting bot initialization...
+2026.06.18 12:13:22 core.spotify_handler INFO     Spotify API connection established.
+2026.06.18 12:13:22 __main__             INFO     ✅ Spotify service initialized
+2026.06.18 12:13:22 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.06.18 12:13:22 core.youtube_handler INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.18 12:13:22 __main__             INFO     ✅ YouTube services initialized (firefox)
+2026.06.18 12:13:22 __main__             INFO     🔌 Loading plugins...
+2026.06.18 12:13:22 core.utilities       INFO     🔍 Scanning plugins in: plugins
+2026.06.18 12:13:22 core.utilities       INFO     🔄 Loading: plugins.music_plugin
+2026.06.18 12:13:22 core.utilities       INFO     ✅ Loaded (sync): plugins.music_plugin
+2026.06.18 12:13:22 core.utilities       INFO     🔄 Loading: plugins.start_plugin
+2026.06.18 12:13:22 plugins.start_plugin INFO     ✅ Start plugin yükləndi
+2026.06.18 12:13:22 core.utilities       INFO     ✅ Loaded (async): plugins.start_plugin
+2026.06.18 12:13:22 core.utilities       INFO     🔄 Loading: plugins.spotify_plugin
+2026.06.18 12:13:22 core.utilities       INFO     ✅ Loaded (sync): plugins.spotify_plugin
+2026.06.18 12:13:22 core.utilities       INFO     🔄 Loading: plugins.youtube_plugin
+2026.06.18 12:13:22 core.utilities       INFO     ✅ Loaded (sync): plugins.youtube_plugin
+2026.06.18 12:13:22 __main__             INFO     🚀 Starting polling...
+2026.06.18 12:13:22 aiogram.dispatcher   INFO     Start polling
+2026.06.18 12:13:22 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.06.18 16:12:58 core.utilities       INFO     User 8502974425 executed command: /music head movement
+2026.06.18 16:12:58 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.18 16:12:58 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.06.18 16:13:00 aiogram.event        INFO     Update id=875899511 is handled. Duration 2161 ms by bot id=8976652462
+2026.06.18 16:13:05 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.18 16:13:05 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.06.18 16:13:12 aiogram.event        INFO     Update id=875899512 is handled. Duration 7005 ms by bot id=8976652462
+2026.06.18 17:33:11 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.18 17:33:11 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.18 17:33:22 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.19 06:30:57 aiogram.event        INFO     Update id=875899513 is not handled. Duration 1 ms by bot id=8976652462
+2026.06.19 06:31:07 aiogram.event        INFO     Update id=875899514 is not handled. Duration 1 ms by bot id=8976652462
+2026.06.19 06:31:27 aiogram.event        INFO     Update id=875899515 is not handled. Duration 1 ms by bot id=8976652462
+2026.06.19 07:54:57 aiogram.event        INFO     Update id=875899516 is not handled. Duration 1 ms by bot id=8976652462
+2026.06.19 07:55:50 core.utilities       INFO     User 8502974425 executed command: /music barroco 2
+2026.06.19 07:55:50 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.19 07:55:50 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.06.19 07:55:52 aiogram.event        INFO     Update id=875899517 is handled. Duration 1594 ms by bot id=8976652462
+2026.06.19 07:55:55 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.19 07:55:55 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.06.19 07:55:59 aiogram.event        INFO     Update id=875899518 is handled. Duration 4358 ms by bot id=8976652462
+2026.06.19 07:56:27 aiogram.event        INFO     Update id=875899519 is not handled. Duration 1 ms by bot id=8976652462
+2026.06.19 07:59:42 aiogram.event        INFO     Update id=875899520 is not handled. Duration 1 ms by bot id=8976652462
+2026.06.19 11:43:16 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.19 11:43:16 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.19 11:43:27 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.19 14:35:10 core.utilities       INFO     User 8502974425 executed command: /music bayram zır kayıfdayam
+2026.06.19 14:35:10 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.19 14:35:10 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.06.19 14:35:11 aiogram.event        INFO     Update id=875899521 is handled. Duration 1513 ms by bot id=8976652462
+2026.06.19 14:35:21 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.19 14:35:21 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.06.19 14:35:27 aiogram.event        INFO     Update id=875899522 is handled. Duration 6224 ms by bot id=8976652462
+2026.06.19 14:52:56 core.utilities       INFO     User 8502974425 executed command: /music röya həsr
+2026.06.19 14:52:56 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.19 14:52:56 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.06.19 14:52:58 aiogram.event        INFO     Update id=875899523 is handled. Duration 1578 ms by bot id=8976652462
+2026.06.19 14:53:02 aiogram.event        INFO     Update id=875899524 is handled. Duration 160 ms by bot id=8976652462
+2026.06.19 14:53:05 aiogram.event        INFO     Update id=875899525 is handled. Duration 214 ms by bot id=8976652462
+2026.06.19 14:53:06 aiogram.event        INFO     Update id=875899526 is handled. Duration 50 ms by bot id=8976652462
+2026.06.19 14:53:13 aiogram.event        INFO     Update id=875899527 is handled. Duration 5256 ms by bot id=8976652462
+2026.06.19 14:53:16 core.utilities       INFO     User 8502974425 executed command: /music həsrət nəğməsi
+2026.06.19 14:53:16 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.19 14:53:16 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.06.19 14:53:18 aiogram.event        INFO     Update id=875899528 is handled. Duration 1258 ms by bot id=8976652462
+2026.06.19 14:53:21 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.19 14:53:21 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.06.19 14:53:26 aiogram.event        INFO     Update id=875899529 is handled. Duration 4793 ms by bot id=8976652462
+2026.06.19 21:13:19 core.utilities       INFO     User 8502974425 executed command: /music cavan olanda zor oğlan idim
+2026.06.19 21:13:19 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.19 21:13:19 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.06.19 21:13:21 aiogram.event        INFO     Update id=875899530 is handled. Duration 1421 ms by bot id=8976652462
+2026.06.19 21:13:27 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.19 21:13:27 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.06.19 21:13:33 aiogram.event        INFO     Update id=875899531 is handled. Duration 6075 ms by bot id=8976652462
+2026.06.19 21:13:44 aiogram.event        INFO     Update id=875899532 is not handled. Duration 1 ms by bot id=8976652462
+2026.06.20 02:19:42 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.20 02:19:42 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.20 02:19:53 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.20 02:27:53 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.20 02:27:53 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.20 02:28:04 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.20 06:55:48 aiogram.event        INFO     Update id=875899533 is not handled. Duration 1 ms by bot id=8976652462
+2026.06.20 08:39:30 aiogram.event        INFO     Update id=875899534 is not handled. Duration 1 ms by bot id=8976652462
+2026.06.20 08:39:40 aiogram.event        INFO     Update id=875899535 is not handled. Duration 1 ms by bot id=8976652462
+2026.06.20 20:25:52 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.20 20:25:52 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.20 20:26:03 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.21 03:58:11 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.21 03:58:11 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.21 03:58:22 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.21 04:04:12 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.21 04:04:12 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.21 04:04:23 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.21 04:05:13 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.21 04:05:13 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.21 04:05:24 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.21 04:10:15 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.21 04:10:15 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.21 04:10:26 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.21 04:23:16 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.21 04:23:16 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.21 04:23:27 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.21 04:26:18 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.21 04:26:18 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.21 04:26:29 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.21 07:20:11 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.21 07:20:11 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.21 07:20:22 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.21 07:30:12 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.21 07:30:12 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.21 07:30:24 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.21 07:40:14 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.21 07:40:14 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.21 07:40:25 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.21 16:20:19 core.utilities       INFO     User 8502974425 executed command: /music başına qoyub vasmi papağ
+2026.06.21 16:20:19 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.21 16:20:19 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.06.21 16:20:20 aiogram.event        INFO     Update id=875899536 is handled. Duration 1612 ms by bot id=8976652462
+2026.06.21 16:20:31 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.21 16:20:31 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.06.21 16:20:37 aiogram.event        INFO     Update id=875899537 is handled. Duration 6263 ms by bot id=8976652462
+2026.06.21 16:43:39 core.utilities       INFO     User 7933726547 executed command: /start
+2026.06.21 16:43:40 aiogram.event        INFO     Update id=875899538 is handled. Duration 1084 ms by bot id=8976652462
+2026.06.21 16:43:44 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.21 16:43:44 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.06.21 16:43:51 aiogram.event        INFO     Update id=875899539 is handled. Duration 6347 ms by bot id=8976652462
+2026.06.22 13:37:15 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.22 13:37:15 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.22 13:37:26 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.22 13:49:17 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.22 13:49:17 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.22 13:49:28 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.22 13:58:09 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.22 13:58:09 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.22 13:58:20 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.22 16:48:40 core.utilities       INFO     User 8502974425 executed command: /music sokoladim
+2026.06.22 16:48:40 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.22 16:48:40 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.06.22 16:48:42 aiogram.event        INFO     Update id=875899540 is handled. Duration 2343 ms by bot id=8976652462
+2026.06.22 16:48:52 aiogram.event        INFO     Update id=875899541 is handled. Duration 5151 ms by bot id=8976652462
+2026.06.22 16:49:39 core.utilities       INFO     User 8502974425 executed command: /music sokoladim
+2026.06.22 16:49:39 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.22 16:49:39 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.06.22 16:49:40 aiogram.event        INFO     Update id=875899542 is handled. Duration 1522 ms by bot id=8976652462
+2026.06.22 16:50:00 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.22 16:50:00 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.06.22 16:50:07 aiogram.event        INFO     Update id=875899543 is handled. Duration 6346 ms by bot id=8976652462
+2026.06.22 19:47:14 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.22 19:47:14 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.22 19:47:25 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.22 19:49:15 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.22 19:49:15 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.22 19:49:26 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.23 00:52:18 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.23 00:52:18 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.23 00:52:29 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.23 01:10:50 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.06.23 01:10:50 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.23 01:10:51 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.06.23 01:10:51 aiogram.dispatcher   WARNING  Sleep for 1.439809 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.06.23 01:10:52 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.06.23 01:10:52 aiogram.dispatcher   WARNING  Sleep for 1.907231 seconds and try again... (tryings = 2, bot id = 8976652462)
+2026.06.23 01:10:54 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.06.23 01:10:54 aiogram.dispatcher   WARNING  Sleep for 2.459010 seconds and try again... (tryings = 3, bot id = 8976652462)
+2026.06.23 01:10:58 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.06.23 01:10:58 aiogram.dispatcher   WARNING  Sleep for 3.028666 seconds and try again... (tryings = 4, bot id = 8976652462)
+2026.06.23 01:11:01 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.06.23 01:11:01 aiogram.dispatcher   WARNING  Sleep for 4.109143 seconds and try again... (tryings = 5, bot id = 8976652462)
+2026.06.23 01:11:53 aiogram.dispatcher   INFO     Connection established (tryings = 6, bot id = 8976652462)
+2026.06.23 03:17:11 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.23 03:17:11 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.23 03:17:22 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.23 03:18:12 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.23 03:18:12 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.23 03:18:23 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.23 03:30:14 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.23 03:30:14 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.23 03:30:25 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.23 03:40:16 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.23 03:40:16 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.23 03:40:27 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.23 07:45:18 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.23 07:45:18 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.06.23 07:45:20 aiogram.event        INFO     Update id=875899544 is handled. Duration 1863 ms by bot id=8976652462
+2026.06.23 07:45:23 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.23 07:45:23 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.06.23 07:45:28 aiogram.event        INFO     Update id=875899545 is handled. Duration 4891 ms by bot id=8976652462
+2026.06.23 07:45:38 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.23 07:45:38 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.06.23 07:45:40 aiogram.event        INFO     Update id=875899546 is handled. Duration 1890 ms by bot id=8976652462
+2026.06.23 07:45:56 aiogram.event        INFO     Update id=875899547 is handled. Duration 5087 ms by bot id=8976652462
+2026.06.23 08:17:13 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.23 08:17:13 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.23 08:17:24 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.23 12:53:10 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.23 12:53:10 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.23 12:53:21 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.23 12:55:11 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.23 12:55:11 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.23 12:55:22 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.23 13:52:17 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.23 13:52:17 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.23 13:52:28 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.23 20:32:07 core.utilities       INFO     User 8502974425 executed command: /music goodfellas
+2026.06.23 20:32:07 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.23 20:32:07 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.06.23 20:32:08 aiogram.event        INFO     Update id=875899548 is handled. Duration 1411 ms by bot id=8976652462
+2026.06.23 20:32:16 aiogram.event        INFO     Update id=875899549 is handled. Duration 5133 ms by bot id=8976652462
+2026.06.23 20:32:20 core.utilities       INFO     User 8502974425 executed command: /music xper goodfellas
+2026.06.23 20:32:20 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.23 20:32:20 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.06.23 20:32:21 aiogram.event        INFO     Update id=875899550 is handled. Duration 1241 ms by bot id=8976652462
+2026.06.23 20:32:27 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.23 20:32:27 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.06.23 20:32:32 aiogram.event        INFO     Update id=875899551 is handled. Duration 5338 ms by bot id=8976652462
+2026.06.23 22:37:09 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.23 22:37:09 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.23 22:37:20 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.23 22:39:10 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.23 22:39:10 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.23 22:39:21 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.24 08:18:19 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.24 08:18:19 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.24 08:18:30 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.24 08:19:10 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.24 08:19:10 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.24 08:19:21 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.24 15:48:49 aiogram.event        INFO     Update id=875899552 is not handled. Duration 1 ms by bot id=8976652462
+2026.06.24 15:49:50 aiogram.event        INFO     Update id=875899553 is not handled. Duration 1 ms by bot id=8976652462
+2026.06.24 15:50:12 aiogram.event        INFO     Update id=875899554 is not handled. Duration 1 ms by bot id=8976652462
+2026.06.24 18:03:14 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.24 18:03:14 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.24 18:03:25 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.24 18:05:16 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.24 18:05:16 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.24 18:05:27 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.24 22:43:57 core.utilities       INFO     User 8502974425 executed command: /music hemen mehle hemen
+2026.06.24 22:43:57 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.24 22:43:57 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.06.24 22:43:59 aiogram.event        INFO     Update id=875899555 is handled. Duration 1348 ms by bot id=8976652462
+2026.06.24 22:44:04 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.24 22:44:04 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.06.24 22:44:09 aiogram.event        INFO     Update id=875899556 is handled. Duration 5005 ms by bot id=8976652462
+2026.06.24 22:44:24 core.utilities       INFO     User 8502974425 executed command: /music hemen mehle hemen
+2026.06.24 22:44:24 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.24 22:44:24 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.06.24 22:44:25 aiogram.event        INFO     Update id=875899557 is handled. Duration 1119 ms by bot id=8976652462
+2026.06.24 22:44:30 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.24 22:44:30 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.06.24 22:44:35 aiogram.event        INFO     Update id=875899558 is handled. Duration 4744 ms by bot id=8976652462
+2026.06.24 22:44:48 core.utilities       INFO     User 8502974425 executed command: /music hemen mehle hemen
+2026.06.24 22:44:48 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.24 22:44:48 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.06.24 22:44:49 aiogram.event        INFO     Update id=875899559 is handled. Duration 1003 ms by bot id=8976652462
+2026.06.24 22:44:51 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.24 22:44:51 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.06.24 22:44:56 aiogram.event        INFO     Update id=875899560 is handled. Duration 5480 ms by bot id=8976652462
+2026.06.24 22:45:44 core.utilities       INFO     User 8502974425 executed command: /music hemen mehle
+2026.06.24 22:45:44 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.24 22:45:44 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.06.24 22:45:45 aiogram.event        INFO     Update id=875899561 is handled. Duration 1134 ms by bot id=8976652462
+2026.06.24 22:45:54 aiogram.event        INFO     Update id=875899562 is handled. Duration 47 ms by bot id=8976652462
+2026.06.24 22:45:58 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.24 22:45:58 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.06.24 22:46:04 aiogram.event        INFO     Update id=875899563 is handled. Duration 6061 ms by bot id=8976652462
+2026.06.24 22:55:02 core.utilities       INFO     User 8502974425 executed command: /music jj still
+2026.06.24 22:55:02 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.24 22:55:02 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.06.24 22:55:03 aiogram.event        INFO     Update id=875899564 is handled. Duration 1430 ms by bot id=8976652462
+2026.06.24 22:55:05 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.24 22:55:05 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.06.24 22:55:10 aiogram.event        INFO     Update id=875899565 is handled. Duration 5435 ms by bot id=8976652462
+2026.06.24 22:55:30 core.utilities       INFO     User 8502974425 executed command: /music jj still
+2026.06.24 22:55:30 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.24 22:55:30 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.06.24 22:55:31 aiogram.event        INFO     Update id=875899566 is handled. Duration 1121 ms by bot id=8976652462
+2026.06.24 22:55:33 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.24 22:55:33 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.06.24 22:55:38 aiogram.event        INFO     Update id=875899567 is handled. Duration 4350 ms by bot id=8976652462
+2026.06.24 23:57:17 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.24 23:57:17 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.24 23:57:28 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.25 00:25:10 core.utilities       INFO     User 8502974425 executed command: /music səninəm
+2026.06.25 00:25:10 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.25 00:25:10 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.06.25 00:25:11 aiogram.event        INFO     Update id=875899568 is handled. Duration 1041 ms by bot id=8976652462
+2026.06.25 00:25:17 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.25 00:25:17 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.06.25 00:25:22 aiogram.event        INFO     Update id=875899569 is handled. Duration 4635 ms by bot id=8976652462
+2026.06.25 00:27:46 aiogram.event        INFO     Update id=875899570 is not handled. Duration 1 ms by bot id=8976652462
+2026.06.25 01:47:12 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.25 01:47:12 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.25 01:47:23 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.25 03:52:10 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.25 03:52:10 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.25 03:52:21 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.25 03:53:11 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.25 03:53:11 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.25 03:53:22 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.25 10:03:12 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.25 10:03:12 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.25 10:03:24 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.25 16:47:09 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.25 16:47:09 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.25 16:47:20 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.25 16:49:10 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.25 16:49:10 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.25 16:49:21 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.25 19:17:10 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.25 19:17:10 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.25 19:17:21 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.25 23:32:10 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.25 23:32:10 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.25 23:32:21 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.25 23:34:11 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.25 23:34:11 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.25 23:34:22 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.26 09:27:18 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.26 09:27:18 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.26 09:27:29 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.26 09:29:19 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.26 09:29:19 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.26 09:29:30 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.26 09:30:10 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.26 09:30:10 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.26 09:30:21 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.26 09:52:13 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.26 09:52:13 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.26 09:52:24 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.26 09:53:14 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.26 09:53:14 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.26 09:53:25 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.26 17:58:16 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.26 17:58:16 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.26 17:58:27 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.26 18:09:18 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.26 18:09:18 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.26 18:09:29 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.26 19:06:05 core.utilities       INFO     User 8502974425 executed command: /music hərə öz kefində
+2026.06.26 19:06:06 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.26 19:06:06 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.06.26 19:06:07 aiogram.event        INFO     Update id=875899571 is handled. Duration 1829 ms by bot id=8976652462
+2026.06.26 19:06:12 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.06.26 19:06:12 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.06.26 19:06:18 aiogram.event        INFO     Update id=875899572 is handled. Duration 5856 ms by bot id=8976652462
+2026.06.26 20:13:16 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.26 20:13:16 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.26 20:13:27 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.26 20:14:17 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.26 20:14:17 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.26 20:14:28 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.26 22:13:14 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.26 22:13:14 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.26 22:13:25 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.26 22:15:16 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.26 22:15:16 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.26 22:15:27 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.26 22:50:02 aiogram.event        INFO     Update id=875899573 is not handled. Duration 4 ms by bot id=8976652462
+2026.06.27 06:57:15 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.27 06:57:15 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.27 06:57:26 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.27 06:59:16 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.06.27 06:59:16 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.06.27 06:59:27 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.06.27 09:53:55 aiogram.dispatcher   WARNING  Received SIGINT signal
+2026.06.27 09:53:55 aiogram.dispatcher   INFO     Polling stopped for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.06.27 09:53:55 aiogram.dispatcher   INFO     Polling stopped
+2026.06.27 09:53:55 __main__             INFO     🛑 Polling stopped
+2026.06.27 09:53:55 __main__             INFO     🔴 Bot stopped
