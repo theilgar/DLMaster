@@ -354,6 +354,7 @@ SYS_TEXT = (
     "📈 <b>htop</b> — CPU / RAM / proseslər, <i>canlı · 3 san.</i>\n"
     "🌿 <b>GitHub</b> — kod dəyişiklikləri, push\n"
     "🧩 <b>Plugin-lər</b> — quraşdır, yenilə, söndür\n"
+    "🎧 <b>Yükləmə formatı</b> — birbaşa m4a / ffmpeg çevirmə\n"
     "━━━━━━━━━━━━━━━━━━"
 )
 
@@ -364,9 +365,56 @@ def sys_kb():
         [_btn("🚀 Speedtest", "speed"), _btn("🖥 Fastfetch", "fetch")],
         [InlineKeyboardButton(text="📈 htop", callback_data="htop:start"),          # htop_plugin
          InlineKeyboardButton(text="🌿 GitHub", callback_data="ghf:open")],         # update_notifier_plugin
-        [InlineKeyboardButton(text="🧩 Plugin-lər", callback_data="pm:list")],      # plugin_manager_plugin
+        [InlineKeyboardButton(text="🧩 Plugin-lər", callback_data="pm:list"),      # plugin_manager_plugin
+         _btn("🎧 Yükləmə formatı", "dlf")],
         nav_row("main"),
     ])
+
+
+def dl_format_view(note: str = ""):
+    """🎧 Yükləmə formatı: ⚡ birbaşa m4a və 🎞 ffmpeg çevirmə açarları."""
+    try:
+        from core.youtube_handler import download_mode, ffmpeg_available, DL_STATS
+    except Exception as e:
+        return f"❌ youtube_handler yüklənmədi: <code>{escape(str(e))[:200]}</code>", \
+            InlineKeyboardMarkup(inline_keyboard=[nav_row("sys")])
+    m = download_mode()
+    has_ff = ffmpeg_available()
+    direct, ff = m["direct_m4a"], m["ffmpeg"]
+    ff_eff = ff and has_ff
+
+    if direct and ff_eff:
+        result = "✅ m4a varsa <b>birbaşa</b> (çevirməsiz), yoxdursa <b>ffmpeg</b> ilə m4a — <i>tövsiyə olunan</i>"
+    elif direct:
+        result = ("⚠️ m4a varsa birbaşa, yoxdursa <b>orijinal format</b> (webm/opus) göndərilir — "
+                  "Telegram onu musiqi kimi göstərməyə bilər")
+    elif ff_eff:
+        result = "🎞 Həmişə ən yaxşı audio + <b>ffmpeg</b> ilə m4a — <i>yavaş, keyfiyyət bir az yüksək</i>"
+    else:
+        result = "⚠️ Çevirmə yoxdur — fayl <b>olduğu kimi</b> göndərilir (webm/opus ola bilər)"
+
+    total = sum(DL_STATS.values())
+    stats = (f"⚡ birbaşa {DL_STATS['direct']} · 🎞 ffmpeg {DL_STATS['converted']} · "
+             f"📄 orijinal {DL_STATS['original']}") if total else "<i>hələ yükləmə olmayıb</i>"
+    text = (
+        "🎧 <b>Yükləmə formatı</b>\n━━━━━━━━━━━━━━━━━━\n"
+        f"⚡ <b>Birbaşa m4a:</b> {'✅ açıq' if direct else '❌ bağlı'}\n"
+        "<i>YouTube-un hazır m4a (AAC) audiosu endirilir — çevirmə yoxdur, ən sürətli yol.</i>\n\n"
+        f"🎞 <b>ffmpeg çevirmə:</b> {'✅ açıq' if ff else '❌ bağlı'}"
+        f"{'' if has_ff else ' · ⚠️ ffmpeg serverdə tapılmadı'}\n"
+        "<i>m4a yoxdursa ən yaxşı audio endirilib ffmpeg ilə m4a-ya çevrilir (alternativ yol).</i>\n"
+        "━━━━━━━━━━━━━━━━━━\n"
+        f"📌 <b>Nəticə:</b> {result}\n\n"
+        f"📊 Bu sessiyada: {stats}"
+        + (f"\n\n{note}" if note else "")
+    )
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [_btn(f"⚡ Birbaşa m4a: {'✅' if direct else '❌'}", "dlf_direct"),
+         _btn(f"🎞 ffmpeg: {'✅' if ff else '❌'}", "dlf_ffmpeg")],
+        [_btn("🔄 Yenilə", "dlf")],
+        nav_row("sys"),
+    ])
+    return text, kb
 
 
 FETCH_INTERVAL = 3          # fastfetch yenilənməsi (san.)
@@ -1877,6 +1925,21 @@ def setup(context):
             await cb.answer()
             reset_inputs()
             await edit(cb, SYS_TEXT, sys_kb())
+
+        elif action in ("dlf", "dlf_direct", "dlf_ffmpeg"):
+            note = ""
+            if action != "dlf":
+                key = "dl:direct_m4a" if action == "dlf_direct" else "dl:ffmpeg"
+                db = get_db()
+                cur = (db.get_setting(key) or "on").strip().lower() in ("1", "on", "true", "yes")
+                await asyncio.to_thread(db.set_setting, key, "off" if cur else "on")
+                label = "⚡ Birbaşa m4a" if action == "dlf_direct" else "🎞 ffmpeg çevirmə"
+                note = f"{'❌ Bağlandı' if cur else '✅ Açıldı'}: {label} — növbəti yükləmədən etibarən"
+                await cb.answer(note)
+            else:
+                await cb.answer()
+            text, kb = dl_format_view(note)
+            await edit(cb, text, kb)
 
         elif action in ("fetch", "fetch_pause", "fetch_stop"):
             key = (cb.message.chat.id, cb.message.message_id)

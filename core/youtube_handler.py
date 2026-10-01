@@ -103,6 +103,38 @@ async def convert_to_m4a(src_path: str, base_name: str, cancel_event=None) -> st
     return dst_path
 
 
+# ───────────────────────── Yükləmə rejimi (/menu → 🖥 Sistem → 🎧 Yükləmə formatı) ─────────────────────────
+# ⚡ direct_m4a: YouTube-un hazır m4a (AAC) audio axını birbaşa endirilir — çevirmə yoxdur, ən sürətli yol
+# 🎞 ffmpeg:     m4a axını yoxdursa (və ya birbaşa rejim söndürülübsə) ən yaxşı audio endirilib m4a-ya çevrilir
+DL_STATS = {"direct": 0, "converted": 0, "original": 0}
+
+
+def _setting_on(key: str, default: bool = True) -> bool:
+    try:
+        from core.database import get_db
+        value = get_db().get_setting(key)
+    except Exception:
+        value = None
+    if value is None:
+        return default
+    return str(value).strip().lower() in ("1", "on", "true", "yes")
+
+
+def download_mode() -> dict:
+    return {"direct_m4a": _setting_on("dl:direct_m4a"), "ffmpeg": _setting_on("dl:ffmpeg")}
+
+
+def ffmpeg_available() -> bool:
+    return shutil.which("ffmpeg") is not None
+
+
+def _format_string(direct: bool, ffmpeg: bool) -> str:
+    if direct:
+        # əvvəl hazır m4a audio, olmasa istənilən audio; birləşdirmə (video+audio) yalnız ffmpeg ilə
+        return "bestaudio[ext=m4a]/bestaudio/best" + ("/bestvideo+bestaudio" if ffmpeg else "")
+    return "bestaudio/best" + ("/bestvideo+bestaudio" if ffmpeg else "")
+
+
 async def download_as_m4a(url: str, base_name: str, browser: str, cookies=None, cancel_event=None) -> str:
     """Videonu yükləyir (mümkün olarsa yalnız audio axını, yoxdursa video) və m4a-ya çevirir.
 
@@ -120,6 +152,10 @@ async def download_as_m4a(url: str, base_name: str, browser: str, cookies=None, 
         if cancelled():
             raise DownloadCancelled("İstifadəçi yükləməni dayandırdı")
 
+    mode = download_mode()
+    use_ffmpeg = mode["ffmpeg"] and ffmpeg_available()
+    fmt = _format_string(mode["direct_m4a"], use_ffmpeg)
+
     # (təsvir, cookies istifadə olunsun?, player_client)
     attempts = [
         ("cookies + default client", True, None),
@@ -133,8 +169,7 @@ async def download_as_m4a(url: str, base_name: str, browser: str, cookies=None, 
             remove_partial(base_name)
             raise DownloadCancelled("İstifadəçi yükləməni dayandırdı")
         ydl_opts = {
-            # Əvvəl audio axını, olmasa audio+video olan istənilən format
-            'format': 'bestaudio/best/bestvideo+bestaudio',
+            'format': fmt,
             'outtmpl': os.path.join(DOWNLOAD_DIR, f"{base_name}.%(ext)s"),
             'noplaylist': True,
             'nopart': True,
@@ -161,7 +196,16 @@ async def download_as_m4a(url: str, base_name: str, browser: str, cookies=None, 
 
             if cancelled():
                 raise DownloadCancelled("İstifadəçi yükləməni dayandırdı")
-            return await convert_to_m4a(src_path, base_name, cancel_event)
+
+            if src_path.lower().endswith(".m4a"):
+                DL_STATS["direct"] += 1                  # ⚡ çevirməsiz
+                return src_path
+            if use_ffmpeg:
+                DL_STATS["converted"] += 1               # 🎞 ffmpeg ilə m4a
+                return await convert_to_m4a(src_path, base_name, cancel_event)
+            DL_STATS["original"] += 1                    # ffmpeg söndürülüb — olduğu kimi (webm/opus və s.)
+            logger.info(f"ffmpeg söndürülüb, fayl çevrilmədən göndərilir: {os.path.basename(src_path)}")
+            return src_path
 
         except DownloadCancelled:
             logger.info(f"Yükləmə dayandırıldı: {url}")
