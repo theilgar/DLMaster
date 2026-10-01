@@ -4811,3 +4811,256 @@ can_send_welcome_messages
 2026.10.01 15:52:05 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster'
 2026.10.01 15:52:08 plugins.update_notifier_plugin INFO     ✅ Yeniləmə bildirişi göndərildi
 2026.10.01 15:52:21 aiogram.event        INFO     Update id=875903243 is handled. Duration 189 ms by bot id=8976652462
+2026.10.01 15:52:25 plugins.update_notifier_plugin INFO     📦 Full push: b39e416 (21 fayl)
+2026.10.01 15:52:25 aiogram.event        INFO     Update id=875903244 is handled. Duration 2470 ms by bot id=8976652462
+2026.10.01 15:52:48 core.utilities       INFO     User 1922161311 executed command: /start
+2026.10.01 15:52:48 aiogram.event        INFO     Update id=875903245 is handled. Duration 88 ms by bot id=8976652462
+2026.10.01 15:52:50 aiogram.event        INFO     Update id=875903246 is handled. Duration 99 ms by bot id=8976652462
+2026.10.01 15:52:52 aiogram.event        INFO     Update id=875903247 is handled. Duration 73 ms by bot id=8976652462
+2026.10.01 15:52:55 aiogram.event        INFO     Update id=875903248 is handled. Duration 34 ms by bot id=8976652462
+2026.10.01 15:53:16 core.utilities       INFO     User 8502974425 executed command: /menu
+2026.10.01 15:53:16 aiogram.event        INFO     Update id=875903249 is handled. Duration 44 ms by bot id=8976652462
+2026.10.01 15:53:28 aiogram.event        INFO     Update id=875903250 is handled. Duration 189 ms by bot id=8976652462
+2026.10.01 15:53:38 plugins.depo_filler_plugin INFO     ✅ Depo doldurucu plugin-i yükləndi (/depo)
+2026.10.01 15:53:38 plugins.plugin_manager_plugin INFO     🧩 Plugin yükləndi: depo_filler_plugin (+2 handler, köhnə 0 çıxarıldı)
+2026.10.01 15:53:38 aiogram.event        INFO     Update id=875903251 is handled. Duration 60 ms by bot id=8976652462
+2026.10.01 15:53:40 aiogram.event        INFO     Update id=875903252 is handled. Duration 120 ms by bot id=8976652462
+2026.10.01 15:53:50 aiogram.event        INFO     Update id=875903253 is handled. Duration 122 ms by bot id=8976652462
+2026.10.01 15:53:53 aiogram.event        INFO     Update id=875903254 is handled. Duration 53 ms by bot id=8976652462
+2026.10.01 15:53:55 aiogram.event        INFO     Update id=875903255 is handled. Duration 74 ms by bot id=8976652462
+2026.10.01 15:53:59 aiogram.event        INFO     Update id=875903256 is handled. Duration 82 ms by bot id=8976652462
+2026.10.01 15:54:16 core.utilities       INFO     User 8502974425 executed command: /depo
+2026.10.01 15:54:16 aiogram.event        INFO     Update id=875903257 is handled. Duration 59 ms by bot id=8976652462
+2026.10.01 15:54:32 plugins.depo_filler_plugin INFO     📦 Depo doldurucu işə düşdü
+2026.10.01 15:54:32 aiogram.event        INFO     Update id=875903258 is handled. Duration 65 ms by bot id=8976652462
+2026.10.01 15:54:37 core.audio_cache     INFO     📦 Depo kanalı: DLLMaster Depo (-1003987878159)
+2026.10.01 15:54:37 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': "artist:F'Rhyme", 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 15:54:37 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:Xpert', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 15:54:37 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:İfrat', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 15:54:37 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:INNA', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 15:54:37 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:The Weeknd', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 15:54:37 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:Röya', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 15:54:37 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:Eyyub Yaqubov', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 15:54:37 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:Aygün Kazımova', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 15:54:37 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:𝐍𝐢𝐲ə 𝐙𝐚𝐥ı𝐦 𝐒ə𝐧 𝐀𝐠̆𝐚𝐫𝐭𝐝ı𝐧 𝐒𝐚𝐜̧ı𝐦ı𝐧 𝐐𝐚𝐫ə𝐥ə𝐫𝐢𝐧', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 15:54:37 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:Jennifer Lopez', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 15:54:37 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:Eminem', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 15:54:37 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:Mobb Deep', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 15:54:37 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 15:54:37 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 15:54:39 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 15:54:39 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 15:54:41 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 15:54:41 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 15:54:42 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 15:54:42 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.10.01 15:54:44 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 15:54:44 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 15:54:45 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 15:54:45 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 15:54:46 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 15:54:46 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.10.01 15:54:47 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 15:54:47 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 15:54:49 core.spotify_handler INFO     Fetching playlist data: 37i9dQZF1DXcBWIGoYBM5M
+2026.10.01 15:54:49 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/playlists/37i9dQZF1DXcBWIGoYBM5M with Params: {'fields': None, 'market': None, 'additional_types': 'track'} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 15:54:49 core.spotify_handler ERROR    Spotify API error: http status: 403, code: -1 - https://api.spotify.com/v1/playlists/37i9dQZF1DXcBWIGoYBM5M?additional_types=track:
+ Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again., reason: None
+2026.10.01 15:54:49 plugins.links_plugin INFO     Spotify API (playlist/37i9dQZF1DXcBWIGoYBM5M) alınmadı, embed sınanır: Spotify API error: http status: 403, code: -1 - https://api.spotify.com/v1/playlists/37i9dQZF1DXcBWIGoYBM5M?additional_types=track:
+ Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again., reason: None
+2026.10.01 15:54:49 core.spotify_handler INFO     Fetching playlist data: 37i9dQZEVXbMDoHDwVN2tF
+2026.10.01 15:54:49 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/playlists/37i9dQZEVXbMDoHDwVN2tF with Params: {'fields': None, 'market': None, 'additional_types': 'track'} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 15:54:49 core.spotify_handler ERROR    Spotify API error: http status: 403, code: -1 - https://api.spotify.com/v1/playlists/37i9dQZEVXbMDoHDwVN2tF?additional_types=track:
+ Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again., reason: None
+2026.10.01 15:54:49 plugins.links_plugin INFO     Spotify API (playlist/37i9dQZEVXbMDoHDwVN2tF) alınmadı, embed sınanır: Spotify API error: http status: 403, code: -1 - https://api.spotify.com/v1/playlists/37i9dQZEVXbMDoHDwVN2tF?additional_types=track:
+ Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again., reason: None
+2026.10.01 15:54:49 plugins.depo_filler_plugin INFO     📦 Doldurucu növbəsi: 175 mahnı
+2026.10.01 15:54:49 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 15:54:49 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.10.01 15:54:49 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 15:54:50 plugins.music_plugin WARNING  Odesli API açar tələb edir (ODESLI_API_KEY). Birbaşa song.link/<url> linki istifadə olunacaq.
+2026.10.01 15:55:04 plugins.music_plugin INFO     Metadata (youtube): INNA - Love
+2026.10.01 15:55:16 aiogram.event        INFO     Update id=875903259 is handled. Duration 63 ms by bot id=8976652462
+2026.10.01 15:55:23 aiogram.event        INFO     Update id=875903260 is handled. Duration 48 ms by bot id=8976652462
+2026.10.01 15:55:24 aiogram.event        INFO     Update id=875903261 is handled. Duration 74 ms by bot id=8976652462
+2026.10.01 15:55:26 aiogram.event        INFO     Update id=875903262 is handled. Duration 57 ms by bot id=8976652462
+2026.10.01 15:55:29 aiogram.event        INFO     Update id=875903263 is handled. Duration 79 ms by bot id=8976652462
+2026.10.01 15:55:30 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 15:55:30 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 15:55:30 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 15:55:43 plugins.music_plugin INFO     Metadata (youtube): Imany - Don't Be So Shy (Filatov & Karas Remix) /
+2026.10.01 15:56:09 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 15:56:09 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.10.01 15:56:09 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 15:56:27 core.utilities       INFO     User 8502974425 executed command: /depo add
+2026.10.01 15:56:27 aiogram.event        INFO     Update id=875903264 is handled. Duration 75 ms by bot id=8976652462
+2026.10.01 15:56:31 core.utilities       INFO     User 8930564913 executed command: /start
+2026.10.01 15:56:31 aiogram.event        INFO     Update id=875903265 is handled. Duration 77 ms by bot id=8976652462
+2026.10.01 15:56:32 plugins.music_plugin INFO     Metadata (youtube): YouTube - ✵Azeri Bass✵{Seni ILk Gorduyum Gun}✵
+2026.10.01 15:57:00 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 15:57:00 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 15:57:00 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 15:57:16 plugins.music_plugin INFO     Metadata (youtube): EfirBeatsZ - Mennen Uzaqlaşma Yaxınlaş Ginen Remix
+2026.10.01 15:57:42 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 15:57:42 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 15:57:42 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 15:58:21 plugins.music_plugin INFO     Metadata (youtube): YouTube - Men Onda Royada idim. Azeri Bass Music.
+2026.10.01 15:58:24 core.utilities       INFO     User 8502974425 executed command: /depo add https://open.spotify.com/playlist/37i9dQZF1E4xturCDzmsaZ?si=PTnPgTG3Re-A6eS6gBIu0A&utm_source=copy-link
+2026.10.01 15:58:24 core.spotify_handler INFO     Fetching playlist data: 37i9dQZF1E4xturCDzmsaZ
+2026.10.01 15:58:24 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/playlists/37i9dQZF1E4xturCDzmsaZ with Params: {'fields': None, 'market': None, 'additional_types': 'track'} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 15:58:24 core.spotify_handler ERROR    Spotify API error: http status: 403, code: -1 - https://api.spotify.com/v1/playlists/37i9dQZF1E4xturCDzmsaZ?additional_types=track:
+ Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again., reason: None
+2026.10.01 15:58:24 plugins.links_plugin INFO     Spotify API (playlist/37i9dQZF1E4xturCDzmsaZ) alınmadı, embed sınanır: Spotify API error: http status: 403, code: -1 - https://api.spotify.com/v1/playlists/37i9dQZF1E4xturCDzmsaZ?additional_types=track:
+ Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again., reason: None
+2026.10.01 15:58:25 aiogram.event        INFO     Update id=875903266 is handled. Duration 432 ms by bot id=8976652462
+2026.10.01 15:58:34 core.utilities       INFO     User 8502974425 executed command: /depo
+2026.10.01 15:58:34 aiogram.event        INFO     Update id=875903267 is handled. Duration 121 ms by bot id=8976652462
+2026.10.01 15:58:44 aiogram.event        INFO     Update id=875903268 is handled. Duration 59 ms by bot id=8976652462
+2026.10.01 15:58:47 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 15:58:47 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 15:58:47 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 15:58:49 core.spotify_handler INFO     Fetching playlist data: 37i9dQZF1E4xturCDzmsaZ
+2026.10.01 15:58:49 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/playlists/37i9dQZF1E4xturCDzmsaZ with Params: {'fields': None, 'market': None, 'additional_types': 'track'} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 15:58:49 core.spotify_handler ERROR    Spotify API error: http status: 403, code: -1 - https://api.spotify.com/v1/playlists/37i9dQZF1E4xturCDzmsaZ?additional_types=track:
+ Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again., reason: None
+2026.10.01 15:58:49 plugins.links_plugin INFO     Spotify API (playlist/37i9dQZF1E4xturCDzmsaZ) alınmadı, embed sınanır: Spotify API error: http status: 403, code: -1 - https://api.spotify.com/v1/playlists/37i9dQZF1E4xturCDzmsaZ?additional_types=track:
+ Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again., reason: None
+2026.10.01 15:58:49 aiogram.event        INFO     Update id=875903269 is handled. Duration 373 ms by bot id=8976652462
+2026.10.01 15:58:52 aiogram.event        INFO     Update id=875903270 is handled. Duration 62 ms by bot id=8976652462
+2026.10.01 15:59:05 plugins.music_plugin INFO     Metadata (youtube): YouTube - Azəri bass music 2025 / Xəbərin yoxdu sənin / Yeni mahnı Trend mahnı
+2026.10.01 15:59:33 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 15:59:33 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.10.01 15:59:33 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 15:59:46 plugins.music_plugin INFO     Metadata (youtube): YouTube - CIA Musıc & Xumar Qədimova Gələcəyəm Gəl Desən REMIX
+2026.10.01 16:00:12 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:00:12 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.10.01 16:00:12 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 16:00:37 plugins.music_plugin INFO     Metadata (youtube): Uzeyir Mehdizade - Gizli Nomre
+2026.10.01 16:00:39 core.utilities       INFO     User 8502974425 executed command: /depo
+2026.10.01 16:00:39 aiogram.event        INFO     Update id=875903271 is handled. Duration 66 ms by bot id=8976652462
+2026.10.01 16:01:03 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:01:03 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.10.01 16:01:03 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 16:01:22 plugins.music_plugin INFO     Metadata (youtube): Vuqar Bileceri - Torpaqlar Aparmasinlar Remix (ProBeats Remix 2023)
+2026.10.01 16:01:48 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:01:48 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 16:01:48 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 16:02:10 plugins.music_plugin INFO     Metadata (youtube): Vüqar Biləcəri - Ölməz Bu Məhəbbət (Remix GroodBeatsZ)
+2026.10.01 16:02:36 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:02:36 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.10.01 16:02:36 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 16:03:11 plugins.music_plugin INFO     Metadata (youtube): Resad Dagli & Balaeli & Orxan - Sen O Canana Gore (Remix @SamiIsmayilli )
+2026.10.01 16:03:37 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:03:37 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.10.01 16:03:37 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 16:04:12 plugins.music_plugin INFO     Metadata (youtube): Namiq Mena - Bayram Kürdexanlı - Serin Serin, Full
+2026.10.01 16:04:37 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:04:37 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 16:04:37 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 16:04:55 plugins.music_plugin INFO     Metadata (youtube): Azeri Bass Music 2025 - [Axtarılan Mahnı Remix Bass] Yeni Mahnı 2025
+2026.10.01 16:05:05 aiogram.event        INFO     Update id=875903272 is handled. Duration 489 ms by bot id=8976652462
+2026.10.01 16:05:06 aiogram.event        INFO     Update id=875903273 is handled. Duration 43 ms by bot id=8976652462
+2026.10.01 16:05:22 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:05:22 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 16:05:22 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 16:05:36 aiogram.event        INFO     Update id=875903274 is handled. Duration 114 ms by bot id=8976652462
+2026.10.01 16:05:41 plugins.music_plugin INFO     Metadata (youtube): Balabəy Ağayev ft Gülağa Ağayev ft Cavid - Bir Addım da Yaxınlaş
+2026.10.01 16:05:43 aiogram.event        INFO     Update id=875903275 is handled. Duration 61 ms by bot id=8976652462
+2026.10.01 16:06:08 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:06:08 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.10.01 16:06:08 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 16:06:25 plugins.music_plugin INFO     Metadata (youtube): Vahid Qedim - Zəmanəmiz kəllə mayallaq gedir - (Kaset mahnilari) #arxiv #retro #dolya
+2026.10.01 16:06:52 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:06:52 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 16:06:52 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 16:07:10 aiogram.dispatcher   WARNING  Received SIGINT signal
+2026.10.01 16:07:10 aiogram.dispatcher   INFO     Polling stopped for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.10.01 16:07:10 aiogram.dispatcher   INFO     Polling stopped
+2026.10.01 16:07:10 __main__             INFO     🛑 Polling stopped
+2026.10.01 16:07:10 __main__             INFO     🔴 Bot stopped
+2026.10.01 16:07:17 __main__             INFO     🤖 Starting bot...
+2026.10.01 16:07:17 __main__             INFO     🚀 Starting bot initialization...
+2026.10.01 16:07:17 core.spotify_handler INFO     Spotify API connection established.
+2026.10.01 16:07:17 __main__             INFO     ✅ Spotify service initialized
+2026.10.01 16:07:17 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 16:07:17 core.youtube_handler INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:07:17 __main__             INFO     ✅ YouTube services initialized (firefox)
+2026.10.01 16:07:17 __main__             INFO     🔌 Loading plugins...
+2026.10.01 16:07:17 core.utilities       INFO     🔍 Scanning plugins in: /home/admin/dlmaster/plugins
+2026.10.01 16:07:17 core.utilities       INFO     🔄 Loading: plugins.audio_editor_plugin
+2026.10.01 16:07:17 core.utilities       INFO     🔄 Loading: plugins.depo_filler_plugin
+2026.10.01 16:07:17 core.utilities       INFO     🔄 Loading: plugins.links_plugin
+2026.10.01 16:07:17 core.utilities       INFO     🔄 Loading: plugins.menu_plugin
+2026.10.01 16:07:17 core.utilities       INFO     🔄 Loading: plugins.music_plugin
+2026.10.01 16:07:17 core.utilities       INFO     🔄 Loading: plugins.payments_plugin
+2026.10.01 16:07:17 core.utilities       INFO     🔄 Loading: plugins.plugin_manager_plugin
+2026.10.01 16:07:17 core.utilities       INFO     🔄 Loading: plugins.start_plugin
+2026.10.01 16:07:17 core.utilities       INFO     🔄 Loading: plugins.update_notifier_plugin
+2026.10.01 16:07:17 plugins.links_plugin INFO     ✅ Links plugin yükləndi (YouTube + Spotify)
+2026.10.01 16:07:17 core.utilities       INFO     ✅ Loaded: plugins.links_plugin
+2026.10.01 16:07:17 core.utilities       INFO     ✅ Loaded: plugins.audio_editor_plugin
+2026.10.01 16:07:17 plugins.menu_plugin  INFO     ✅ Menu plugin yükləndi
+2026.10.01 16:07:17 core.utilities       INFO     ✅ Loaded: plugins.menu_plugin
+2026.10.01 16:07:17 core.utilities       INFO     ✅ Loaded: plugins.music_plugin
+2026.10.01 16:07:17 plugins.payments_plugin INFO     ✅ Payments plugin yükləndi
+2026.10.01 16:07:17 core.utilities       INFO     ✅ Loaded: plugins.payments_plugin
+2026.10.01 16:07:17 plugins.plugin_manager_plugin INFO     ✅ Plugin meneceri yükləndi
+2026.10.01 16:07:17 core.utilities       INFO     ✅ Loaded: plugins.plugin_manager_plugin
+2026.10.01 16:07:17 plugins.start_plugin WARNING  Default admin yetkiləri təyin edilmədi: 4 validation errors for ChatAdministratorRights
+can_post_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_edit_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_delete_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_send_welcome_messages
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026.10.01 16:07:17 plugins.start_plugin INFO     ✅ Start plugin yükləndi
+2026.10.01 16:07:17 core.utilities       INFO     ✅ Loaded: plugins.start_plugin
+2026.10.01 16:07:17 plugins.depo_filler_plugin INFO     📦 Depo doldurucu işə düşdü
+2026.10.01 16:07:17 plugins.depo_filler_plugin INFO     ✅ Depo doldurucu plugin-i yükləndi (/depo)
+2026.10.01 16:07:17 core.utilities       INFO     ✅ Loaded: plugins.depo_filler_plugin
+2026.10.01 16:07:17 core.utilities       INFO     ✅ Loaded: plugins.update_notifier_plugin
+2026.10.01 16:07:17 __main__             INFO     🚀 Starting polling...
+2026.10.01 16:07:17 aiogram.dispatcher   INFO     Start polling
+2026.10.01 16:07:17 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.10.01 16:07:21 plugins.update_notifier_plugin INFO     ✅ Yeniləmə bildirişi göndərildi
+2026.10.01 16:07:22 core.audio_cache     INFO     📦 Depo kanalı: DLLMaster Depo (-1003987878159)
+2026.10.01 16:07:22 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': "artist:F'Rhyme", 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 16:07:22 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:Xpert', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 16:07:22 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:İfrat', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 16:07:22 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:INNA', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 16:07:22 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:The Weeknd', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 16:07:22 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:Röya', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 16:07:22 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:Eyyub Yaqubov', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 16:07:22 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:Aygün Kazımova', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 16:07:22 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:𝐍𝐢𝐲ə 𝐙𝐚𝐥ı𝐦 𝐒ə𝐧 𝐀𝐠̆𝐚𝐫𝐭𝐝ı𝐧 𝐒𝐚𝐜̧ı𝐦ı𝐧 𝐐𝐚𝐫ə𝐥ə𝐫𝐢𝐧', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 16:07:22 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:Jennifer Lopez', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 16:07:22 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:Eminem', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 16:07:22 spotipy.client       ERROR    HTTP Error for GET to https://api.spotify.com/v1/search with Params: {'q': 'artist:Mobb Deep', 'limit': 1, 'offset': 0, 'type': 'artist', 'market': None} returned 403 due to Active premium subscription required for the owner of the app. When the subscription status changes, it can take a few hours before requests are allowed again.
+2026.10.01 16:07:22 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:07:22 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 16:07:24 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:07:24 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.10.01 16:07:25 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:07:25 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.10.01 16:07:26 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:07:26 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 16:07:28 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:07:28 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.10.01 16:07:29 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:07:29 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 16:07:30 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:07:30 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.10.01 16:07:32 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:07:32 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.10.01 16:07:33 plugins.depo_filler_plugin INFO     📦 Doldurucu növbəsi: 91 mahnı
+2026.10.01 16:07:33 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 16:07:33 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.10.01 16:07:33 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 16:07:34 plugins.music_plugin WARNING  Odesli API açar tələb edir (ODESLI_API_KEY). Birbaşa song.link/<url> linki istifadə olunacaq.
+2026.10.01 16:07:48 aiogram.event        INFO     Update id=875903276 is handled. Duration 266 ms by bot id=8976652462

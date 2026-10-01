@@ -333,7 +333,13 @@ def setup(context):
         await run_batch(status, [item], item["title"], message.from_user.id, source, single=True)
 
     # ── link mesajı ──
-    @dp.message(F.text.func(is_music_link))
+    async def not_reserved(message: types.Message) -> bool:
+        """Link başqa iş üçün gəlibsə (məs. depo doldurucusuna mənbə) — yükləmə etmə."""
+        waiting = getattr(context, "depo_waiting", None)
+        return not (waiting and message.from_user and waiting(message.from_user.id))
+
+    # "/depo add <link>" kimi komandalar — öz plugin-lərinə aiddir
+    @dp.message(F.text.func(is_music_link), ~F.text.startswith("/"), not_reserved)
     async def handle_link(message: types.Message):
         parsed = parse_link(message.text)
         if not parsed or not message.from_user:

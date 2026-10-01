@@ -320,6 +320,8 @@ def main_kb():
         [_btn("📢 Broadcast", "bc"), _btn("💎 Premium", "prm:0")],
         [_btn(f"💬 Caption (mənim): {'✅ Açıq' if creator_caption_enabled() else '❌ Bağlı'}", "cap")],
         [_btn("🎨 Mesaj və media", "ms")],
+        [InlineKeyboardButton(text="📦 Depo doldurucu", callback_data="df:panel"),    # depo_filler_plugin
+         InlineKeyboardButton(text="🧩 Plugin-lər", callback_data="pm:list")],       # plugin_manager_plugin
         [_btn("✖️ Bağla", "close")],
     ])
 
