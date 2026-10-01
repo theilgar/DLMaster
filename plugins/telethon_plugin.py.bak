@@ -1,10 +1,14 @@
 """
-Telethon Userbot Plugin — depo inteqrasiyası
+📱 Telethon Userbot İnteqrasiyası — depo üçün (şəxsi hesab)
+
+Bu plugin şəxsi Telegram hesabınızı (userbot) botla eyni loop-da işə salır[span_0](start_span)[span_0](end_span).
+Qrup və gizli kanallardakı audiolara çıxış əldə edir və onları birbaşa
+depo doldurucu (depo_filler_plugin) növbəsinə əlavə edir[span_1](start_span)[span_1](end_span).
 
 Əmrlər:
   .alive                                — istənilən çatda reaksiya verir, 2 saniyə sonra mesajı silir
   /userbot                              — userbot-un statusunu yoxla (bot üzərindən)
-  /scan_chat <link/ID> [mesaj_sayı]     — kanalı skan edib mahnıları /depo növbəsinə əlavə et
+  /scan_chat <link/ID> [mesaj_sayı]     — kanalı skan edib mahnıları /depo növbəsinə əlavə et[span_2](start_span)[span_2](end_span)
 """
 import os
 import asyncio
@@ -36,7 +40,7 @@ def setup(context):
     context.telethon_client = client
 
     def is_creator(uid: int) -> bool:
-        return bool(context.creator_id) and uid == context.creator_id
+        return bool(context.creator_id) and uid == context.creator_id[span_3](start_span)[span_3](end_span)
 
     async def start_telethon():
         """Telethon müştərisini arxa fonda təhlükəsiz işə salır."""
@@ -73,6 +77,7 @@ def setup(context):
         except Exception:
             pass
 
+        # 2 saniyə gözləyir və mesajı hər iki tərəfdən silir
         await asyncio.sleep(2)
         try:
             await event.delete()
@@ -82,7 +87,7 @@ def setup(context):
     # ── 2) Yeni audiolara qulaq asmaq (Bota yönləndirmədən birbaşa növbəyə atır) ──
     @client.on(events.NewMessage(func=lambda e: bool(e.audio)))
     async def on_new_audio(event):
-        filler = getattr(context, "depo_filler", None)
+        filler = getattr(context, "depo_filler", None)[span_4](start_span)[span_4](end_span)
         if not filler:
             return
 
@@ -107,7 +112,7 @@ def setup(context):
             "sp_id": None,
         }
 
-        filler._add(item)
+        filler._add(item)[span_5](start_span)[span_5](end_span)
         logger.info(f"📥 Yeni audio birbaşa depo növbəsinə əlavə edildi: {full_title}")
 
     # ── 3) Userbot statusu ──
@@ -122,7 +127,7 @@ def setup(context):
             f"🟢 <b>Userbot Aktivdir!</b>\n"
             f"👤 <b>Hesab:</b> {escape(me.first_name)} (@{escape(me.username or 'yoxdur')})\n"
             f"🆔 <b>ID:</b> <code>{me.id}</code>\n"
-            f"📦 <i>Qrup və gizli kanallardan mahnıları skan edib /depo üçün istifadə edə bilərsiniz.</i>\n"
+            f"📦 <i>Qrup və gizli kanallardan mahnıları skan edib /depo üçün istifadə edə bilərsiniz.</i>[span_6](start_span)[span_6](end_span)\n"
             f"⚡ <i>İstənilən çatda <code>.alive</code> yazaraq hesabı yoxlaya bilərsiniz.</i>",
             parse_mode="HTML",
         )
@@ -153,9 +158,9 @@ def setup(context):
         if len(args) > 1 and args[1].isdigit():
             limit = int(args[1])
 
-        filler = getattr(context, "depo_filler", None)
+        filler = getattr(context, "depo_filler", None)[span_7](start_span)[span_7](end_span)
         if not filler:
-            await message.answer("❌ Depo doldurucu (<code>depo_filler_plugin</code>) aktiv deyil.", parse_mode="HTML")
+            await message.answer("❌ Depo doldurucu (<code>depo_filler_plugin</code>) aktiv deyil.", parse_mode="HTML")[span_8](start_span)[span_8](end_span)
             return
 
         limit_label = f"Son {limit} mesaj" if limit else "Bütün tarixçə"
@@ -185,13 +190,13 @@ def setup(context):
                         "sp_id": None,
                     }
 
-                    filler._add(item)
+                    filler._add(item)[span_9](start_span)[span_9](end_span)
                     count += 1
 
             await status.edit_text(
                 f"✅ <b>Skan tamamlandı!</b>\n\n"
                 f"🎶 <b>{count}</b> ədəd audio <b>/depo</b> növbəsinə əlavə edildi.\n"
-                f"<i>Vəziyyəti izləmək və ya növbəni işə salmaq üçün <b>/depo</b> menyusuna baxa bilərsiniz.</i>",
+                f"<i>Vəziyyəti izləmək və ya növbəni işə salmaq üçün <b>/depo</b> menyusuna baxa bilərsiniz.</i>[span_10](start_span)[span_10](end_span)",
                 parse_mode="HTML",
             )
 
@@ -201,7 +206,7 @@ def setup(context):
 
 
 async def teardown(context):
-    """Plugin yenidən yüklənəndə və ya bot sönəndə Telethon-u təhlükəsiz söndürür."""
+    """Plugin yenidən yüklənəndə və ya bot sönəndə Telethon-u təhlükəsiz söndürür[span_11](start_span)[span_11](end_span)[span_12](start_span)[span_12](end_span)[span_13](start_span)[span_13](end_span)."""
     task = getattr(context, "telethon_task", None)
     if task and not task.done():
         task.cancel()
