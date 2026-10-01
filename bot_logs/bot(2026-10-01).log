@@ -489,3 +489,85 @@ can_send_welcome_messages
 2026.10.01 08:50:34 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster'
 2026.10.01 08:50:37 plugins.update_notifier_plugin INFO     ✅ Yeniləmə bildirişi göndərildi
 2026.10.01 08:50:47 aiogram.event        INFO     Update id=875902571 is handled. Duration 153 ms by bot id=8976652462
+2026.10.01 08:51:19 plugins.update_notifier_plugin INFO     📦 Full push: e6588f0 (29 fayl)
+2026.10.01 08:51:19 aiogram.event        INFO     Update id=875902572 is handled. Duration 2909 ms by bot id=8976652462
+2026.10.01 08:51:27 aiogram.event        INFO     Update id=875902573 is handled. Duration 54 ms by bot id=8976652462
+2026.10.01 08:51:31 aiogram.event        INFO     Update id=875902574 is handled. Duration 56 ms by bot id=8976652462
+2026.10.01 08:51:32 aiogram.event        INFO     Update id=875902575 is handled. Duration 124 ms by bot id=8976652462
+2026.10.01 08:51:33 aiogram.event        INFO     Update id=875902576 is handled. Duration 71 ms by bot id=8976652462
+2026.10.01 08:51:38 aiogram.event        INFO     Update id=875902577 is handled. Duration 1244 ms by bot id=8976652462
+2026.10.01 08:51:46 aiogram.event        INFO     Update id=875902578 is handled. Duration 120 ms by bot id=8976652462
+2026.10.01 08:51:49 aiogram.event        INFO     Update id=875902579 is handled. Duration 124 ms by bot id=8976652462
+2026.10.01 08:51:53 aiogram.event        INFO     Update id=875902580 is handled. Duration 97 ms by bot id=8976652462
+2026.10.01 08:52:11 aiogram.event        INFO     Update id=875902581 is handled. Duration 37 ms by bot id=8976652462
+2026.10.01 08:52:17 core.utilities       INFO     User 8502974425 executed command: /start
+2026.10.01 08:52:17 aiogram.event        INFO     Update id=875902582 is handled. Duration 70 ms by bot id=8976652462
+2026.10.01 08:52:20 aiogram.event        INFO     Update id=875902583 is handled. Duration 73 ms by bot id=8976652462
+2026.10.01 08:52:34 aiogram.event        INFO     Update id=875902584 is handled. Duration 462 ms by bot id=8976652462
+2026.10.01 08:55:35 core.utilities       INFO     User 8502974425 executed command: /menu
+2026.10.01 08:55:35 aiogram.event        INFO     Update id=875902585 is handled. Duration 57 ms by bot id=8976652462
+2026.10.01 08:58:14 aiogram.event        INFO     Update id=875902586 is handled. Duration 100 ms by bot id=8976652462
+2026.10.01 08:58:17 aiogram.event        INFO     Update id=875902587 is handled. Duration 135 ms by bot id=8976652462
+2026.10.01 08:58:19 aiogram.event        INFO     Update id=875902588 is handled. Duration 52 ms by bot id=8976652462
+2026.10.01 08:58:22 aiogram.event        INFO     Update id=875902589 is handled. Duration 156 ms by bot id=8976652462
+2026.10.01 08:58:23 aiogram.event        INFO     Update id=875902590 is handled. Duration 101 ms by bot id=8976652462
+2026.10.01 08:58:26 aiogram.event        INFO     Update id=875902591 is handled. Duration 55 ms by bot id=8976652462
+2026.10.01 08:58:27 aiogram.event        INFO     Update id=875902592 is handled. Duration 129 ms by bot id=8976652462
+2026.10.01 08:58:29 aiogram.event        INFO     Update id=875902593 is handled. Duration 46 ms by bot id=8976652462
+2026.10.01 08:58:30 aiogram.event        INFO     Update id=875902594 is handled. Duration 133 ms by bot id=8976652462
+2026.10.01 08:58:31 aiogram.event        INFO     Update id=875902595 is handled. Duration 187 ms by bot id=8976652462
+2026.10.01 08:58:33 aiogram.event        INFO     Update id=875902596 is handled. Duration 105 ms by bot id=8976652462
+2026.10.01 08:58:34 aiogram.event        INFO     Update id=875902597 is handled. Duration 85 ms by bot id=8976652462
+2026.10.01 09:04:04 core.utilities       INFO     User 8502974425 executed command: /menu
+2026.10.01 09:04:04 aiogram.event        INFO     Update id=875902598 is handled. Duration 51 ms by bot id=8976652462
+2026.10.01 09:04:49 aiogram.dispatcher   WARNING  Received SIGINT signal
+2026.10.01 09:04:49 aiogram.dispatcher   INFO     Polling stopped for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.10.01 09:04:49 aiogram.dispatcher   INFO     Polling stopped
+2026.10.01 09:04:49 __main__             INFO     🛑 Polling stopped
+2026.10.01 09:04:49 __main__             INFO     🔴 Bot stopped
+2026.10.01 09:04:54 __main__             INFO     🤖 Starting bot...
+2026.10.01 09:04:54 __main__             INFO     🚀 Starting bot initialization...
+2026.10.01 09:04:55 core.spotify_handler INFO     Spotify API connection established.
+2026.10.01 09:04:55 __main__             INFO     ✅ Spotify service initialized
+2026.10.01 09:04:55 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.10.01 09:04:55 core.youtube_handler INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:04:55 __main__             INFO     ✅ YouTube services initialized (firefox)
+2026.10.01 09:04:55 __main__             INFO     🔌 Loading plugins...
+2026.10.01 09:04:55 core.utilities       INFO     🔍 Scanning plugins in: /home/admin/dlmaster/plugins
+2026.10.01 09:04:55 core.utilities       INFO     🔄 Loading: plugins.audio_editor_plugin
+2026.10.01 09:04:55 core.utilities       INFO     🔄 Loading: plugins.menu_plugin
+2026.10.01 09:04:55 core.utilities       INFO     🔄 Loading: plugins.music_plugin
+2026.10.01 09:04:55 core.utilities       INFO     🔄 Loading: plugins.payments_plugin
+2026.10.01 09:04:55 core.utilities       INFO     🔄 Loading: plugins.spotify_plugin
+2026.10.01 09:04:55 core.utilities       INFO     🔄 Loading: plugins.start_plugin
+2026.10.01 09:04:55 core.utilities       INFO     🔄 Loading: plugins.update_notifier_plugin
+2026.10.01 09:04:55 core.utilities       INFO     🔄 Loading: plugins.youtube_plugin
+2026.10.01 09:04:55 core.utilities       INFO     ✅ Loaded: plugins.audio_editor_plugin
+2026.10.01 09:04:55 plugins.menu_plugin  INFO     ✅ Menu plugin yükləndi
+2026.10.01 09:04:55 core.utilities       INFO     ✅ Loaded: plugins.menu_plugin
+2026.10.01 09:04:55 core.utilities       INFO     ✅ Loaded: plugins.music_plugin
+2026.10.01 09:04:55 plugins.payments_plugin INFO     ✅ Payments plugin yükləndi
+2026.10.01 09:04:55 core.utilities       INFO     ✅ Loaded: plugins.payments_plugin
+2026.10.01 09:04:55 core.utilities       INFO     ✅ Loaded: plugins.spotify_plugin
+2026.10.01 09:04:55 plugins.start_plugin WARNING  Default admin yetkiləri təyin edilmədi: 4 validation errors for ChatAdministratorRights
+can_post_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_edit_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_delete_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_send_welcome_messages
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026.10.01 09:04:55 plugins.start_plugin INFO     ✅ Start plugin yükləndi
+2026.10.01 09:04:55 core.utilities       INFO     ✅ Loaded: plugins.start_plugin
+2026.10.01 09:04:55 core.utilities       INFO     ✅ Loaded: plugins.youtube_plugin
+2026.10.01 09:04:55 core.utilities       INFO     ✅ Loaded: plugins.update_notifier_plugin
+2026.10.01 09:04:55 __main__             INFO     🚀 Starting polling...
+2026.10.01 09:04:55 aiogram.dispatcher   INFO     Start polling
+2026.10.01 09:04:55 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.10.01 09:04:58 plugins.update_notifier_plugin INFO     ✅ Yeniləmə bildirişi göndərildi
+2026.10.01 09:05:19 aiogram.event        INFO     Update id=875902599 is handled. Duration 166 ms by bot id=8976652462

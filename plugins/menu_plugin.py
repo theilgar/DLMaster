@@ -7,8 +7,7 @@
   📢 Broadcast        — şəxsi / qruplar / kanallar / hamısı üçün mətn göndərmə
   💎 Premium          — ID və ya @username ilə premium vermə / alma, siyahı
                         ⭐ Ulduz satışı: plan qiymətləri, ödənişlər, geri qaytarma
-  🖼 Media            — /start salam mesajının və start düymələrindəki bələdçilərin şəkli / GIF-i / videosu
-  📝 Mesajlar         — /start, qrup salamı və bələdçi mesajlarının mətni
+  🎨 Mesaj və media   — /start, qrup salamı, bələdçilər və premium mesajının mətni + şəkli / GIF-i / videosu
 
 /premium — istənilən istifadəçi öz statusunu (Free / Premium) görür.
 
@@ -318,7 +317,7 @@ def main_kb():
          InlineKeyboardButton(text="🌿 GitHub", callback_data="ghf:open")],   # update_notifier_plugin
         [_btn("📢 Broadcast", "bc"), _btn("💎 Premium", "prm:0")],
         [_btn(f"💬 Caption (mənim): {'✅ Açıq' if creator_caption_enabled() else '❌ Bağlı'}", "cap")],
-        [_btn("🖼 Media", "wm"), _btn("📝 Mesajlar", "tx")],
+        [_btn("🎨 Mesaj və media", "ms")],
         [_btn("✖️ Bağla", "close")],
     ])
 
@@ -718,42 +717,67 @@ def setup(context):
         if last_query:
             us["last_query"] = last_query
 
-    # ═════════════ Media (salam + start bələdçiləri) ═════════════
-    def wm_list_panel(note: str = ""):
+    # ═════════════ 🎨 Mesaj və media (birləşmiş bölmə) ═════════════
+    # Hər mesajın həm mətni (TEXT_SLOTS), həm mediası (SLOTS) bir paneldən dəyişilir.
+    # Qrup salamı salam mesajının mediasını istifadə edir.
+    MS_WHERE = {
+        "welcome": "/start yazanda göndərilir.",
+        "group": "Bot qrupa əlavə olunanda və qrupda /start yazılanda göndərilir.",
+        "premium": "/start → 💎 Premium al düyməsinə basanda göndərilir.",
+    }
+
+    def media_slot(slot: str) -> str:
+        return TEXT_SLOTS[slot]["media"]
+
+    def short_media(slot: str) -> str:
+        kind = get_media(media_slot(slot))["type"]
+        return {"default": "🎞 GIF", "photo": "🖼 şəkil", "animation": "🎞 GIF",
+                "video": "🎬 video", "none": "🚫 yoxdur"}.get(kind, kind)
+
+    def ms_list_panel(note: str = ""):
         lines = [
-            f"{info['label']}: <b>{escape(media_label(slot))}</b>" for slot, info in SLOTS.items()
+            f"{info['label']}\n    📝 {'✏️ dəyişdirilib' if get_text_template(slot) else 'default'}"
+            f" · 🖼 {short_media(slot)}"
+            for slot, info in TEXT_SLOTS.items()
         ]
         text = (
-            "🖼 <b>Media</b>\n\n"
-            "/start mesajının və start düymələrinə basanda göndərilən bələdçilərin mediası.\n\n"
+            "🎨 <b>Mesaj və media</b>\n\n"
+            "Botun göndərdiyi mesajların mətni və şəkli / GIF-i / videosu.\n\n"
             + "\n".join(lines)
             + (f"\n\n{note}" if note else "")
             + "\n\n<i>Dəyişmək istədiyini seç:</i>"
         )
-        rows = [[_btn(info["label"], f"wm:{slot}")] for slot, info in SLOTS.items()]
+        btns = [_btn(info["label"], f"ms:{slot}") for slot, info in TEXT_SLOTS.items()]
+        rows = [btns[i:i + 2] for i in range(0, len(btns), 2)]
         rows.append(nav_row("main"))
         return text, InlineKeyboardMarkup(inline_keyboard=rows)
 
-    def wm_panel(slot: str, note: str = ""):
-        info = SLOTS[slot]
-        where = (
-            "/start mesajında və bot qrupa əlavə olunanda göndərilir."
-            if slot == "welcome" else "/start altındakı düyməyə basanda göndərilir."
-        )
+    def ms_panel(slot: str, note: str = ""):
+        info = TEXT_SLOTS[slot]
+        mslot = media_slot(slot)
+        custom = get_text_template(slot)
+        shared = " <i>(salam mesajı ilə ortaq)</i>" if mslot != slot else ""
+        where = MS_WHERE.get(slot, "/start altındakı düyməyə basanda göndərilir.")
+        vars_text = " ".join(f"<code>{escape(k)}</code>" for k in info["vars"])
         text = (
-            f"🖼 <b>{escape(info['label'])}</b>\n\n{where}\n\n"
-            f"📌 Hazırda: <b>{escape(media_label(slot))}</b>"
+            f"🎨 <b>{escape(info['label'])}</b>\n<i>{where}</i>\n\n"
+            f"📝 <b>Mətn:</b> {'✏️ sənin mətnin' if custom else 'default'}"
+            + (f" ({len(custom)} simvol)" if custom else "")
+            + f"\n🖼 <b>Media:</b> {escape(media_label(mslot))}{shared}\n\n"
+            f"🔤 Mətndə dəyişənlər: {vars_text}"
             + (f"\n\n{note}" if note else "")
         )
-        second = [_btn("🚫 Mediasız", f"wm_none:{slot}")]
-        if slot == "welcome":
-            second.insert(0, _btn("↩️ Default GIF", f"wm_def:{slot}"))
-        kb = InlineKeyboardMarkup(inline_keyboard=[
-            [_btn("📤 Yeni media göndər", f"wm_set:{slot}"), _btn("👁 Önizləmə", f"wm_prev:{slot}")],
-            second,
-            nav_row("wm"),
-        ])
-        return text, kb
+        text_row = [_btn("✏️ Mətni dəyiş", f"tx_set:{slot}"), _btn("📋 Hazırkı mətn", f"tx_show:{slot}")]
+        media_row = [_btn("🖼 Media göndər", f"wm_set:{slot}"), _btn("🚫 Mediasız", f"wm_none:{slot}")]
+        rows = [text_row]
+        if custom:
+            rows.append([_btn("↩️ Default mətn", f"tx_def:{slot}")])
+        rows.append(media_row)
+        if mslot == "welcome":
+            rows.append([_btn("↩️ Default GIF", f"wm_def:{slot}")])
+        rows.append([_btn("👁 Önizləmə", f"tx_prev:{slot}")])
+        rows.append(nav_row("ms"))
+        return text, InlineKeyboardMarkup(inline_keyboard=rows)
 
     async def wm_edit_panel(text: str, kb=None):
         try:
@@ -770,7 +794,8 @@ def setup(context):
 
     @dp.message(F.chat.type == "private", F.photo | F.animation | F.video, waiting_media)
     async def welcome_media_input(message: Message):
-        slot = wm.get("slot", "welcome")
+        slot = wm.get("slot", "welcome")          # media slotu
+        back = wm.get("back", "welcome")          # panelin slotu
         if message.animation:
             kind, file_id = "animation", message.animation.file_id
         elif message.video:
@@ -782,7 +807,7 @@ def setup(context):
             await message.delete()
         except Exception:
             pass
-        text, kb = wm_panel(slot, "✅ <b>Yeni media saxlandı.</b> Yoxlamaq üçün 👁 Önizləmə bas.")
+        text, kb = ms_panel(back, "✅ <b>Yeni media saxlandı.</b> Yoxlamaq üçün 👁 Önizləmə bas.")
         await wm_edit_panel(text, kb)
         wm["stage"] = None
         logger.info(f"Media dəyişdi ({slot}): {kind}")
@@ -796,43 +821,6 @@ def setup(context):
             "<i>Şəkli \"fayl kimi\" yox, adi şəkil kimi göndərin.</i>",
             parse_mode="HTML",
         )
-
-    # ═════════════ Mesajlar (mətn şablonları) ═════════════
-    def tx_list_panel(note: str = ""):
-        lines = [
-            f"{info['label']}: <b>{'✏️ dəyişdirilib' if get_text_template(slot) else 'default'}</b>"
-            for slot, info in TEXT_SLOTS.items()
-        ]
-        text = (
-            "📝 <b>Mesajlar</b>\n\n"
-            "/start, qrup salamı və start düymələrinin bələdçi mesajlarının mətni.\n\n"
-            + "\n".join(lines)
-            + (f"\n\n{note}" if note else "")
-            + "\n\n<i>Dəyişmək istədiyini seç:</i>"
-        )
-        rows = [[_btn(info["label"], f"tx:{slot}")] for slot, info in TEXT_SLOTS.items()]
-        rows.append(nav_row("main"))
-        return text, InlineKeyboardMarkup(inline_keyboard=rows)
-
-    def tx_panel(slot: str, note: str = ""):
-        info = TEXT_SLOTS[slot]
-        custom = get_text_template(slot)
-        vars_text = "\n".join(f"<code>{escape(k)}</code> — {escape(v)}" for k, v in info["vars"].items())
-        text = (
-            f"📝 <b>{escape(info['label'])}</b>\n\n"
-            f"📌 Hazırda: <b>{'✏️ sənin mətnin' if custom else 'default mətn'}</b>"
-            + (f" ({len(custom)} simvol)" if custom else "")
-            + f"\n\n🔤 <b>Dəyişənlər</b> (göndəriləndə real dəyərlə əvəz olunur):\n{vars_text}"
-            + (f"\n\n{note}" if note else "")
-        )
-        rows = [
-            [_btn("✏️ Yeni mətn yaz", f"tx_set:{slot}"), _btn("👁 Önizləmə", f"tx_prev:{slot}")],
-            [_btn("📋 Hazırkı mətn", f"tx_show:{slot}")],
-        ]
-        if custom:
-            rows[1].append(_btn("↩️ Default mətn", f"tx_def:{slot}"))
-        rows.append(nav_row("tx"))
-        return text, InlineKeyboardMarkup(inline_keyboard=rows)
 
     async def tx_edit_panel(text: str, kb=None):
         try:
@@ -882,7 +870,7 @@ def setup(context):
         if get_media(TEXT_SLOTS[slot]["media"])["type"] != "none" and len(rendered) > CAPTION_LIMIT:
             note += (f"\n⚠️ Mətn {len(rendered)} simvoldur — media ilə göndərmək üçün maksimum "
                      f"{CAPTION_LIMIT}. Bu halda media olmadan, yalnız mətn gedəcək.")
-        text, kb = tx_panel(slot, note)
+        text, kb = ms_panel(slot, note)
         await tx_edit_panel(text, kb)
         logger.info(f"Mətn dəyişdi ({slot}): {len(template)} simvol")
 
@@ -1641,77 +1629,45 @@ def setup(context):
             )
             await edit(cb, MAIN_TEXT, main_kb())
 
-        elif action == "wm":
+        elif action in ("ms", "wm", "tx"):          # "wm"/"tx" — köhnə düymələr üçün
             await cb.answer()
             if bc.get("stage") == "await_text":
                 await delete_preview()
                 bc_reset()
             reset_inputs()
             slot = parts[2] if len(parts) > 2 else None
-            text, kb = wm_panel(slot) if slot in SLOTS else wm_list_panel()
+            text, kb = ms_panel(slot) if slot in TEXT_SLOTS else ms_list_panel()
             await edit(cb, text, kb)
 
         elif action == "wm_set":
             slot = parts[2] if len(parts) > 2 else ""
-            if slot not in SLOTS:
+            if slot not in TEXT_SLOTS:
                 await cb.answer()
                 return
             await cb.answer()
             reset_inputs()
-            wm.update(stage="await_media", slot=slot, chat_id=cb.message.chat.id, panel_id=cb.message.message_id)
+            wm.update(stage="await_media", slot=media_slot(slot), back=slot,
+                      chat_id=cb.message.chat.id, panel_id=cb.message.message_id)
+            shared = ("\n\n<i>ℹ️ Bu media salam mesajı ilə ortaqdır — orada da dəyişəcək.</i>"
+                      if media_slot(slot) != slot else "")
             await edit(
                 cb,
-                f"🖼 <b>{escape(SLOTS[slot]['label'])}</b>\n\n"
+                f"🖼 <b>{escape(TEXT_SLOTS[slot]['label'])}</b>\n\n"
                 "📤 Yeni <b>şəkil</b>, <b>GIF</b> və ya <b>video</b> göndərin.\n"
-                "<i>Mesajın mətni onun altında caption kimi görünəcək.</i>",
-                InlineKeyboardMarkup(inline_keyboard=[nav_row(f"wm:{slot}")]),
+                "<i>Mesajın mətni onun altında caption kimi görünəcək.</i>" + shared,
+                InlineKeyboardMarkup(inline_keyboard=[nav_row(f"ms:{slot}")]),
             )
 
         elif action in ("wm_def", "wm_none"):
             slot = parts[2] if len(parts) > 2 else ""
-            if slot not in SLOTS:
+            if slot not in TEXT_SLOTS:
                 await cb.answer()
                 return
             kind = "default" if action == "wm_def" else "none"
-            await asyncio.to_thread(set_media, slot, kind)
+            await asyncio.to_thread(set_media, media_slot(slot), kind)
             reset_inputs()
             await cb.answer("✅ Yadda saxlandı")
-            text, kb = wm_panel(slot)
-            await edit(cb, text, kb)
-
-        elif action == "wm_prev":
-            slot = parts[2] if len(parts) > 2 else ""
-            if slot not in SLOTS:
-                await cb.answer()
-                return
-            await cb.answer("Önizləmə göndərilir...")
-            try:
-                # İstifadəçilərin görəcəyi mesajın özü
-                import plugins.start_plugin as sp
-                username = (await context.bot.me()).username
-                if slot == "welcome":
-                    sample = await asyncio.to_thread(
-                        sp.build_private_text, cb.from_user.first_name or "Dostum", username, cb.from_user.id
-                    )
-                    kb = sp.private_keyboard(username)
-                else:
-                    sample, kb = sp.guide_text(slot, username), sp.guide_keyboard(slot)
-            except Exception as e:
-                logger.warning(f"Önizləmə mətni alınmadı, nümunə mətn istifadə olunur: {e}")
-                sample, kb = f"<b>{escape(SLOTS[slot]['label'])}</b>\n\n<i>(nümunə mətn)</i>", None
-            try:
-                await send_media(context.bot, cb.message.chat.id, sample, kb, slot)
-            except Exception as e:
-                await cb.message.answer(f"❌ Önizləmə alınmadı: <code>{escape(str(e))[:300]}</code>", parse_mode="HTML")
-
-        elif action == "tx":
-            await cb.answer()
-            if bc.get("stage") == "await_text":
-                await delete_preview()
-                bc_reset()
-            reset_inputs()
-            slot = parts[2] if len(parts) > 2 else None
-            text, kb = tx_panel(slot) if slot in TEXT_SLOTS else tx_list_panel()
+            text, kb = ms_panel(slot)
             await edit(cb, text, kb)
 
         elif action == "tx_set":
@@ -1730,7 +1686,7 @@ def setup(context):
                 "Qalın, kursiv, link, <code>kod</code> kimi formatlar saxlanılır.\n\n"
                 f"🔤 İstifadə edə biləcəyin dəyişənlər: {vars_line}\n\n"
                 "<i>💡 Köhnə mətni əsas götürmək üçün əvvəlcə 📋 Hazırkı mətn ilə onu al, kopyala və dəyiş.</i>",
-                InlineKeyboardMarkup(inline_keyboard=[nav_row(f"tx:{slot}")]),
+                InlineKeyboardMarkup(inline_keyboard=[nav_row(f"ms:{slot}")]),
             )
 
         elif action == "tx_show":
@@ -1766,7 +1722,7 @@ def setup(context):
             await asyncio.to_thread(set_text_template, slot, None)
             reset_inputs()
             await cb.answer("↩️ Default mətnə qaytarıldı")
-            text, kb = tx_panel(slot)
+            text, kb = ms_panel(slot)
             await edit(cb, text, kb)
 
         elif action == "cancel":
