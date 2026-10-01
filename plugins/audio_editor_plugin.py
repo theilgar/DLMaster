@@ -183,22 +183,32 @@ def setup(context):
     @dp.message(F.chat.type == "private", F.audio | F.document.mime_type.startswith("audio/"))
     async def on_audio(message: types.Message):
         media = message.audio or message.document
-        if media.file_size and media.file_size > MAX_DOWNLOAD:
-            await message.reply(
+        await start_session(
+            chat_id=message.chat.id, uid=message.from_user.id, file_id=media.file_id,
+            file_name=getattr(media, "file_name", None) or "", title=getattr(media, "title", None),
+            artist=getattr(media, "performer", None), duration=getattr(media, "duration", None),
+            mime=getattr(media, "mime_type", None), size=media.file_size, reply_to=message.message_id,
+        )
+
+    async def start_session(chat_id, uid, file_id, file_name="", title=None, artist=None,
+                            duration=None, mime=None, size=None, reply_to=None):
+        """
+        Redaktə sessiyası + panel. Başqa plugin-lər də çağırır (context.audio_editor_start) —
+        məs. music_plugin: inline ilə bota göndərilən mahnı üçün "✅ Bəli" basılanda.
+        """
+        if size and size > MAX_DOWNLOAD:
+            await bot.send_message(
+                chat_id,
                 "❌ <b>Fayl 20 MB-dan böyükdür.</b>\n"
                 "<i>Telegram Bot API botlara yalnız 20 MB-a qədər faylı yükləməyə icazə verir.</i>",
-                parse_mode="HTML",
+                parse_mode="HTML", reply_to_message_id=reply_to,
             )
-            return
+            return None
 
-        uid = message.from_user.id
         purge_expired()
         drop_session(uid)
 
-        file_name = getattr(media, "file_name", None) or ""
-        title = getattr(media, "title", None)
-        artist = getattr(media, "performer", None)
-        stem = os.path.splitext(file_name)[0].strip()
+        stem = os.path.splitext(file_name or "")[0].strip()
         if not title:
             if not artist and " - " in stem:
                 artist, title = [p.strip() for p in stem.split(" - ", 1)]
@@ -206,10 +216,10 @@ def setup(context):
                 title = stem or "Naməlum"
 
         s = {
-            "chat_id": message.chat.id,
-            "file_id": media.file_id,
-            "ext": guess_ext(file_name, getattr(media, "mime_type", None)),
-            "duration": getattr(media, "duration", None),
+            "chat_id": chat_id,
+            "file_id": file_id,
+            "ext": guess_ext(file_name, mime),
+            "duration": duration,
             "title": title,
             "artist": artist or "",
             "awaiting": None,
@@ -220,8 +230,12 @@ def setup(context):
             "panel_id": None,
         }
         sessions[uid] = s
-        panel = await message.reply(panel_text(s), reply_markup=panel_kb(s), parse_mode="HTML")
+        panel = await bot.send_message(chat_id, panel_text(s), reply_markup=panel_kb(s), parse_mode="HTML",
+                                       reply_to_message_id=reply_to)
         s["panel_id"] = panel.message_id
+        return panel
+
+    context.audio_editor_start = start_session
 
     # ── 2) Düymələr ──
     @dp.callback_query(F.data.startswith("ae:"))

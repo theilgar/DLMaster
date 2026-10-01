@@ -473,9 +473,87 @@ def setup(context):
             return False
         return True
 
+    # ═════════════ ✏️ Inline ilə BOTUN ÖZÜNƏ göndərilən mahnı → meta redaktə təklifi ═════════════
+    def inline_vid(message: types.Message):
+        """Botun inline mesajından video ID: placeholder (inl_stop:<id>) və ya hazır mahnı (mix:<id>)."""
+        kb = getattr(message, "reply_markup", None)
+        for row in (kb.inline_keyboard if kb else []):
+            for b in row:
+                data = getattr(b, "callback_data", None) or ""
+                if data.startswith("inl_stop:"):
+                    return data.split(":", 1)[1]
+                q = getattr(b, "switch_inline_query_current_chat", None) or ""
+                if q.startswith("mix:"):
+                    return q[4:]
+        return None
+
+    async def is_own_inline(message: types.Message) -> bool:
+        vb = getattr(message, "via_bot", None)
+        return bool(vb) and vb.id == context.bot.id
+
+    @dp.message(F.chat.type == "private", F.via_bot, is_own_inline)
+    async def own_inline_in_private(message: types.Message):
+        vid = inline_vid(message)
+        if not vid or not getattr(context, "audio_editor_start", None):
+            return                       # axtarışa getmir, sadəcə susur
+        info = inline_cache.get(vid) or {}
+        title = clean_youtube_title(info.get("title") or "") or \
+            (message.text or "").replace("⏳", "").split("\n")[0].strip() or "bu mahnı"
+        await message.reply(
+            f"✏️ <b>{escape(title[:80])}</b>\n\n"
+            "Bu mahnının meta məlumatlarını dəyişmək istəyirsən?\n"
+            "<i>🎵 ad · 🎤 artist · 🖼 üz qabığı şəkli</i>",
+            parse_mode="HTML",
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=[[
+                InlineKeyboardButton(text="✅ Bəli", callback_data=f"meta:yes:{vid}:{message.message_id}"),
+                InlineKeyboardButton(text="❌ Ləğv et", callback_data="meta:no"),
+            ]]),
+        )
+
+    @dp.callback_query(F.data.startswith("meta:"))
+    async def meta_offer(callback: types.CallbackQuery):
+        parts = callback.data.split(":")
+        if parts[1] == "no" or len(parts) < 4:
+            await callback.answer("Ləğv edildi")
+            with contextlib.suppress(Exception):
+                await callback.message.delete()
+            return
+
+        vid, reply_to = parts[2], int(parts[3]) if parts[3].isdigit() else None
+        await callback.answer()
+        with contextlib.suppress(Exception):
+            await callback.message.edit_text("⏳ <i>Mahnı hazırlanır...</i>", parse_mode="HTML")
+
+        # Inline mahnı hələ yüklənirsə — hazır olana qədər gözlə (depo/keşə düşən an)
+        cached = None
+        for _ in range(120):
+            cached = await asyncio.to_thread(audio_cache.get_cached, vid)
+            if cached:
+                break
+            await asyncio.sleep(1)
+        if not cached:
+            with contextlib.suppress(Exception):
+                await callback.message.edit_text(
+                    "❌ Mahnı hazır olmadı (yükləmə dayandırılıb və ya alınmayıb).\n"
+                    "<i>Mahnı gələndən sonra onu mənə göndər — redaktə paneli açılacaq.</i>",
+                    parse_mode="HTML",
+                )
+            return
+
+        start = getattr(context, "audio_editor_start", None)
+        performer, title = cached.get("performer") or "", cached.get("title") or "audio"
+        await start(
+            chat_id=callback.message.chat.id, uid=callback.from_user.id, file_id=cached["file_id"],
+            file_name=f"{performer + ' - ' if performer else ''}{title}.m4a", title=title, artist=performer,
+            duration=cached.get("duration"), mime="audio/mp4", size=cached.get("size"), reply_to=reply_to,
+        )
+        with contextlib.suppress(Exception):
+            await callback.message.delete()
+
     @dp.message(
         F.chat.type == "private",
         F.text,
+        ~F.via_bot,                      # botun öz inline mesajı axtarış sayılmasın
         not_editing_audio,
         ~F.text.startswith("/"),
         ~(F.text.contains("youtube.com/playlist") | F.text.contains("youtu.be/playlist")),
@@ -748,7 +826,7 @@ def setup(context):
                 disable_web_page_preview=True,
             ),
             # inline_message_id almaq üçün reply_markup mütləqdir
-            reply_markup=stop_keyboard("inl_stop"),
+            reply_markup=stop_keyboard(f"inl_stop:{vid}"),
         )
 
     @dp.inline_query()
@@ -828,7 +906,7 @@ def setup(context):
         await callback.answer("Yüklənir, bir az gözləyin...")
 
     # ── ⏹ Yükləməni dayandır (inline) ──
-    @dp.callback_query(F.data == "inl_stop")
+    @dp.callback_query(F.data.startswith("inl_stop"))
     async def handle_inline_stop(callback: types.CallbackQuery):
         iid = callback.inline_message_id
         if not iid:
