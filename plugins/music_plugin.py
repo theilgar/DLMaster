@@ -286,7 +286,7 @@ def setup(context):
         current_results = results[start:start+5]
 
         response = [
-            f"<b>🎵 Tapılan Mahnılar (Səhifə {new_page +1}/{total_pages}):</b>",
+            f"<b>{user_data.get('header', '🎵 Tapılan Mahnılar')} (Səhifə {new_page +1}/{total_pages}):</b>",
             ""
         ]
 
@@ -324,6 +324,141 @@ def setup(context):
     async def music_cmd(message: types.Message, command: CommandObject):
         command_used = message.text.split()[0][1:]
         await handle_music_search(message, command.args, command_used)
+
+    # ═════════════ /mix — oxşar mahnılar (inline Mix-in çat versiyası) ═════════════
+    MIX_PAGE, MIX_PAGES = 5, 5
+
+    def mix_seed_from_reply(message: types.Message):
+        """
+        Cavab verilən mesajdan Mix toxumu → (video_id | None, axtarış/başlıq | None):
+          • botun göndərdiyi mahnı (🔀 Mix düyməsi varsa — dəqiq video)
+          • mətndə / caption-da YouTube linki
+          • audio (artist + ad, yoxdursa fayl adı), audio-fayl sənəd, video
+          • adi mətn — mahnı adı kimi axtarılır
+        """
+        r = message.reply_to_message
+        if not r:
+            return None, None
+
+        audio_title = None
+        if r.audio:
+            audio_title = " ".join(filter(None, [r.audio.performer, r.audio.title])) or \
+                          os.path.splitext(r.audio.file_name or "")[0] or None
+
+        kb = getattr(r, "reply_markup", None)
+        for row in (kb.inline_keyboard if kb else []):
+            for b in row:
+                q = getattr(b, "switch_inline_query_current_chat", None) or ""
+                if q.startswith("mix:"):
+                    return q[4:], (r.audio.title if r.audio and r.audio.title else audio_title)
+
+        text = r.text or r.caption or ""
+        vid = video_id_from_url(text)
+        if vid:
+            return vid, None
+        if audio_title:
+            return None, audio_title
+        doc = getattr(r, "document", None)
+        if doc and (doc.mime_type or "").startswith("audio/") and doc.file_name:
+            return None, os.path.splitext(doc.file_name)[0]
+        video = getattr(r, "video", None)
+        if video and getattr(video, "file_name", None):
+            return None, os.path.splitext(video.file_name)[0]
+        if text and not text.startswith("/"):
+            return None, text[:100]
+        return None, None
+
+    def mix_page_kb(results, page: int):
+        total_pages = max(1, (len(results) + MIX_PAGE - 1) // MIX_PAGE)
+        start = page * MIX_PAGE
+        rows = [
+            [InlineKeyboardButton(text=f"{r['title']} ({r['duration']})"[:64], callback_data=f"choice_{start + i}")]
+            for i, r in enumerate(results[start:start + MIX_PAGE])
+        ]
+        nav = []
+        if page > 0:
+            nav.append(InlineKeyboardButton(text="◀️ Geri", callback_data=f"page_{page - 1}"))
+        if page < total_pages - 1:
+            nav.append(InlineKeyboardButton(text="İrəli ▶️", callback_data=f"page_{page + 1}"))
+        if nav:
+            rows.append(nav)
+        rows.append([InlineKeyboardButton(text="❌ Ləğv et", callback_data="cancel")])
+        return InlineKeyboardMarkup(inline_keyboard=rows), total_pages
+
+    @dp.message(Command("mix"))
+    async def mix_cmd(message: types.Message, command: CommandObject):
+        await run_mix(message, (command.args or "").strip())
+
+    # Mahnıya cavab olaraq sadəcə "mix" yazmaq da işləyir (slash-sız)
+    MIX_WORDS = {"mix", "miks", "🔀", "mix et", "oxşar"}
+
+    @dp.message(F.reply_to_message, F.text.func(lambda t: t.strip().lower() in MIX_WORDS))
+    async def mix_reply_word(message: types.Message):
+        await run_mix(message, "")
+
+    async def run_mix(message: types.Message, query: str):
+        vid, seed_title = video_id_from_url(query), None
+        if not query:
+            vid, reply_query = mix_seed_from_reply(message)
+            if vid:
+                seed_title = reply_query
+            else:
+                query = reply_query or ""
+
+        if not vid and not query:
+            usage = await message.answer(
+                "<b>🔀 Mix — oxşar mahnılar</b>\n\n"
+                "👉 <code>/mix mahnı adı</code>\n"
+                "👉 <code>/mix YouTube linki</code>\n"
+                "👉 və ya istənilən mahnıya <b>cavab (reply)</b> olaraq <code>/mix</code> və ya sadəcə <code>mix</code> yaz\n\n"
+                "<i>Nümunə:</i> <code>/mix Eminem Lose Yourself</code>",
+                parse_mode="HTML",
+            )
+            await asyncio.sleep(20)
+            try:
+                await usage.delete()
+            except Exception:
+                pass
+            return
+
+        status = await message.answer("<i>🔀 Oxşar mahnılar axtarılır...</i>", parse_mode="HTML")
+        try:
+            if not vid:
+                found = await context.youtube_manager.youtube_search(query)
+                seed = next((r for r in found or [] if video_id_from_url(r.get("url"))), None)
+                if not seed:
+                    raise ValueError("Mahnı tapılmadı")
+                vid, seed_title = video_id_from_url(seed["url"]), seed["title"]
+
+            results = await context.youtube_manager.youtube_mix(vid, limit=MIX_PAGE * MIX_PAGES)
+            if not results:
+                raise ValueError("Bu mahnı üçün Mix tapılmadı")
+
+            label = escape(clean_youtube_title(seed_title)[:60]) if seed_title else "bu mahnı"
+            header = f"🔀 Mix: {label}"
+            kb, total_pages = mix_page_kb(results, 0)
+            await status.edit_text(
+                f"<b>{header} (Səhifə 1/{total_pages}):</b>\n"
+                f"<i>{len(results)} oxşar mahnı tapıldı — yükləmək üçün seç</i>",
+                parse_mode="HTML", reply_markup=kb, disable_web_page_preview=True,
+            )
+            # /music ilə eyni axın: choice_ / page_ / cancel handler-ləri bunu istifadə edir
+            user_searches[message.from_user.id] = {
+                'results': results,
+                'search_message_id': status.message_id,
+                'original_message_id': message.message_id,
+                'command_used': "mix",
+                'current_page': 0,
+                'header': header,
+            }
+        except Exception as e:
+            logger.warning(f"/mix xətası: {e}")
+            try:
+                await status.edit_text(f"❌ <b>Xəta:</b> <code>{escape(str(e))[:300]}</code>", parse_mode="HTML")
+                await asyncio.sleep(5)
+                await status.delete()
+            except Exception:
+                pass
 
     async def not_editing_audio(message: types.Message) -> bool:
         """audio_editor_plugin ad/artist gözləyərkən yazılan mətn axtarış sayılmasın."""
@@ -400,7 +535,9 @@ def setup(context):
                     reply_markup=build_keyboard(selected['url'], sl, user_id)
                 )
 
-            await log_download(callback.from_user.id, f"{artist} - {track_name}", selected['url'], "music")
+            await log_download(callback.from_user.id, f"{artist} - {track_name}", selected['url'],
+                               "mix" if user_data.get('command_used') == "mix" else "music",
+                               chat_id=callback.message.chat.id)
 
             try:
                 await callback.message.bot.delete_message(callback.message.chat.id, user_data['search_message_id'])
