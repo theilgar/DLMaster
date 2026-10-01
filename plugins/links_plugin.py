@@ -2,7 +2,8 @@
 🔗 YouTube və Spotify linkləri — bütün növlər bir yerdə.
 
   YouTube:  video · Shorts · YouTube Music · playlist · YT Music albomu · Mix / Radio
-  Spotify:  mahnı · albom · playlist · Radio / Daily Mix / editorial siyahılar · ifaçı (top mahnılar)
+  Spotify:  mahnı · albom · playlist · Radio / Daily Mix / editorial siyahılar
+            ifaçı — BÜTÜN albomları və sinqlları (təkrarsız) və ya yalnız top mahnılar
             spotify.link qısa linkləri də açılır
 
 Bütün yükləmələr music_plugin-in ümumi axını ilə gedir:
@@ -57,6 +58,17 @@ def sp_item(name: str, artists: list, duration_ms: int, image_url=None) -> dict:
         "meta": {"artist": artist, "track": name},
         "thumb": image_url,
     }
+
+
+_VERSION_RE = re.compile(
+    r"\s*[-–(\[]\s*(?:\d{4}\s+)?(?:remaster(?:ed)?|deluxe|bonus track|single version|album version|"
+    r"radio edit|explicit|clean)[^)\]]*[)\]]?", re.I)
+
+
+def track_key(name: str) -> str:
+    """"Song - Remastered 2011" / "Song (Deluxe)" → "song" — təkrarları tutmaq üçün."""
+    base = _VERSION_RE.sub("", name or "")
+    return re.sub(r"[^\w]+", " ", base.lower()).strip()
 
 
 def total_duration(items) -> str:
@@ -181,12 +193,7 @@ def setup(context):
                                 pick_image(t["album"].get("images")))
                         for t in p["tracks"] if t.get("name")]}
                 if kind == "artist":
-                    art = await asyncio.to_thread(spotify.sp.artist, sid)
-                    top = await asyncio.to_thread(spotify.sp.artist_top_tracks, sid)
-                    return {"name": f"{art.get('name', 'İfaçı')} — top mahnılar", "items": [
-                        sp_item(t["name"], [x["name"] for x in t["artists"]], t["duration_ms"],
-                                pick_image(t["album"].get("images")))
-                        for t in top.get("tracks", [])]}
+                    return await asyncio.to_thread(artist_full_sync, sid)
             except Exception as e:
                 api_error = e
                 logger.info(f"Spotify API ({kind}/{sid}) alınmadı, embed sınanır: {e}")
@@ -194,6 +201,94 @@ def setup(context):
             return await spotify_embed(kind, sid)
         except Exception as e:
             raise RuntimeError(f"{api_error or e}")
+
+    def artist_full_sync(sid: str) -> dict:
+        """
+        İfaçının albomları + sinqlları (yeni → köhnə), hər birinin mahnıları, təkrarsız.
+        Kompilyasiyalar və "appears on" (başqasının albomunda iştirak) daxil deyil.
+        """
+        sp = spotify.sp
+        art = sp.artist(sid)
+        name = art.get("name", "İfaçı")
+        top = sp.artist_top_tracks(sid, country="US").get("tracks", [])
+        top_items = [sp_item(t["name"], [x["name"] for x in t["artists"]], t["duration_ms"],
+                             pick_image(t["album"].get("images"))) for t in top]
+
+        albums, seen_album = [], set()
+        res = sp.artist_albums(sid, include_groups="album,single", country="US", limit=50)
+        while res:
+            for a in res.get("items", []):
+                key = (a.get("name", "").lower(), a.get("album_type"))
+                if key in seen_album:              # eyni albomun başqa bazar versiyası
+                    continue
+                seen_album.add(key)
+                albums.append(a)
+            res = sp.next(res) if res.get("next") else None
+        # əvvəl albomlar, sonra sinqllar; hər qrupda yenidən köhnəyə
+        albums = sorted([a for a in albums if a.get("album_type") == "album"],
+                        key=lambda a: a.get("release_date") or "", reverse=True) + \
+                 sorted([a for a in albums if a.get("album_type") != "album"],
+                        key=lambda a: a.get("release_date") or "", reverse=True)
+
+        items, seen_track, album_names = [], set(), []
+        n_album = n_single = 0
+        for a in albums:
+            cover = pick_image(a.get("images"))
+            res = sp.album_tracks(a["id"], limit=50)
+            added = 0
+            while res:
+                for t in res.get("items", []):
+                    k = track_key(t.get("name"))
+                    if not k or k in seen_track:
+                        continue
+                    seen_track.add(k)
+                    items.append(sp_item(t["name"], [x["name"] for x in t.get("artists", [])],
+                                         t.get("duration_ms") or 0, cover))
+                    added += 1
+                res = sp.next(res) if res.get("next") else None
+            if added:
+                if a.get("album_type") == "album":
+                    n_album += 1
+                    album_names.append(a.get("name"))
+                else:
+                    n_single += 1
+        return {"name": name, "items": items, "top": top_items, "albums": n_album, "singles": n_single,
+                "album_names": album_names}
+
+    async def show_artist_card(status: types.Message, message: types.Message, data: dict):
+        items = data["items"]
+        top = data.get("top") or []
+        if not items and not top:
+            await status.edit_text("❌ Bu ifaçının mahnıları tapılmadı.")
+            return
+        await show_list_card(status, message, "🎤 Spotify ifaçısı", f"{data['name']} — bütün mahnılar",
+                             items or top, "spotify")
+        p = pending.get((status.chat.id, status.message_id))
+        if not p:
+            return
+        if top:
+            p["alt_top"] = [it for it in top if (it.get("raw_duration") or 0) <= BATCH_MAX_DURATION]
+            p["artist_name"] = data["name"]
+        albums_line = ""
+        if data.get("albums") is not None:
+            names = ", ".join(escape(n[:30]) for n in (data.get("album_names") or [])[:6])
+            albums_line = (f"💿 {data['albums']} albom · 🎵 {data.get('singles', 0)} sinql/EP"
+                           + (f"\n<i>{names}{' …' if len(data.get('album_names') or []) > 6 else ''}</i>" if names else "")
+                           + "\n<i>Təkrarlar (deluxe, remaster) çıxarılıb.</i>\n\n")
+        else:
+            albums_line = "<i>ℹ️ Spotify API qoşulmayıb — yalnız top mahnılar əlçatandır.</i>\n\n"
+        n = len(p["items"])
+        await status.edit_text(
+            f"🎤 <b>{escape(data['name'])}</b>\n\n{albums_line}"
+            f"📊 Cəmi: <b>{n}</b> mahnı · ⏳ {total_duration(p['items'])}"
+            + (f"\n<i>⏭ {p['skipped']} uzun video (15 dəq.+) ötürüləcək</i>" if p.get("skipped") else ""),
+            parse_mode="HTML",
+            reply_markup=kb(
+                [btn(f"💿 Bütün mahnılar ({n})", "lk:go")],
+                *([[btn(f"🔥 Yalnız top mahnılar ({len(p['alt_top'])})", "lk:top")]] if p.get("alt_top") else []),
+                [btn("❌ Ləğv et", "lk:no")],
+            ),
+        )
 
     # ── siyahı kartı → təsdiq ──
     async def show_list_card(status: types.Message, message: types.Message, label: str, name: str,
@@ -294,11 +389,16 @@ def setup(context):
 
         if kind.startswith("sp_"):
             sp_kind = kind[3:]
+            if sp_kind == "artist":
+                await status.edit_text("🎤 <i>İfaçının albomları toplanır... (bir az çəkə bilər)</i>", parse_mode="HTML")
             data = await spotify_data(sp_kind, parsed["id"])
-            if not data["items"]:
+            if not data["items"] and not data.get("top"):
                 raise RuntimeError("Spotify-dan mahnı siyahısı alınmadı")
             if sp_kind == "track":
                 await start_single(status, message, data["items"][0], "spotify")
+                return
+            if sp_kind == "artist":
+                await show_artist_card(status, message, data)
                 return
             label = {"album": "💿 Spotify albomu", "playlist": "🎧 Spotify playlist",
                      "artist": "🎤 Spotify ifaçısı"}.get(sp_kind, "🎧 Spotify")
@@ -354,6 +454,15 @@ def setup(context):
             except Exception as e:
                 await cb.message.edit_text(f"❌ <b>Xəta:</b> <code>{escape(str(e))[:300]}</code>", parse_mode="HTML")
             return
+
+        if action == "top":
+            if not p.get("alt_top"):
+                await cb.answer()
+                return
+            p["items"] = p["alt_top"]
+            p["header"] = f"🔥 {p.get('artist_name', 'İfaçı')} — top mahnılar"
+            p["skipped"] = 0
+            action = "go"
 
         if action == "go":
             busy = getattr(context, "music_batch_busy", None)
