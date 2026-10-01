@@ -36,6 +36,7 @@ from aiogram.types import (
 )
 from core.database import get_db, creator_caption_enabled, set_creator_caption, is_premium
 from core.stars import PLANS, PLAN_MAP, MIN_STARS, MAX_STARS, get_price, set_price, per_month, buy_keyboard
+from core import audio_cache
 from core.welcome import (
     SLOTS, get_media, set_media, media_label, send_media,
     TEXT_SLOTS, TEXT_LIMIT, CAPTION_LIMIT, get_text_template, set_text_template,
@@ -885,6 +886,8 @@ def setup(context):
         pc = await asyncio.to_thread(db.premium_count)
         cc = await asyncio.to_thread(db.chat_counts)
         grp_dl = await asyncio.to_thread(db.group_download_count, now - 30 * 86400)
+        depo = audio_cache.depo_status()
+        cs = await asyncio.to_thread(db.cache_stats, depo["id"])
         dl, du, us_ = st["dl"], st["dl_users"], st["users"]
         tabs = stats_tabs(view) + [[_btn("🔄 Yenilə", view)], nav_row("main")]
 
@@ -911,6 +914,10 @@ def setup(context):
                 f"   🎧 Mahnı yükləyənlər (30 gün): <b>{pct(du['month'], us_['total'])}</b>\n\n"
                 f"💬 <b>Çatlar:</b> 👥 {cc['groups']} qrup · 📣 {cc['channels']} kanal\n"
                 f"   Qruplarda yükləmə (30 gün): <b>{grp_dl}</b> ({pct(grp_dl, dl['month'])})\n\n"
+                f"📦 <b>Depo</b> ({escape(depo['ref'])}{'' if depo['id'] else ' — ⚠️ əlçatan deyil'})\n"
+                f"   Saxlanan mahnı: <b>{cs['songs']}</b> · {cs['size'] / 1048576:.0f} MB\n"
+                f"   Keşdən göndərilib: <b>{cs['hits']}</b> dəfə "
+                f"({pct(cs['hits'], cs['hits'] + cs['songs'])} yükləməsiz)\n\n"
                 f"📥 <b>Mənbələr (30 gün)</b>\n{src_lines}\n\n"
                 f"<i>🕒 {now_dt.strftime('%d.%m.%Y %H:%M')} · {escape(tz_name)}</i>"
             )

@@ -6,8 +6,10 @@ from aiogram.types import (
 )
 from core.utilities import sanitize_filename
 from core.youtube_handler import YoutubeManager, DownloadCancelled
+from core import audio_cache
 from core.database import log_download, caption_for_user
 import asyncio
+import contextlib
 import threading
 import os
 import logging
@@ -482,6 +484,55 @@ def setup(context):
     async def handle_private_music_request(message: types.Message):
         await handle_music_search(message, message.text, "music")
 
+    # ═════════════ 📦 Keş + depo kanalı ═════════════
+    async def fetch_audio(url: str, yt_title: str, duration: int, cancel_event,
+                          need_file_id: bool = False, fallback_chat=None, sem=None) -> dict:
+        """
+        Mahnını əvvəl keşdən (depo kanalı) götürür; yoxdursa YouTube-dan yükləyir, depoya atır, keşə yazır.
+        Nəticə: {file_id, path, fname, artist, track, sl, cached, vid}
+        """
+        bot = context.bot
+        vid = video_id_from_url(url)
+        sl_task = asyncio.create_task(get_songlink(url))
+        async with (audio_cache.lock_for(vid) if vid else contextlib.nullcontext()):
+            cached = await asyncio.to_thread(audio_cache.get_cached, vid)
+            if cached:
+                try:
+                    sl = await asyncio.wait_for(asyncio.shield(sl_task), 2)   # keşdən göndərməni ləngitməsin
+                except (asyncio.TimeoutError, Exception):
+                    sl = None
+                artist, track, _ = resolve_meta(yt_title, sl)
+                logger.info(f"📦 Keşdən: {vid}")
+                return {"file_id": cached["file_id"], "path": None, "fname": None, "vid": vid, "sl": sl,
+                        "artist": cached.get("performer") or artist, "track": cached.get("title") or track,
+                        "cached": True}
+
+            async with (sem or contextlib.nullcontext()):
+                if cancel_event.is_set():
+                    raise DownloadCancelled("İstifadəçi yükləməni dayandırdı")
+                path = await context.youtube_manager.download_track(
+                    url, sanitize_filename(yt_title), cancel_event=cancel_event
+                )
+            sl = await sl_task
+            if cancel_event.is_set():
+                with contextlib.suppress(OSError):
+                    os.remove(path)
+                raise DownloadCancelled("İstifadəçi yükləməni dayandırdı")
+
+            artist, track, meta_src = resolve_meta(yt_title, sl)
+            logger.info(f"Metadata ({meta_src}): {artist} - {track}")
+            fname = audio_filename(artist, track, path)
+            file_id = await audio_cache.upload_to_depo(bot, path, fname, track, artist, duration, url, vid)
+            if not file_id and need_file_id and fallback_chat:
+                # depo əlçatan deyil — inline üçün file_id mütləq lazımdır
+                msg = await bot.send_audio(
+                    chat_id=fallback_chat, audio=FSInputFile(path, filename=fname),
+                    title=track[:64], performer=artist[:64], duration=duration or None,
+                )
+                file_id = await asyncio.to_thread(audio_cache.save_from_message, vid, msg, track, artist, duration)
+            return {"file_id": file_id, "path": path, "fname": fname, "vid": vid, "sl": sl,
+                    "artist": artist, "track": track, "cached": False}
+
     @dp.callback_query(F.data.startswith("choice_"))
     async def handle_choice(callback: types.CallbackQuery):
         user_id = callback.from_user.id
@@ -507,33 +558,38 @@ def setup(context):
                 reply_markup=stop_keyboard(f"dlstop:{user_data['search_message_id']}"),
             )
             
-            # song.link sorğusu yükləmə ilə paralel gedir
-            sl_task = asyncio.create_task(get_songlink(selected['url']))
-            file_path = await context.youtube_manager.download_track(
-                selected['url'], 
-                sanitize_filename(selected['title']),
-                cancel_event=job["event"],
-            )
-            sl = await sl_task
-            if job["event"].is_set():          # yükləmə bitən an basılıbsa
-                raise DownloadCancelled("İstifadəçi yükləməni dayandırdı")
-
-            # Ad/artist: əvvəl song.link, yoxdursa təmizlənmiş YouTube adı
-            artist, track_name, meta_src = resolve_meta(selected['title'], sl)
-            logger.info(f"Metadata ({meta_src}): {artist} - {track_name}")
-            
-            with open(file_path, 'rb') as f:
+            duration = int(selected.get('raw_duration', 0) or 0)
+            for attempt in (1, 2):
+                # 📦 əvvəl depo/keş, yoxdursa yüklə (song.link paralel)
+                res = await fetch_audio(selected['url'], selected['title'], duration, job["event"])
+                file_path = res["path"]
+                sl, artist, track_name = res["sl"], res["artist"], res["track"]
                 caption = build_caption(selected['url'], sl, callback.from_user.id)
-
-                await callback.message.answer_audio(
-                    audio=BufferedInputFile(f.read(), filename=audio_filename(artist, track_name, file_path)),
-                    title=track_name[:64],
-                    performer=artist[:64],
-                    duration=int(selected.get('raw_duration', 0)),
-                    parse_mode="HTML",
-                    caption=caption,
-                    reply_markup=build_keyboard(selected['url'], sl, user_id)
-                )
+                kb = build_keyboard(selected['url'], sl, user_id)
+                if job["event"].is_set():          # yükləmə bitən an basılıbsa
+                    raise DownloadCancelled("İstifadəçi yükləməni dayandırdı")
+                try:
+                    if res["file_id"]:
+                        await callback.message.answer_audio(
+                            audio=res["file_id"], caption=caption, parse_mode="HTML", reply_markup=kb,
+                        )
+                    else:
+                        # depo əlçatan deyil — birbaşa göndər, file_id-ni yenə də keşə yaz
+                        sent = await callback.message.answer_audio(
+                            audio=FSInputFile(file_path, filename=res["fname"]),
+                            title=track_name[:64], performer=artist[:64], duration=duration or None,
+                            parse_mode="HTML", caption=caption, reply_markup=kb,
+                        )
+                        await asyncio.to_thread(audio_cache.save_from_message, res["vid"], sent,
+                                                track_name, artist, duration)
+                    break
+                except Exception as e:
+                    if attempt == 1 and res["cached"] and audio_cache.is_bad_file_id(e):
+                        await asyncio.to_thread(audio_cache.invalidate, res["vid"])
+                        continue                       # yenidən: bu dəfə YouTube-dan
+                    raise
+            if res["cached"]:
+                await asyncio.to_thread(audio_cache.mark_hit, res["vid"])
 
             await log_download(callback.from_user.id, f"{artist} - {track_name}", selected['url'],
                                "mix" if user_data.get('command_used') == "mix" else "music",
@@ -665,7 +721,6 @@ def setup(context):
     # ───────────────────────── INLINE MODE ─────────────────────────
     STORAGE_CHAT_ID = int(os.getenv("STORAGE_CHAT_ID") or context.creator_id)
     inline_cache = {}      # video_id -> axtarış nəticəsi
-    file_id_cache = {}     # video_id -> telegram file_id (təkrar seçim ani olur)
     search_cache = {}      # sorğu -> (vaxt, nəticələr)
     latest_inline = {}     # user_id -> son inline query id (debounce)
     download_sem = asyncio.Semaphore(2)
@@ -819,48 +874,37 @@ def setup(context):
             job["event"].set()
 
         try:
-            sl_task = asyncio.create_task(get_songlink(url))
-
-            file_id = file_id_cache.get(vid)
-            if not file_id:
-                async with download_sem:
-                    if job["event"].is_set():      # növbədə gözləyərkən dayandırılıb
-                        raise DownloadCancelled("İstifadəçi yükləməni dayandırdı")
-                    file_path = await context.youtube_manager.download_track(
-                        url, sanitize_filename(title), cancel_event=job["event"]
+            duration = int(info.get("raw_duration", 0) or 0)
+            for attempt in (1, 2):
+                # 📦 əvvəl depo/keş; yoxdursa yüklə. İnline mesaja yeni fayl yükləmək olmur →
+                # depo (və ya STORAGE_CHAT_ID) üzərindən file_id alınır
+                res = await fetch_audio(url, title, duration, job["event"], need_file_id=True,
+                                        fallback_chat=STORAGE_CHAT_ID, sem=download_sem)
+                file_path = res["path"]
+                sl, artist, track = res["sl"], res["artist"], res["track"]
+                if job["event"].is_set():
+                    raise DownloadCancelled("İstifadəçi yükləməni dayandırdı")
+                try:
+                    await bot.edit_message_media(
+                        inline_message_id=inline_id,
+                        media=InputMediaAudio(
+                            media=res["file_id"],
+                            title=track[:64],
+                            performer=artist[:64],
+                            duration=duration or None,
+                            caption=build_caption(url, sl, chosen.from_user.id),
+                            parse_mode="HTML",
+                        ),
+                        reply_markup=build_keyboard(url, sl, owner),
                     )
-            if job["event"].is_set():
-                raise DownloadCancelled("İstifadəçi yükləməni dayandırdı")
-
-            # Ad/artist: əvvəl song.link, yoxdursa təmizlənmiş YouTube adı
-            sl = await sl_task
-            artist, track, meta_src = resolve_meta(title, sl)
-            logger.info(f"Metadata ({meta_src}): {artist} - {track}")
-
-            if not file_id:
-                # Inline mesaja yeni fayl yükləmək olmur → əvvəlcə "anbar" çata göndərib file_id alırıq
-                stored = await bot.send_audio(
-                    chat_id=STORAGE_CHAT_ID,
-                    audio=FSInputFile(file_path, filename=audio_filename(artist, track, file_path)),
-                    title=track[:64],
-                    performer=artist[:64],
-                    duration=int(info.get("raw_duration", 0)),
-                )
-                file_id = stored.audio.file_id
-                file_id_cache[vid] = file_id
-
-            await bot.edit_message_media(
-                inline_message_id=inline_id,
-                media=InputMediaAudio(
-                    media=file_id,
-                    title=track[:64],
-                    performer=artist[:64],
-                    duration=int(info.get("raw_duration", 0)),
-                    caption=build_caption(url, sl, chosen.from_user.id),
-                    parse_mode="HTML",
-                ),
-                reply_markup=build_keyboard(url, sl, owner),
-            )
+                    break
+                except Exception as e:
+                    if attempt == 1 and res["cached"] and audio_cache.is_bad_file_id(e):
+                        await asyncio.to_thread(audio_cache.invalidate, res["vid"])
+                        continue
+                    raise
+            if res["cached"]:
+                await asyncio.to_thread(audio_cache.mark_hit, res["vid"])
             await log_download(chosen.from_user.id, f"{artist} - {track}", url, "inline")
 
         except DownloadCancelled:

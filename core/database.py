@@ -11,6 +11,7 @@ Cədvəllər:
   settings   — bot ayarları (məs. creator-un caption seçimi)
   premium    — premium istifadəçilər (until NULL = ömürlük)
   payments   — Telegram Stars (⭐) ilə premium ödənişləri
+  audio_cache — depo kanalına yüklənmiş mahnılar (video_id → Telegram file_id), təkrar yükləməsiz göndərmə
   files      — kod fayllarının son vəziyyəti (yeniləmə bildirişi üçün)
 
 İstifadə (istənilən plugin-dən):
@@ -56,6 +57,20 @@ class Database:
                 );
                 CREATE INDEX IF NOT EXISTS idx_downloads_ts ON downloads(ts);
                 CREATE INDEX IF NOT EXISTS idx_downloads_user ON downloads(user_id, ts);
+                CREATE TABLE IF NOT EXISTS audio_cache (
+                    video_id   TEXT PRIMARY KEY,
+                    file_id    TEXT NOT NULL,
+                    unique_id  TEXT,
+                    title      TEXT,
+                    performer  TEXT,
+                    duration   INTEGER,
+                    size       INTEGER,
+                    chat_id    INTEGER,
+                    message_id INTEGER,
+                    created    INTEGER NOT NULL,
+                    hits       INTEGER NOT NULL DEFAULT 0,
+                    last_hit   INTEGER
+                );
                 CREATE TABLE IF NOT EXISTS payments (
                     id         INTEGER PRIMARY KEY AUTOINCREMENT,
                     user_id    INTEGER NOT NULL,
@@ -243,6 +258,47 @@ class Database:
             self._conn.execute("UPDATE premium SET until=? WHERE user_id=?", (until, user_id))
             self._conn.commit()
         return until
+
+    # ───────────── 📦 audio keşi (depo kanalı) ─────────────
+    def cache_get(self, video_id: str):
+        with self._lock:
+            row = self._conn.execute("SELECT * FROM audio_cache WHERE video_id=?", (video_id,)).fetchone()
+        return dict(row) if row else None
+
+    def cache_put(self, video_id, file_id, unique_id=None, title=None, performer=None, duration=None,
+                  size=None, chat_id=None, message_id=None):
+        with self._lock:
+            self._conn.execute(
+                """INSERT INTO audio_cache(video_id, file_id, unique_id, title, performer, duration, size,
+                                           chat_id, message_id, created)
+                   VALUES(?,?,?,?,?,?,?,?,?,?)
+                   ON CONFLICT(video_id) DO UPDATE SET
+                       file_id=excluded.file_id, unique_id=excluded.unique_id, title=excluded.title,
+                       performer=excluded.performer, duration=excluded.duration, size=excluded.size,
+                       chat_id=excluded.chat_id, message_id=excluded.message_id""",
+                (video_id, file_id, unique_id, title, performer, duration, size, chat_id, message_id,
+                 int(time.time())),
+            )
+            self._conn.commit()
+
+    def cache_hit(self, video_id: str):
+        with self._lock:
+            self._conn.execute("UPDATE audio_cache SET hits = hits + 1, last_hit=? WHERE video_id=?",
+                               (int(time.time()), video_id))
+            self._conn.commit()
+
+    def cache_delete(self, video_id: str):
+        with self._lock:
+            self._conn.execute("DELETE FROM audio_cache WHERE video_id=?", (video_id,))
+            self._conn.commit()
+
+    def cache_stats(self, depo_chat_id=None) -> dict:
+        with self._lock:
+            row = self._conn.execute(
+                """SELECT COUNT(*) AS songs, COALESCE(SUM(hits),0) AS hits, COALESCE(SUM(size),0) AS size,
+                          COALESCE(SUM(chat_id = ?),0) AS in_depo
+                   FROM audio_cache""", (depo_chat_id or 0,)).fetchone()
+        return dict(row)
 
     # ───────────── ⭐ Stars ödənişləri ─────────────
     def add_payment(self, user_id, plan, days, stars, charge_id) -> int:
