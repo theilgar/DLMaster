@@ -23,6 +23,7 @@ import os
 
 from core.database import get_db, is_creator
 from core.welcome import send_welcome, send_media, get_text_template, render_template
+from core.stars import plans_for_sale, per_month, buy_keyboard
 
 logger = logging.getLogger(__name__)
 router = Router()
@@ -141,6 +142,15 @@ DEFAULT_TEXTS = {
         "🔀 Mahnının altındakı <b>Mix</b> ilə oxşar mahnıları da eyni yolla göndərə bilərsən.\n\n"
         "👇 Sınamaq üçün düyməyə bas"
     ),
+    "premium": (
+        "💎 <b>DLLMaster Premium</b>\n\n"
+        "✨ <b>Premium nə verir?</b>\n"
+        "🎵 Mahnılar \"via @dllmasterbot\" yazısı olmadan, təmiz gəlir\n"
+        "⚡ Telegram Stars ilə bir neçə saniyəyə aktivləşir\n"
+        "🔁 Aktiv premiumu uzatmaq olar — müddət üstünə əlavə olunur\n\n"
+        "{status}\n\n"
+        "{plans}"
+    ),
     "edit": (
         "✏️ <b>Mahnının metadatasını dəyişmək</b>\n\n"
         "1️⃣ Mənə istənilən mahnını (audio faylı) göndər\n"
@@ -172,7 +182,8 @@ def private_keyboard(bot_username: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="🎵 Mahnı yüklə", callback_data="sg:download"),
          InlineKeyboardButton(text="🔎 İnline axtarış", callback_data="sg:inline")],
-        [InlineKeyboardButton(text="✏️ Metadata redaktə", callback_data="sg:edit")],
+        [InlineKeyboardButton(text="✏️ Metadata redaktə", callback_data="sg:edit"),
+         InlineKeyboardButton(text="💎 Premium al", callback_data="sg:premium")],
         [InlineKeyboardButton(text="🤖 Botu qrupa əlavə et", url=admin_request_url(bot_username))],
         [InlineKeyboardButton(text="❌ Ləğv et", callback_data="sg:close")],
     ])
@@ -259,13 +270,19 @@ async def start_guide(callback: CallbackQuery):
             await delete_quietly(msg)
         return
 
-    if action not in ("download", "inline", "edit"):
+    if action not in ("download", "inline", "edit", "premium"):
         await callback.answer()
         return
     await callback.answer()
     try:
         username = (await bot.me()).username
-        await send_media(bot, chat_id, guide_text(action, username), guide_keyboard(action), action)
+        if action == "premium":
+            uid = callback.from_user.id
+            text, kb = await asyncio.to_thread(premium_text, uid, username), \
+                await asyncio.to_thread(premium_keyboard, uid)
+        else:
+            text, kb = guide_text(action, username), guide_keyboard(action)
+        await send_media(bot, chat_id, text, kb, action)
     except Exception as e:
         logger.error(f"Bələdçi göndərilmədi ({action}): {e}")
         return
@@ -342,6 +359,45 @@ def build_group_text(title: str, bot_username: str, rights: dict, adder_html: st
     })
 
 
+def premium_info(user_id: int):
+    """(statusu sətri, planlar mətni, alış düymələri) — /start → 💎 Premium al."""
+    if is_creator(user_id):
+        return "👑 <b>Sənin statusun: Creator</b> — bütün imkanlar açıqdır.", "", None
+    try:
+        cur = get_db().get_premium(user_id)
+    except Exception:
+        cur = None
+    lifetime = bool(cur) and cur["until"] is None
+    if cur:
+        status = f"📌 <b>Sənin statusun: 💎 Premium</b> ({'ömürlük' if lifetime else _fmt_date(cur['until']) + '-dək'})"
+    else:
+        status = "📌 <b>Sənin statusun: 🆓 Free</b>"
+    if lifetime:
+        return status, "♾ <i>Ömürlük premiumun var — heç nə almağa ehtiyac yoxdur.</i>", None
+    plans = plans_for_sale()
+    if not plans:
+        return status, "<i>Premium hazırda satışda deyil. Ətraflı: @" + CREATOR_USERNAME + "</i>", None
+    lines = "\n".join(f"⭐ {escape(label)} — <b>{price}</b> ulduz{per_month(days, price)}"
+                      for _, days, label, price in plans)
+    head = "⭐ <b>Uzatmaq üçün plan seç:</b>" if cur else "⭐ <b>Plan seç:</b>"
+    return status, f"{head}\n{lines}", buy_keyboard(False)
+
+
+def premium_text(user_id: int, bot_username: str) -> str:
+    status, plans, _ = premium_info(user_id)
+    text = render_template(text_template("premium"), {
+        "status": status, "plans": plans, "bot": escape(bot_username), "creator": CREATOR_USERNAME,
+    })
+    return text.rstrip()
+
+
+def premium_keyboard(user_id: int) -> InlineKeyboardMarkup:
+    _, _, buy = premium_info(user_id)
+    rows = list(buy.inline_keyboard) if buy else []
+    rows.append(nav_row())
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
 def sample_message(slot: str, first_name: str, user_id: int, bot_username: str):
     """/menu önizləməsi üçün: (mətn, klaviatura) — istifadəçilərin görəcəyi kimi."""
     if slot == "welcome":
@@ -350,6 +406,9 @@ def sample_message(slot: str, first_name: str, user_id: int, bot_username: str):
         rights = {"admin": True, "can_delete_messages": True, "can_pin_messages": False}
         adder = f'<a href="tg://user?id={user_id}">{escape(first_name)}</a>'
         return build_group_text("Test qrupu", bot_username, rights, adder), rights_keyboard(bot_username, rights)
+    if slot == "premium":
+        # Creator önizləmədə free istifadəçinin görəcəyini görsün
+        return premium_text(0, bot_username), premium_keyboard(0)
     return guide_text(slot, bot_username), guide_keyboard(slot)
 
 
