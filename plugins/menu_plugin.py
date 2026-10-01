@@ -71,6 +71,7 @@ SOURCE_LABELS = {
     "music": "🔎 Axtarış (/music)",
     "inline": "⚡ İnline",
     "mix": "🔀 /mix",
+    "batch": "⬇️ Toplu yükləmə",
     "spotify": "🟢 Spotify",
     "playlist": "📃 Playlist",
     "youtube": "▶️ YouTube",

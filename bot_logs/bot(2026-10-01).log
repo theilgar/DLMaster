@@ -571,3 +571,377 @@ can_send_welcome_messages
 2026.10.01 09:04:55 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster'
 2026.10.01 09:04:58 plugins.update_notifier_plugin INFO     ✅ Yeniləmə bildirişi göndərildi
 2026.10.01 09:05:19 aiogram.event        INFO     Update id=875902599 is handled. Duration 166 ms by bot id=8976652462
+2026.10.01 09:05:23 plugins.update_notifier_plugin INFO     📦 Full push: 0986f35 (3 fayl)
+2026.10.01 09:05:23 aiogram.event        INFO     Update id=875902600 is handled. Duration 2032 ms by bot id=8976652462
+2026.10.01 09:05:29 core.utilities       INFO     User 8502974425 executed command: /menu
+2026.10.01 09:05:29 aiogram.event        INFO     Update id=875902601 is handled. Duration 38 ms by bot id=8976652462
+2026.10.01 09:05:34 aiogram.event        INFO     Update id=875902602 is handled. Duration 50 ms by bot id=8976652462
+2026.10.01 09:05:42 aiogram.event        INFO     Update id=875902603 is handled. Duration 45 ms by bot id=8976652462
+2026.10.01 09:05:47 aiogram.event        INFO     Update id=875902604 is handled. Duration 95 ms by bot id=8976652462
+2026.10.01 09:07:34 core.utilities       INFO     User 1922161311 executed command: /start
+2026.10.01 09:07:34 aiogram.event        INFO     Update id=875902605 is handled. Duration 47 ms by bot id=8976652462
+2026.10.01 09:07:46 core.utilities       INFO     User 1922161311 executed command: /premium
+2026.10.01 09:07:46 aiogram.event        INFO     Update id=875902606 is handled. Duration 48 ms by bot id=8976652462
+2026.10.01 09:08:04 aiogram.event        INFO     Update id=875902607 is handled. Duration 82 ms by bot id=8976652462
+2026.10.01 09:11:23 core.utilities       INFO     User 1922161311 executed command: /start
+2026.10.01 09:11:23 aiogram.event        INFO     Update id=875902608 is handled. Duration 66 ms by bot id=8976652462
+2026.10.01 09:11:28 aiogram.event        INFO     Update id=875902609 is handled. Duration 85 ms by bot id=8976652462
+2026.10.01 09:11:48 aiogram.event        INFO     Update id=875902610 is handled. Duration 82 ms by bot id=8976652462
+2026.10.01 09:11:50 aiogram.event        INFO     Update id=875902611 is handled. Duration 86 ms by bot id=8976652462
+2026.10.01 09:11:57 aiogram.event        INFO     Update id=875902612 is handled. Duration 96 ms by bot id=8976652462
+2026.10.01 09:11:58 aiogram.event        INFO     Update id=875902613 is handled. Duration 76 ms by bot id=8976652462
+2026.10.01 09:12:06 aiogram.event        INFO     Update id=875902614 is handled. Duration 79 ms by bot id=8976652462
+2026.10.01 09:12:28 core.utilities       INFO     User 8502974425 executed command: /menu
+2026.10.01 09:12:28 aiogram.event        INFO     Update id=875902615 is handled. Duration 46 ms by bot id=8976652462
+2026.10.01 09:12:30 aiogram.event        INFO     Update id=875902616 is handled. Duration 52 ms by bot id=8976652462
+2026.10.01 09:12:32 aiogram.event        INFO     Update id=875902617 is handled. Duration 49 ms by bot id=8976652462
+2026.10.01 09:12:35 aiogram.event        INFO     Update id=875902618 is handled. Duration 70 ms by bot id=8976652462
+2026.10.01 09:12:51 aiogram.event        INFO     Update id=875902619 is handled. Duration 51 ms by bot id=8976652462
+2026.10.01 09:13:15 plugins.menu_plugin  INFO     Mətn dəyişdi (welcome): 83 simvol
+2026.10.01 09:13:15 aiogram.event        INFO     Update id=875902620 is handled. Duration 82 ms by bot id=8976652462
+2026.10.01 09:13:27 core.utilities       INFO     User 1922161311 executed command: /start
+2026.10.01 09:13:27 aiogram.event        INFO     Update id=875902621 is handled. Duration 91 ms by bot id=8976652462
+2026.10.01 09:15:17 aiogram.event        INFO     Update id=875902622 is handled. Duration 47 ms by bot id=8976652462
+2026.10.01 09:15:22 aiogram.event        INFO     Update id=875902623 is handled. Duration 51 ms by bot id=8976652462
+2026.10.01 09:15:28 aiogram.event        INFO     Update id=875902624 is handled. Duration 83 ms by bot id=8976652462
+2026.10.01 09:15:30 aiogram.event        INFO     Update id=875902625 is handled. Duration 68 ms by bot id=8976652462
+2026.10.01 09:15:33 aiogram.event        INFO     Update id=875902626 is handled. Duration 52 ms by bot id=8976652462
+2026.10.01 09:15:36 aiogram.event        INFO     Update id=875902627 is handled. Duration 1892 ms by bot id=8976652462
+2026.10.01 09:18:30 aiogram.event        INFO     Update id=875902628 is handled. Duration 3 ms by bot id=8976652462
+2026.10.01 09:25:43 aiogram.dispatcher   WARNING  Received SIGINT signal
+2026.10.01 09:25:43 aiogram.dispatcher   INFO     Polling stopped for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.10.01 09:25:43 aiogram.dispatcher   INFO     Polling stopped
+2026.10.01 09:25:43 __main__             INFO     🛑 Polling stopped
+2026.10.01 09:25:43 __main__             INFO     🔴 Bot stopped
+2026.10.01 09:25:50 __main__             INFO     🤖 Starting bot...
+2026.10.01 09:25:50 __main__             INFO     🚀 Starting bot initialization...
+2026.10.01 09:25:50 core.spotify_handler INFO     Spotify API connection established.
+2026.10.01 09:25:50 __main__             INFO     ✅ Spotify service initialized
+2026.10.01 09:25:50 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:25:50 core.youtube_handler INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:25:50 __main__             INFO     ✅ YouTube services initialized (firefox)
+2026.10.01 09:25:50 __main__             INFO     🔌 Loading plugins...
+2026.10.01 09:25:50 core.utilities       INFO     🔍 Scanning plugins in: /home/admin/dlmaster/plugins
+2026.10.01 09:25:50 core.utilities       INFO     🔄 Loading: plugins.audio_editor_plugin
+2026.10.01 09:25:50 core.utilities       INFO     🔄 Loading: plugins.menu_plugin
+2026.10.01 09:25:50 core.utilities       INFO     🔄 Loading: plugins.music_plugin
+2026.10.01 09:25:50 core.utilities       INFO     🔄 Loading: plugins.payments_plugin
+2026.10.01 09:25:50 core.utilities       INFO     🔄 Loading: plugins.spotify_plugin
+2026.10.01 09:25:50 core.utilities       INFO     🔄 Loading: plugins.start_plugin
+2026.10.01 09:25:50 core.utilities       INFO     🔄 Loading: plugins.update_notifier_plugin
+2026.10.01 09:25:50 core.utilities       INFO     🔄 Loading: plugins.youtube_plugin
+2026.10.01 09:25:50 core.utilities       INFO     ✅ Loaded: plugins.audio_editor_plugin
+2026.10.01 09:25:50 plugins.menu_plugin  INFO     ✅ Menu plugin yükləndi
+2026.10.01 09:25:50 core.utilities       INFO     ✅ Loaded: plugins.menu_plugin
+2026.10.01 09:25:50 core.utilities       INFO     ✅ Loaded: plugins.music_plugin
+2026.10.01 09:25:50 plugins.payments_plugin INFO     ✅ Payments plugin yükləndi
+2026.10.01 09:25:50 core.utilities       INFO     ✅ Loaded: plugins.payments_plugin
+2026.10.01 09:25:50 core.utilities       INFO     ✅ Loaded: plugins.spotify_plugin
+2026.10.01 09:25:50 plugins.start_plugin WARNING  Default admin yetkiləri təyin edilmədi: 4 validation errors for ChatAdministratorRights
+can_post_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_edit_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_delete_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_send_welcome_messages
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026.10.01 09:25:50 plugins.start_plugin INFO     ✅ Start plugin yükləndi
+2026.10.01 09:25:50 core.utilities       INFO     ✅ Loaded: plugins.start_plugin
+2026.10.01 09:25:50 core.utilities       INFO     ✅ Loaded: plugins.youtube_plugin
+2026.10.01 09:25:50 core.utilities       INFO     ✅ Loaded: plugins.update_notifier_plugin
+2026.10.01 09:25:50 __main__             INFO     🚀 Starting polling...
+2026.10.01 09:25:50 aiogram.dispatcher   INFO     Start polling
+2026.10.01 09:25:51 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.10.01 09:25:54 plugins.update_notifier_plugin INFO     ✅ Yeniləmə bildirişi göndərildi
+2026.10.01 09:26:04 aiogram.event        INFO     Update id=875902629 is handled. Duration 2202 ms by bot id=8976652462
+2026.10.01 09:26:10 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:26:10 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:26:14 aiogram.event        INFO     Update id=875902630 is handled. Duration 3569 ms by bot id=8976652462
+2026.10.01 09:26:16 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:26:16 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:26:16 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 09:26:17 plugins.music_plugin WARNING  Odesli API açar tələb edir (ODESLI_API_KEY). Birbaşa song.link/<url> linki istifadə olunacaq.
+2026.10.01 09:26:28 plugins.music_plugin INFO     Metadata (youtube): INNA - Caliente
+2026.10.01 09:26:28 core.audio_cache     INFO     📦 Depo kanalı: DLLMaster Depo (-1003987878159)
+2026.10.01 09:26:31 aiogram.event        INFO     Update id=875902631 is handled. Duration 14685 ms by bot id=8976652462
+2026.10.01 09:26:49 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:26:49 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 09:26:51 aiogram.event        INFO     Update id=875902632 is handled. Duration 2171 ms by bot id=8976652462
+2026.10.01 09:26:53 plugins.music_plugin INFO     📦 Keşdən: Rpc8pTvNHwA
+2026.10.01 09:26:53 aiogram.event        INFO     Update id=875902633 is handled. Duration 123 ms by bot id=8976652462
+2026.10.01 09:27:06 aiogram.event        INFO     Update id=875902634 is handled. Duration 0 ms by bot id=8976652462
+2026.10.01 09:27:08 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:27:08 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.10.01 09:27:11 aiogram.event        INFO     Update id=875902635 is handled. Duration 3814 ms by bot id=8976652462
+2026.10.01 09:27:15 plugins.music_plugin INFO     📦 Keşdən: Rpc8pTvNHwA
+2026.10.01 09:27:15 aiogram.event        INFO     Update id=875902636 is handled. Duration 94 ms by bot id=8976652462
+2026.10.01 09:29:24 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:29:24 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:29:26 aiogram.event        INFO     Update id=875902637 is handled. Duration 2173 ms by bot id=8976652462
+2026.10.01 09:29:27 aiogram.event        INFO     Update id=875902638 is handled. Duration 35 ms by bot id=8976652462
+2026.10.01 09:29:28 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:29:28 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.10.01 09:29:28 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 09:29:28 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:29:28 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 09:29:33 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:29:33 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.10.01 09:29:33 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 09:29:33 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:29:33 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:29:35 aiogram.event        INFO     Update id=875902639 is handled. Duration 6845 ms by bot id=8976652462
+2026.10.01 09:29:36 aiogram.event        INFO     Update id=875902641 is handled. Duration 2898 ms by bot id=8976652462
+2026.10.01 09:29:51 plugins.music_plugin INFO     Metadata (youtube): INNA - Amazing
+2026.10.01 09:29:52 aiogram.event        INFO     Update id=875902640 is handled. Duration 24265 ms by bot id=8976652462
+2026.10.01 09:29:53 plugins.music_plugin INFO     Metadata (youtube): INNA - HOT
+2026.10.01 09:29:55 aiogram.event        INFO     Update id=875902642 is handled. Duration 21849 ms by bot id=8976652462
+2026.10.01 09:29:56 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:29:56 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.10.01 09:29:56 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 09:29:56 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:29:56 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:30:03 aiogram.event        INFO     Update id=875902643 is handled. Duration 6964 ms by bot id=8976652462
+2026.10.01 09:30:13 plugins.music_plugin INFO     Metadata (youtube): Jennifer Lopez, Pitbull - On The Floor
+2026.10.01 09:30:15 aiogram.event        INFO     Update id=875902644 is handled. Duration 19110 ms by bot id=8976652462
+2026.10.01 09:32:44 aiogram.event        INFO     Update id=875902645 is handled. Duration 131 ms by bot id=8976652462
+2026.10.01 09:32:49 plugins.music_plugin INFO     📦 Keşdən: gKHe12T6GMY
+2026.10.01 09:32:49 aiogram.event        INFO     Update id=875902646 is handled. Duration 210 ms by bot id=8976652462
+2026.10.01 09:33:00 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:33:00 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.10.01 09:33:04 aiogram.event        INFO     Update id=875902647 is handled. Duration 4019 ms by bot id=8976652462
+2026.10.01 09:33:07 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:33:07 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.10.01 09:33:07 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 09:33:11 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:33:11 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:33:14 aiogram.event        INFO     Update id=875902649 is handled. Duration 2965 ms by bot id=8976652462
+2026.10.01 09:33:19 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:33:19 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 09:33:19 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 09:33:24 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:33:24 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:33:27 plugins.music_plugin INFO     Metadata (youtube): YouTube - Ala yeri var
+2026.10.01 09:33:28 aiogram.event        INFO     Update id=875902651 is handled. Duration 3208 ms by bot id=8976652462
+2026.10.01 09:33:28 aiogram.event        INFO     Update id=875902652 is handled. Duration 77 ms by bot id=8976652462
+2026.10.01 09:33:28 plugins.music_plugin INFO     Metadata (youtube): YouTube - Sən ey vəfasız
+2026.10.01 09:33:29 aiogram.event        INFO     Update id=875902653 is handled. Duration 18 ms by bot id=8976652462
+2026.10.01 09:33:30 aiogram.event        INFO     Update id=875902650 is handled. Duration 10421 ms by bot id=8976652462
+2026.10.01 09:33:30 aiogram.event        INFO     Update id=875902648 is handled. Duration 23107 ms by bot id=8976652462
+2026.10.01 09:33:32 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:33:32 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:33:32 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 09:33:32 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:33:32 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.10.01 09:33:35 aiogram.event        INFO     Update id=875902654 is handled. Duration 2710 ms by bot id=8976652462
+2026.10.01 09:33:35 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:33:35 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.10.01 09:33:37 aiogram.event        INFO     Update id=875902656 is handled. Duration 2254 ms by bot id=8976652462
+2026.10.01 09:33:38 aiogram.event        INFO     Update id=875902657 is handled. Duration 18 ms by bot id=8976652462
+2026.10.01 09:33:40 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:33:40 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 09:33:40 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 09:33:40 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:33:40 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.10.01 09:33:46 plugins.music_plugin INFO     Metadata (youtube): Inna - Sun is up
+2026.10.01 09:33:47 aiogram.event        INFO     Update id=875902655 is handled. Duration 14675 ms by bot id=8976652462
+2026.10.01 09:33:48 aiogram.event        INFO     Update id=875902658 is handled. Duration 7325 ms by bot id=8976652462
+2026.10.01 09:33:57 aiogram.event        INFO     Update id=875902660 is handled. Duration 0 ms by bot id=8976652462
+2026.10.01 09:34:00 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:34:00 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:34:00 plugins.music_plugin INFO     Metadata (youtube): 𝐍𝐢𝐲ə 𝐙𝐚𝐥ı𝐦 𝐒ə𝐧 𝐀𝐠̆𝐚𝐫𝐭𝐝ı𝐧 𝐒𝐚𝐜̧ı𝐦ı𝐧 𝐐𝐚𝐫ə𝐥ə𝐫𝐢𝐧 - [ 𝐀𝐱𝐭𝐚𝐫ı𝐥𝐚𝐧 𝐌𝐚𝐡𝐧ı 𝐁𝐚𝐬𝐬 𝐑𝐞𝐦𝐢𝐱 𝟐𝟎𝟐𝟓 ] 𝐘𝐞𝐧𝐢 𝐌𝐚𝐡𝐧ı
+2026.10.01 09:34:02 aiogram.event        INFO     Update id=875902659 is handled. Duration 21624 ms by bot id=8976652462
+2026.10.01 09:34:04 aiogram.event        INFO     Update id=875902661 is handled. Duration 4460 ms by bot id=8976652462
+2026.10.01 09:34:05 plugins.music_plugin INFO     📦 Keşdən: _dOtAjo3bxc
+2026.10.01 09:34:05 aiogram.event        INFO     Update id=875902662 is handled. Duration 90 ms by bot id=8976652462
+2026.10.01 09:34:08 aiogram.event        INFO     Update id=875902663 is handled. Duration 191 ms by bot id=8976652462
+2026.10.01 09:34:31 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:34:31 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.10.01 09:34:33 aiogram.event        INFO     Update id=875902664 is handled. Duration 1840 ms by bot id=8976652462
+2026.10.01 09:34:33 aiogram.event        INFO     Update id=875902665 is handled. Duration 23 ms by bot id=8976652462
+2026.10.01 09:34:35 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:34:35 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:34:35 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 09:34:35 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:34:35 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 09:34:43 aiogram.event        INFO     Update id=875902666 is handled. Duration 7516 ms by bot id=8976652462
+2026.10.01 09:34:56 plugins.music_plugin INFO     Metadata (youtube): YouTube - Qesey qesey
+2026.10.01 09:34:58 aiogram.event        INFO     Update id=875902667 is handled. Duration 22915 ms by bot id=8976652462
+2026.10.01 09:35:25 aiogram.dispatcher   WARNING  Received SIGINT signal
+2026.10.01 09:35:25 aiogram.dispatcher   INFO     Polling stopped for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.10.01 09:35:25 aiogram.dispatcher   INFO     Polling stopped
+2026.10.01 09:35:25 __main__             INFO     🛑 Polling stopped
+2026.10.01 09:35:25 __main__             INFO     🔴 Bot stopped
+2026.10.01 09:35:32 __main__             INFO     🤖 Starting bot...
+2026.10.01 09:35:32 __main__             INFO     🚀 Starting bot initialization...
+2026.10.01 09:35:32 core.spotify_handler INFO     Spotify API connection established.
+2026.10.01 09:35:32 __main__             INFO     ✅ Spotify service initialized
+2026.10.01 09:35:32 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:35:32 core.youtube_handler INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:35:32 __main__             INFO     ✅ YouTube services initialized (firefox)
+2026.10.01 09:35:32 __main__             INFO     🔌 Loading plugins...
+2026.10.01 09:35:32 core.utilities       INFO     🔍 Scanning plugins in: /home/admin/dlmaster/plugins
+2026.10.01 09:35:32 core.utilities       INFO     🔄 Loading: plugins.audio_editor_plugin
+2026.10.01 09:35:32 core.utilities       INFO     🔄 Loading: plugins.menu_plugin
+2026.10.01 09:35:32 core.utilities       INFO     🔄 Loading: plugins.music_plugin
+2026.10.01 09:35:32 core.utilities       INFO     🔄 Loading: plugins.payments_plugin
+2026.10.01 09:35:32 core.utilities       INFO     🔄 Loading: plugins.spotify_plugin
+2026.10.01 09:35:32 core.utilities       INFO     🔄 Loading: plugins.start_plugin
+2026.10.01 09:35:32 core.utilities       INFO     🔄 Loading: plugins.update_notifier_plugin
+2026.10.01 09:35:32 core.utilities       INFO     🔄 Loading: plugins.youtube_plugin
+2026.10.01 09:35:32 core.utilities       INFO     ✅ Loaded: plugins.audio_editor_plugin
+2026.10.01 09:35:32 plugins.menu_plugin  INFO     ✅ Menu plugin yükləndi
+2026.10.01 09:35:32 core.utilities       INFO     ✅ Loaded: plugins.menu_plugin
+2026.10.01 09:35:32 core.utilities       INFO     ✅ Loaded: plugins.music_plugin
+2026.10.01 09:35:32 plugins.payments_plugin INFO     ✅ Payments plugin yükləndi
+2026.10.01 09:35:32 core.utilities       INFO     ✅ Loaded: plugins.payments_plugin
+2026.10.01 09:35:32 core.utilities       INFO     ✅ Loaded: plugins.spotify_plugin
+2026.10.01 09:35:32 plugins.start_plugin WARNING  Default admin yetkiləri təyin edilmədi: 4 validation errors for ChatAdministratorRights
+can_post_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_edit_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_delete_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_send_welcome_messages
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026.10.01 09:35:32 plugins.start_plugin INFO     ✅ Start plugin yükləndi
+2026.10.01 09:35:32 core.utilities       INFO     ✅ Loaded: plugins.start_plugin
+2026.10.01 09:35:32 core.utilities       INFO     ✅ Loaded: plugins.youtube_plugin
+2026.10.01 09:35:32 core.utilities       INFO     ✅ Loaded: plugins.update_notifier_plugin
+2026.10.01 09:35:32 __main__             INFO     🚀 Starting polling...
+2026.10.01 09:35:32 aiogram.dispatcher   INFO     Start polling
+2026.10.01 09:35:32 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.10.01 09:35:35 plugins.update_notifier_plugin INFO     ✅ Yeniləmə bildirişi göndərildi
+2026.10.01 09:35:40 aiogram.event        INFO     Update id=875902668 is handled. Duration 1863 ms by bot id=8976652462
+2026.10.01 09:35:45 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:35:45 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 09:35:47 aiogram.event        INFO     Update id=875902669 is handled. Duration 2125 ms by bot id=8976652462
+2026.10.01 09:35:49 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:35:49 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:35:49 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 09:35:49 plugins.music_plugin WARNING  Odesli API açar tələb edir (ODESLI_API_KEY). Birbaşa song.link/<url> linki istifadə olunacaq.
+2026.10.01 09:35:53 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:35:53 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.10.01 09:35:55 aiogram.event        INFO     Update id=875902671 is handled. Duration 1993 ms by bot id=8976652462
+2026.10.01 09:35:55 aiogram.event        INFO     Update id=875902672 is handled. Duration 22 ms by bot id=8976652462
+2026.10.01 09:35:57 aiogram.event        INFO     Update id=875902673 is handled. Duration 20 ms by bot id=8976652462
+2026.10.01 09:35:57 plugins.music_plugin INFO     Metadata (youtube): YouTube - Nələr baş verir qazamatda
+2026.10.01 09:35:57 aiogram.event        INFO     Update id=875902674 is handled. Duration 65 ms by bot id=8976652462
+2026.10.01 09:35:57 core.audio_cache     INFO     📦 Depo kanalı: DLLMaster Depo (-1003987878159)
+2026.10.01 09:35:57 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:35:57 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:35:57 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 09:35:57 aiogram.event        INFO     Update id=875902675 is handled. Duration 121 ms by bot id=8976652462
+2026.10.01 09:35:58 aiogram.event        INFO     Update id=875902670 is handled. Duration 9277 ms by bot id=8976652462
+2026.10.01 09:36:14 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:36:14 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.10.01 09:36:15 plugins.music_plugin INFO     Metadata (youtube): YouTube - Ölüb Eliyərsən
+2026.10.01 09:36:16 aiogram.event        INFO     Update id=875902678 is handled. Duration 2345 ms by bot id=8976652462
+2026.10.01 09:36:16 aiogram.event        INFO     Update id=875902679 is handled. Duration 18 ms by bot id=8976652462
+2026.10.01 09:36:17 aiogram.event        INFO     Update id=875902676 is handled. Duration 19653 ms by bot id=8976652462
+2026.10.01 09:36:17 aiogram.event        INFO     Update id=875902677 is handled. Duration 15329 ms by bot id=8976652462
+2026.10.01 09:36:19 aiogram.event        INFO     Update id=875902680 is handled. Duration 21 ms by bot id=8976652462
+2026.10.01 09:36:21 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:36:21 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.10.01 09:36:21 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 09:36:21 aiogram.event        INFO     Update id=875902681 is handled. Duration 126 ms by bot id=8976652462
+2026.10.01 09:36:23 aiogram.event        INFO     Update id=875902683 is handled. Duration 160 ms by bot id=8976652462
+2026.10.01 09:36:25 aiogram.event        INFO     Update id=875902684 is handled. Duration 53 ms by bot id=8976652462
+2026.10.01 09:36:32 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:36:32 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:36:32 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 09:36:32 aiogram.event        INFO     Update id=875902685 is handled. Duration 173 ms by bot id=8976652462
+2026.10.01 09:36:35 plugins.music_plugin INFO     Metadata (youtube): YouTube - Он Блатной
+2026.10.01 09:36:35 aiogram.event        INFO     Update id=875902682 is handled. Duration 13989 ms by bot id=8976652462
+2026.10.01 09:36:38 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:36:38 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:36:38 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 09:36:38 aiogram.event        INFO     Update id=875902687 is handled. Duration 129 ms by bot id=8976652462
+2026.10.01 09:36:42 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:36:42 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 09:36:45 aiogram.event        INFO     Update id=875902689 is handled. Duration 2835 ms by bot id=8976652462
+2026.10.01 09:36:45 aiogram.event        INFO     Update id=875902690 is handled. Duration 43 ms by bot id=8976652462
+2026.10.01 09:36:46 aiogram.event        INFO     Update id=875902691 is handled. Duration 41 ms by bot id=8976652462
+2026.10.01 09:36:47 aiogram.event        INFO     Update id=875902692 is handled. Duration 78 ms by bot id=8976652462
+2026.10.01 09:36:49 aiogram.event        INFO     Update id=875902693 is handled. Duration 172 ms by bot id=8976652462
+2026.10.01 09:36:53 plugins.music_plugin INFO     Metadata (youtube): YouTube - Şou biznes (feat. Vahid Qədim)
+2026.10.01 09:36:53 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:36:53 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:36:53 core.youtube_handler INFO     Yükləmə cəhdi: cookies + default client
+2026.10.01 09:36:55 aiogram.event        INFO     Update id=875902686 is handled. Duration 23026 ms by bot id=8976652462
+2026.10.01 09:36:57 plugins.music_plugin INFO     Metadata (youtube): RIO - De Hardasan (feat. İradə İbrahimova)
+2026.10.01 09:36:58 aiogram.event        INFO     Update id=875902688 is handled. Duration 19664 ms by bot id=8976652462
+2026.10.01 09:36:59 aiogram.event        INFO     Update id=875902695 is handled. Duration 0 ms by bot id=8976652462
+2026.10.01 09:37:03 aiogram.event        INFO     Update id=875902696 is handled. Duration 0 ms by bot id=8976652462
+2026.10.01 09:37:04 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:37:04 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.01 09:37:05 aiogram.event        INFO     Update id=875902698 is handled. Duration 800 ms by bot id=8976652462
+2026.10.01 09:37:06 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:37:06 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.10.01 09:37:08 aiogram.event        INFO     Update id=875902697 is handled. Duration 4315 ms by bot id=8976652462
+2026.10.01 09:37:10 aiogram.event        INFO     Update id=875902699 is handled. Duration 4665 ms by bot id=8976652462
+2026.10.01 09:37:10 plugins.music_plugin INFO     Metadata (youtube): YouTube - Chagixuto Gulshi
+2026.10.01 09:37:11 plugins.music_plugin INFO     📦 Keşdən: 4ZVHx_lqsW4
+2026.10.01 09:37:11 aiogram.event        INFO     Update id=875902700 is handled. Duration 134 ms by bot id=8976652462
+2026.10.01 09:37:12 aiogram.event        INFO     Update id=875902694 is handled. Duration 23033 ms by bot id=8976652462
+2026.10.01 09:37:14 aiogram.event        INFO     Update id=875902701 is handled. Duration 306 ms by bot id=8976652462
+2026.10.01 09:42:08 aiogram.dispatcher   WARNING  Received SIGINT signal
+2026.10.01 09:42:08 aiogram.dispatcher   INFO     Polling stopped for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.10.01 09:42:08 aiogram.dispatcher   INFO     Polling stopped
+2026.10.01 09:42:08 __main__             INFO     🛑 Polling stopped
+2026.10.01 09:42:08 __main__             INFO     🔴 Bot stopped
+2026.10.01 09:42:15 __main__             INFO     🤖 Starting bot...
+2026.10.01 09:42:15 __main__             INFO     🚀 Starting bot initialization...
+2026.10.01 09:42:15 core.spotify_handler INFO     Spotify API connection established.
+2026.10.01 09:42:15 __main__             INFO     ✅ Spotify service initialized
+2026.10.01 09:42:15 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.01 09:42:15 core.youtube_handler INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.01 09:42:15 __main__             INFO     ✅ YouTube services initialized (firefox)
+2026.10.01 09:42:15 __main__             INFO     🔌 Loading plugins...
+2026.10.01 09:42:15 core.utilities       INFO     🔍 Scanning plugins in: /home/admin/dlmaster/plugins
+2026.10.01 09:42:15 core.utilities       INFO     🔄 Loading: plugins.audio_editor_plugin
+2026.10.01 09:42:15 core.utilities       INFO     🔄 Loading: plugins.menu_plugin
+2026.10.01 09:42:16 core.utilities       INFO     🔄 Loading: plugins.music_plugin
+2026.10.01 09:42:16 core.utilities       INFO     🔄 Loading: plugins.payments_plugin
+2026.10.01 09:42:16 core.utilities       INFO     🔄 Loading: plugins.spotify_plugin
+2026.10.01 09:42:16 core.utilities       INFO     🔄 Loading: plugins.start_plugin
+2026.10.01 09:42:16 core.utilities       INFO     🔄 Loading: plugins.update_notifier_plugin
+2026.10.01 09:42:16 core.utilities       INFO     🔄 Loading: plugins.youtube_plugin
+2026.10.01 09:42:16 core.utilities       INFO     ✅ Loaded: plugins.audio_editor_plugin
+2026.10.01 09:42:16 plugins.menu_plugin  INFO     ✅ Menu plugin yükləndi
+2026.10.01 09:42:16 core.utilities       INFO     ✅ Loaded: plugins.menu_plugin
+2026.10.01 09:42:16 core.utilities       INFO     ✅ Loaded: plugins.music_plugin
+2026.10.01 09:42:16 plugins.payments_plugin INFO     ✅ Payments plugin yükləndi
+2026.10.01 09:42:16 core.utilities       INFO     ✅ Loaded: plugins.payments_plugin
+2026.10.01 09:42:16 core.utilities       INFO     ✅ Loaded: plugins.spotify_plugin
+2026.10.01 09:42:16 plugins.start_plugin WARNING  Default admin yetkiləri təyin edilmədi: 4 validation errors for ChatAdministratorRights
+can_post_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_edit_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_delete_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_send_welcome_messages
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026.10.01 09:42:16 plugins.start_plugin INFO     ✅ Start plugin yükləndi
+2026.10.01 09:42:16 core.utilities       INFO     ✅ Loaded: plugins.start_plugin
+2026.10.01 09:42:16 core.utilities       INFO     ✅ Loaded: plugins.youtube_plugin
+2026.10.01 09:42:16 core.utilities       INFO     ✅ Loaded: plugins.update_notifier_plugin
+2026.10.01 09:42:16 __main__             INFO     🚀 Starting polling...
+2026.10.01 09:42:16 aiogram.dispatcher   INFO     Start polling
+2026.10.01 09:42:16 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.10.01 09:42:19 plugins.update_notifier_plugin INFO     ✅ Yeniləmə bildirişi göndərildi
+2026.10.01 09:42:24 aiogram.event        INFO     Update id=875902702 is handled. Duration 148 ms by bot id=8976652462

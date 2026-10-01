@@ -7,7 +7,7 @@ from aiogram.types import (
 from core.utilities import sanitize_filename
 from core.youtube_handler import YoutubeManager, DownloadCancelled
 from core import audio_cache
-from core.database import log_download, caption_for_user
+from core.database import log_download, caption_for_user, is_premium
 import asyncio
 import contextlib
 import threading
@@ -96,6 +96,14 @@ def build_keyboard(url: str, sl=None, owner_id: int = 0):
         if row:
             rows.append(row)
     return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+BATCH_MAX_DURATION = 15 * 60      # toplu yükləmədə bundan uzun videolar (mix, albom) ötürülür
+
+
+def download_all_row(count: int) -> list:
+    """Axtarış / mix siyahısının altında: 💎 premium üçün hamısını yüklə."""
+    return [InlineKeyboardButton(text=f"⬇️ Hamısını yüklə ({count}) 💎", callback_data="dlall")]
 
 
 def stop_keyboard(callback_data: str) -> InlineKeyboardMarkup:
@@ -241,6 +249,7 @@ def setup(context):
             if pagination_buttons:
                 keyboard_rows.append(pagination_buttons)
 
+            keyboard_rows.append(download_all_row(len(results)))
             keyboard_rows.append([
                 InlineKeyboardButton(text="❌ Ləğv et", callback_data="cancel")
             ])
@@ -308,6 +317,7 @@ def setup(context):
         if pagination_buttons:
             keyboard_rows.append(pagination_buttons)
 
+        keyboard_rows.append(download_all_row(len(results)))
         keyboard_rows.append([
             InlineKeyboardButton(text="❌ Ləğv et", callback_data="cancel")
         ])
@@ -384,6 +394,7 @@ def setup(context):
             nav.append(InlineKeyboardButton(text="İrəli ▶️", callback_data=f"page_{page + 1}"))
         if nav:
             rows.append(nav)
+        rows.append(download_all_row(len(results)))
         rows.append([InlineKeyboardButton(text="❌ Ləğv et", callback_data="cancel")])
         return InlineKeyboardMarkup(inline_keyboard=rows), total_pages
 
@@ -795,6 +806,161 @@ def setup(context):
         
         user_searches.pop(user_id, None)
 
+
+    # ═════════════ ⬇️ Hamısını yüklə (💎 premium) ═════════════
+    batch_jobs = {}      # user_id -> {"event", "msg_id", "chat_id"}
+
+    async def send_track(target: types.Message, selected: dict, user_id: int, event) -> tuple:
+        """Bir mahnını keş/depo və ya yükləmə ilə göndərir → (artist, ad). handle_choice ilə eyni məntiq."""
+        duration = int(selected.get('raw_duration', 0) or 0)
+        for attempt in (1, 2):
+            res = await fetch_audio(selected['url'], selected['title'], duration, event)
+            try:
+                if event.is_set():
+                    raise DownloadCancelled("İstifadəçi dayandırdı")
+                caption = build_caption(selected['url'], res["sl"], user_id)
+                kb = build_keyboard(selected['url'], res["sl"], user_id)
+                for flood_try in range(3):
+                    try:
+                        if res["file_id"]:
+                            await target.answer_audio(audio=res["file_id"], caption=caption,
+                                                      parse_mode="HTML", reply_markup=kb)
+                        else:
+                            sent = await target.answer_audio(
+                                audio=FSInputFile(res["path"], filename=res["fname"]),
+                                title=res["track"][:64], performer=res["artist"][:64], duration=duration or None,
+                                caption=caption, parse_mode="HTML", reply_markup=kb,
+                            )
+                            await asyncio.to_thread(audio_cache.save_from_message, res["vid"], sent,
+                                                    res["track"], res["artist"], duration)
+                        break
+                    except Exception as e:
+                        wait = getattr(e, "retry_after", None)       # Telegram flood limiti
+                        if wait and flood_try < 2:
+                            await asyncio.sleep(wait + 1)
+                            continue
+                        raise
+                if res["cached"]:
+                    await asyncio.to_thread(audio_cache.mark_hit, res["vid"])
+                return res["artist"], res["track"]
+            except Exception as e:
+                if attempt == 1 and res["cached"] and audio_cache.is_bad_file_id(e):
+                    await asyncio.to_thread(audio_cache.invalidate, res["vid"])
+                    continue
+                raise
+            finally:
+                if res.get("path"):
+                    with contextlib.suppress(OSError):
+                        os.remove(res["path"])
+
+    def batch_stop_kb():
+        return InlineKeyboardMarkup(inline_keyboard=[[
+            InlineKeyboardButton(text="⏹ Dayandır", callback_data="dlall_stop")
+        ]])
+
+    @dp.callback_query(F.data == "dlall")
+    async def handle_download_all(callback: types.CallbackQuery):
+        user_id = callback.from_user.id
+        user_data = user_searches.get(user_id)
+        if not user_data or callback.message.message_id != user_data.get('search_message_id'):
+            await callback.answer("Bu siyahı köhnəlib — yenidən axtar", show_alert=True)
+            return
+        if not await asyncio.to_thread(is_premium, user_id):
+            await callback.answer(
+                "💎 Hamısını birdən yükləmək yalnız Premium istifadəçilər üçündür.\n\n"
+                "Premium almaq üçün: /premium",
+                show_alert=True,
+            )
+            return
+        if user_id in batch_jobs:
+            await callback.answer("Artıq bir toplu yükləmə gedir", show_alert=True)
+            return
+
+        # dublikatları və çox uzun videoları çıxar
+        seen, items, skipped = set(), [], 0
+        for r in user_data['results']:
+            vid = video_id_from_url(r.get('url'))
+            if not vid or vid in seen:
+                continue
+            seen.add(vid)
+            if (r.get('raw_duration') or 0) > BATCH_MAX_DURATION:
+                skipped += 1
+                continue
+            items.append(r)
+        if not items:
+            await callback.answer("Yüklənəcək mahnı yoxdur", show_alert=True)
+            return
+
+        await callback.answer(f"⬇️ {len(items)} mahnı yüklənir...")
+        source = "mix" if user_data.get('command_used') == "mix" else "batch"
+        header = user_data.get('header', "🎵 Axtarış")
+        user_searches.pop(user_id, None)          # siyahı artıq bu iş üçündür
+        event = threading.Event()
+        chat_id = callback.message.chat.id
+        batch_jobs[user_id] = {"event": event, "msg_id": callback.message.message_id, "chat_id": chat_id}
+        delay = 1.0 if callback.message.chat.type == "private" else 3.2   # qrupda ~20 mesaj/dəq limiti
+
+        ok = failed = 0
+        note = f"\n<i>⏭ {skipped} uzun video (15 dəq.+) ötürüldü</i>" if skipped else ""
+
+        async def progress(i, current=""):
+            with contextlib.suppress(Exception):
+                await callback.message.edit_text(
+                    f"⬇️ <b>Hamısı yüklənir</b> — {escape(header)}\n\n"
+                    f"📊 {i}/{len(items)} · ✅ {ok} · ❌ {failed}"
+                    + (f"\n⏳ <i>{escape(current[:60])}</i>" if current else "") + note,
+                    parse_mode="HTML", reply_markup=batch_stop_kb(),
+                )
+
+        try:
+            for i, item in enumerate(items):
+                if event.is_set():
+                    break
+                await progress(i, item['title'])
+                try:
+                    artist, track = await send_track(callback.message, item, user_id, event)
+                    ok += 1
+                    await log_download(user_id, f"{artist} - {track}", item['url'], source, chat_id=chat_id)
+                except DownloadCancelled:
+                    break
+                except Exception as e:
+                    failed += 1
+                    logger.warning(f"Toplu yükləmə xətası ({item.get('url')}): {e}")
+                await asyncio.sleep(delay)
+        finally:
+            batch_jobs.pop(user_id, None)
+
+        stopped = event.is_set()
+        with contextlib.suppress(Exception):
+            await callback.message.edit_text(
+                ("⏹ <b>Dayandırıldı</b>" if stopped else "✅ <b>Hamısı göndərildi</b>")
+                + f" — {escape(header)}\n\n📊 ✅ {ok} · ❌ {failed} · cəmi {len(items)}" + note,
+                parse_mode="HTML",
+            )
+        with contextlib.suppress(Exception):
+            await callback.message.bot.delete_message(chat_id, user_data['original_message_id'])
+
+        async def _cleanup():
+            await asyncio.sleep(15)
+            with contextlib.suppress(Exception):
+                await callback.message.delete()
+        asyncio.create_task(_cleanup())
+
+    @dp.callback_query(F.data == "dlall_stop")
+    async def handle_download_all_stop(callback: types.CallbackQuery):
+        job = batch_jobs.get(callback.from_user.id)
+        if not job or job["msg_id"] != callback.message.message_id:
+            owner = next((u for u, j in batch_jobs.items() if j["msg_id"] == callback.message.message_id), None)
+            if owner is not None and callback.from_user.id == context.creator_id:
+                job = batch_jobs[owner]
+            elif owner is not None:
+                await callback.answer("⛔ Yalnız yükləməni başladan dayandıra bilər", show_alert=True)
+                return
+            else:
+                await callback.answer("Yükləmə artıq bitib")
+                return
+        job["event"].set()
+        await callback.answer("⏹ Dayandırılır...")
 
     # ───────────────────────── INLINE MODE ─────────────────────────
     STORAGE_CHAT_ID = int(os.getenv("STORAGE_CHAT_ID") or context.creator_id)
