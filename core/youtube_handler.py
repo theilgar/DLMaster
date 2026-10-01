@@ -248,13 +248,13 @@ class YoutubeManager:
             **JS_OPTS,
         }
 
-    async def youtube_search(self, query: str) -> list:
+    async def youtube_search(self, query: str, limit: int = 25) -> list:
         """
         YouTube-da axtarış edir və nəticələri qaytarır.
         """
         try:
             with YoutubeDL(self.get_ydl_opts()) as ydl:
-                info = await asyncio.to_thread(ydl.extract_info, f"ytsearch25:{query}", download=False)
+                info = await asyncio.to_thread(ydl.extract_info, f"ytsearch{int(limit)}:{query}", download=False)
                 return [{
                     'title': entry.get('title', 'Naməlum Mahnı'),
                     'url': entry.get('url', ''),
@@ -264,6 +264,38 @@ class YoutubeManager:
         except Exception as e:
             logger.error(f"Axtarış xətası: {e}")
             raise RuntimeError(f"Axtarış xətası: {str(e)}")
+
+    async def playlist_entries(self, url: str, limit: int = 5000) -> dict:
+        """
+        İstənilən YouTube / YouTube Music siyahısı: playlist, albom (OLAK5uy_), Mix/Radio (RD...).
+        Nəticə: {"title": ..., "entries": [{title, url, duration, raw_duration}]}
+        """
+        opts = self.get_ydl_opts()
+        opts['playlistend'] = limit
+        opts['noplaylist'] = False
+        try:
+            with YoutubeDL(opts) as ydl:
+                info = await asyncio.to_thread(ydl.extract_info, url, download=False)
+        except Exception as e:
+            logger.error(f"Playlist xətası: {e}")
+            raise RuntimeError(f"Playlist açılmadı: {str(e)}")
+
+        entries, seen = [], set()
+        for entry in (info.get('entries') or []):
+            if not entry:
+                continue
+            vid = entry.get('id')
+            if not vid or vid in seen or len(vid) != 11:
+                continue
+            seen.add(vid)
+            duration = entry.get('duration') or 0
+            entries.append({
+                'title': entry.get('title') or 'Naməlum Mahnı',
+                'url': f"https://www.youtube.com/watch?v={vid}",
+                'duration': format_duration(duration),
+                'raw_duration': duration,
+            })
+        return {"title": info.get('title') or "YouTube siyahısı", "entries": entries}
 
     async def youtube_mix(self, video_id: str, limit: int = 25) -> list:
         """

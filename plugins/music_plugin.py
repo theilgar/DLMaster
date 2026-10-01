@@ -7,6 +7,7 @@ from aiogram.types import (
 from core.utilities import sanitize_filename
 from core.youtube_handler import YoutubeManager, DownloadCancelled
 from core import audio_cache
+from core.links import is_music_link
 from core.database import log_download, caption_for_user, is_premium
 import asyncio
 import contextlib
@@ -567,15 +568,29 @@ def setup(context):
         ~F.via_bot,                      # botun öz inline mesajı axtarış sayılmasın
         not_editing_audio,
         ~F.text.startswith("/"),
-        ~(F.text.contains("youtube.com/playlist") | F.text.contains("youtu.be/playlist")),
-        ~(F.text.contains("spotify.com/playlist") | F.text.contains("spotify.com/album") | F.text.contains("spotify.com/track"))
+        ~F.text.func(is_music_link),     # YouTube / Spotify linkləri → links_plugin
     )
     async def handle_private_music_request(message: types.Message):
         await handle_music_search(message, message.text, "music")
 
     # ═════════════ 📦 Keş + depo kanalı ═════════════
+    async def fetch_thumb(thumb_url: str):
+        """Üz qabığı (məs. Spotify albom şəkli) — Telegram thumbnail limiti 200 KB."""
+        if not thumb_url:
+            return None
+        try:
+            timeout = aiohttp.ClientTimeout(total=10)
+            async with aiohttp.ClientSession(timeout=timeout) as session:
+                async with session.get(thumb_url) as r:
+                    data = await r.read() if r.status == 200 else None
+            return data if data and len(data) <= 200 * 1024 else None
+        except Exception as e:
+            logger.debug(f"Thumbnail alınmadı: {e}")
+            return None
+
     async def fetch_audio(url: str, yt_title: str, duration: int, cancel_event,
-                          need_file_id: bool = False, fallback_chat=None, sem=None) -> dict:
+                          need_file_id: bool = False, fallback_chat=None, sem=None,
+                          meta: dict = None, thumb_url: str = None) -> dict:
         """
         Mahnını əvvəl keşdən (depo kanalı) götürür; yoxdursa YouTube-dan yükləyir, depoya atır, keşə yazır.
         Nəticə: {file_id, path, fname, artist, track, sl, cached, vid}
@@ -608,10 +623,14 @@ def setup(context):
                     os.remove(path)
                 raise DownloadCancelled("İstifadəçi yükləməni dayandırdı")
 
-            artist, track, meta_src = resolve_meta(yt_title, sl)
+            if meta and meta.get("artist") and meta.get("track"):
+                artist, track, meta_src = meta["artist"], meta["track"], "spotify"   # dəqiq metadata verilib
+            else:
+                artist, track, meta_src = resolve_meta(yt_title, sl)
             logger.info(f"Metadata ({meta_src}): {artist} - {track}")
             fname = audio_filename(artist, track, path)
-            file_id = await audio_cache.upload_to_depo(bot, path, fname, track, artist, duration, url, vid)
+            thumb = await fetch_thumb(thumb_url)
+            file_id = await audio_cache.upload_to_depo(bot, path, fname, track, artist, duration, url, vid, thumb)
             if not file_id and need_file_id and fallback_chat:
                 # depo əlçatan deyil — inline üçün file_id mütləq lazımdır
                 msg = await bot.send_audio(
@@ -810,11 +829,40 @@ def setup(context):
     # ═════════════ ⬇️ Hamısını yüklə (💎 premium) ═════════════
     batch_jobs = {}      # (chat_id, msg_id) -> {"event", "owner"} — hər siyahı mesajı üçün ayrıca iş
 
+    BAD_WORDS = ("live", "cover", "karaoke", "instrumental", "8d", "sped up", "slowed", "reverb",
+                 "nightcore", "remix", "1 hour", "1 saat", "lyrics video")
+
+    async def resolve_youtube(query: str, duration: int = 0):
+        """Spotify mahnısı üçün ən uyğun YouTube videosu: müddət yaxınlığı + "cover/live" kimi sözlərdən qaçış."""
+        try:
+            results = await context.youtube_manager.youtube_search(query, limit=8)
+        except TypeError:                       # köhnə youtube_handler (limit parametri yoxdur)
+            results = await context.youtube_manager.youtube_search(query)
+        q = query.lower()
+        best, best_score = None, None
+        for rank, r in enumerate(results or []):
+            if not video_id_from_url(r.get("url")):
+                continue
+            title = (r.get("title") or "").lower()
+            score = rank * 2
+            if duration and r.get("raw_duration"):
+                diff = abs(int(r["raw_duration"]) - int(duration))
+                score += 0 if diff <= 5 else (diff / 3 if diff <= 30 else 40)
+            score += sum(25 for w in BAD_WORDS if w in title and w not in q)
+            if best_score is None or score < best_score:
+                best, best_score = r, score
+        return best["url"] if best else None
+
     async def send_track(target: types.Message, selected: dict, user_id: int, event) -> tuple:
         """Bir mahnını keş/depo və ya yükləmə ilə göndərir → (artist, ad). handle_choice ilə eyni məntiq."""
         duration = int(selected.get('raw_duration', 0) or 0)
+        if not selected.get('url'):
+            selected['url'] = await resolve_youtube(selected.get('query') or selected['title'], duration)
+            if not selected['url']:
+                raise ValueError(f"YouTube-da tapılmadı: {selected['title']}")
         for attempt in (1, 2):
-            res = await fetch_audio(selected['url'], selected['title'], duration, event)
+            res = await fetch_audio(selected['url'], selected['title'], duration, event,
+                                    meta=selected.get('meta'), thumb_url=selected.get('thumb'))
             try:
                 if event.is_set():
                     raise DownloadCancelled("İstifadəçi dayandırdı")
@@ -897,23 +945,34 @@ def setup(context):
         source = "mix" if user_data.get('command_used') == "mix" else "batch"
         header = user_data.get('header', "🎵 Axtarış")
         user_searches.pop(user_id, None)          # siyahı artıq bu iş üçündür
+        await run_batch(callback.message, items, header, user_id, source,
+                        skipped=skipped, original_message_id=user_data['original_message_id'])
+
+    async def run_batch(status_msg: types.Message, items: list, header: str, user_id: int, source: str,
+                        skipped: int = 0, original_message_id: int = None, single: bool = False):
+        """
+        Mahnıları ardıcıl göndərir; status_msg (botun mesajı) canlı irəliləyiş + ⏹ Dayandır olur.
+        single=True — tək mahnı: sonda status mesajı sadəcə silinir.
+        """
+        chat_id = status_msg.chat.id
         event = threading.Event()
-        chat_id = callback.message.chat.id
-        job_key = (chat_id, callback.message.message_id)
+        job_key = (chat_id, status_msg.message_id)
         batch_jobs[job_key] = {"event": event, "owner": user_id}
-        delay = 1.0 if callback.message.chat.type == "private" else 3.2   # qrupda ~20 mesaj/dəq limiti
+        delay = 1.0 if status_msg.chat.type == "private" else 3.2   # qrupda ~20 mesaj/dəq limiti
 
         ok = failed = 0
+        errors = []
         note = f"\n<i>⏭ {skipped} uzun video (15 dəq.+) ötürüldü</i>" if skipped else ""
 
         async def progress(i, current=""):
+            if single:
+                text = f"⏳ <b>Yüklənir:</b>\n{escape(current[:80])}"
+            else:
+                text = (f"⬇️ <b>Yüklənir</b> — {escape(header)}\n\n"
+                        f"📊 {i}/{len(items)} · ✅ {ok} · ❌ {failed}"
+                        + (f"\n⏳ <i>{escape(current[:60])}</i>" if current else "") + note)
             with contextlib.suppress(Exception):
-                await callback.message.edit_text(
-                    f"⬇️ <b>Hamısı yüklənir</b> — {escape(header)}\n\n"
-                    f"📊 {i}/{len(items)} · ✅ {ok} · ❌ {failed}"
-                    + (f"\n⏳ <i>{escape(current[:60])}</i>" if current else "") + note,
-                    parse_mode="HTML", reply_markup=batch_stop_kb(),
-                )
+                await status_msg.edit_text(text, parse_mode="HTML", reply_markup=batch_stop_kb())
 
         try:
             for i, item in enumerate(items):
@@ -921,33 +980,60 @@ def setup(context):
                     break
                 await progress(i, item['title'])
                 try:
-                    artist, track = await send_track(callback.message, item, user_id, event)
+                    artist, track = await send_track(status_msg, item, user_id, event)
                     ok += 1
                     await log_download(user_id, f"{artist} - {track}", item['url'], source, chat_id=chat_id)
                 except DownloadCancelled:
                     break
                 except Exception as e:
                     failed += 1
-                    logger.warning(f"Toplu yükləmə xətası ({item.get('url')}): {e}")
-                await asyncio.sleep(delay)
+                    errors.append(item['title'])
+                    logger.warning(f"Yükləmə xətası ({item.get('url') or item.get('query')}): {e}")
+                if not single:
+                    await asyncio.sleep(delay)
         finally:
             batch_jobs.pop(job_key, None)
 
         stopped = event.is_set()
+        if single:
+            if failed:
+                with contextlib.suppress(Exception):
+                    await status_msg.edit_text(f"❌ <b>Yüklənmədi:</b> {escape(errors[0][:80])}", parse_mode="HTML")
+                await asyncio.sleep(10)
+            elif stopped:
+                with contextlib.suppress(Exception):
+                    await status_msg.edit_text("⏹ <b>Yükləmə dayandırıldı</b>", parse_mode="HTML")
+                await asyncio.sleep(5)
+            with contextlib.suppress(Exception):
+                await status_msg.delete()
+            return ok
+
+        fail_list = ""
+        if errors:
+            fail_list = "\n\n<b>Yüklənməyənlər:</b>\n" + "\n".join(f"• {escape(t[:50])}" for t in errors[:10]) \
+                + (f"\n<i>… və daha {len(errors) - 10}</i>" if len(errors) > 10 else "")
         with contextlib.suppress(Exception):
-            await callback.message.edit_text(
+            await status_msg.edit_text(
                 ("⏹ <b>Dayandırıldı</b>" if stopped else "✅ <b>Hamısı göndərildi</b>")
-                + f" — {escape(header)}\n\n📊 ✅ {ok} · ❌ {failed} · cəmi {len(items)}" + note,
+                + f" — {escape(header)}\n\n📊 ✅ {ok} · ❌ {failed} · cəmi {len(items)}" + note + fail_list,
                 parse_mode="HTML",
             )
-        with contextlib.suppress(Exception):
-            await callback.message.bot.delete_message(chat_id, user_data['original_message_id'])
-
-        async def _cleanup():
-            await asyncio.sleep(15)
+        if original_message_id:
             with contextlib.suppress(Exception):
-                await callback.message.delete()
-        asyncio.create_task(_cleanup())
+                await status_msg.bot.delete_message(chat_id, original_message_id)
+
+        if not errors:
+            async def _cleanup():
+                await asyncio.sleep(15)
+                with contextlib.suppress(Exception):
+                    await status_msg.delete()
+            asyncio.create_task(_cleanup())
+        return ok
+
+    # digər plugin-lər (links_plugin) üçün
+    context.music_run_batch = run_batch
+    context.music_batch_busy = lambda uid: uid != context.creator_id and any(
+        j["owner"] == uid for j in batch_jobs.values())
 
     @dp.callback_query(F.data == "dlall_stop")
     async def handle_download_all_stop(callback: types.CallbackQuery):

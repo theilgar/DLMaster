@@ -14,7 +14,7 @@ import os
 import time
 from html import escape
 
-from aiogram.types import FSInputFile
+from aiogram.types import BufferedInputFile, FSInputFile
 
 from core.database import get_db
 
@@ -104,7 +104,7 @@ def save_from_message(video_id: str, msg, title=None, performer=None, duration=N
 
 
 async def upload_to_depo(bot, file_path: str, filename: str, title: str, performer: str,
-                         duration: int, url: str, video_id: str):
+                         duration: int, url: str, video_id: str, thumb: bytes = None):
     """Faylı depo kanalına yükləyir, keşə yazır və file_id qaytarır. Alınmasa None."""
     chat_id = await depo_chat_id(bot)
     if not chat_id:
@@ -124,6 +124,7 @@ async def upload_to_depo(bot, file_path: str, filename: str, title: str, perform
             caption=caption,
             parse_mode="HTML",
             disable_notification=True,
+            thumbnail=BufferedInputFile(thumb, filename="cover.jpg") if thumb else None,
         )
     except Exception as e:
         logger.warning(f"📦 Depoya yüklənmədi: {e}")
