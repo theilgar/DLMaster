@@ -23,7 +23,7 @@ import os
 
 from core.database import get_db, is_creator
 from core.welcome import send_welcome, send_media, get_text_template, render_template
-from core.stars import plans_for_sale, per_month, buy_keyboard
+from core.stars import plans_for_sale, per_month, buy_keyboard, TIP_AMOUNTS
 
 logger = logging.getLogger(__name__)
 router = Router()
@@ -151,6 +151,12 @@ DEFAULT_TEXTS = {
         "{status}\n\n"
         "{plans}"
     ),
+    "tip": (
+        "⭐ <b>Bəxşiş göndər</b>\n\n"
+        "DLLMaster-i bəyənirsənsə, əməyə dəstək olaraq Telegram Stars ilə bəxşiş göndərə bilərsən 💙\n\n"
+        "Bəxşişlər serverin, depo kanalının və yeni funksiyaların xərclərini qarşılamağa kömək edir.\n\n"
+        "👇 <b>Məbləği seç və ya öz məbləğini yaz:</b>"
+    ),
     "edit": (
         "✏️ <b>Mahnının metadatasını dəyişmək</b>\n\n"
         "1️⃣ Mənə istənilən mahnını (audio faylı) göndər\n"
@@ -184,6 +190,7 @@ def private_keyboard(bot_username: str) -> InlineKeyboardMarkup:
          InlineKeyboardButton(text="🔎 İnline axtarış", callback_data="sg:inline")],
         [InlineKeyboardButton(text="✏️ Metadata redaktə", callback_data="sg:edit"),
          InlineKeyboardButton(text="💎 Premium al", callback_data="sg:premium")],
+        [InlineKeyboardButton(text="⭐ Bəxşiş göndər", callback_data="sg:tip")],
         [InlineKeyboardButton(text="🤖 Botu qrupa əlavə et", url=admin_request_url(bot_username))],
         [InlineKeyboardButton(text="❌ Ləğv et", callback_data="sg:close")],
     ])
@@ -270,7 +277,7 @@ async def start_guide(callback: CallbackQuery):
             await delete_quietly(msg)
         return
 
-    if action not in ("download", "inline", "edit", "premium"):
+    if action not in ("download", "inline", "edit", "premium", "tip"):
         await callback.answer()
         return
     await callback.answer()
@@ -280,6 +287,8 @@ async def start_guide(callback: CallbackQuery):
             uid = callback.from_user.id
             text, kb = await asyncio.to_thread(premium_text, uid, username), \
                 await asyncio.to_thread(premium_keyboard, uid)
+        elif action == "tip":
+            text, kb = tip_text(username), tip_keyboard()
         else:
             text, kb = guide_text(action, username), guide_keyboard(action)
         await send_media(bot, chat_id, text, kb, action)
@@ -398,6 +407,19 @@ def premium_keyboard(user_id: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
+def tip_text(bot_username: str) -> str:
+    return render_template(text_template("tip"), {"bot": escape(bot_username), "creator": CREATOR_USERNAME})
+
+
+def tip_keyboard() -> InlineKeyboardMarkup:
+    """Bəxşiş məbləğləri (payments_plugin invoice göndərir) + öz məbləğin + naviqasiya."""
+    btns = [InlineKeyboardButton(text=f"⭐ {n}", callback_data=f"tip:{n}") for n in TIP_AMOUNTS]
+    rows = [btns[i:i + 3] for i in range(0, len(btns), 3)]
+    rows.append([InlineKeyboardButton(text="✏️ Öz məbləğim", callback_data="tip:custom")])
+    rows.append(nav_row())
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
 def sample_message(slot: str, first_name: str, user_id: int, bot_username: str):
     """/menu önizləməsi üçün: (mətn, klaviatura) — istifadəçilərin görəcəyi kimi."""
     if slot == "welcome":
@@ -409,6 +431,8 @@ def sample_message(slot: str, first_name: str, user_id: int, bot_username: str):
     if slot == "premium":
         # Creator önizləmədə free istifadəçinin görəcəyini görsün
         return premium_text(0, bot_username), premium_keyboard(0)
+    if slot == "tip":
+        return tip_text(bot_username), tip_keyboard()
     return guide_text(slot, bot_username), guide_keyboard(slot)
 
 

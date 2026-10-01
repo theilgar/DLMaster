@@ -479,6 +479,9 @@ def setup(context):
         s = getattr(context, "audio_edit_sessions", {}).get(message.from_user.id)
         if s and s.get("awaiting") in ("title", "artist"):
             return False
+        # payments_plugin bəxşiş məbləğini gözləyir
+        if message.from_user.id in getattr(context, "tip_waiting", ()):
+            return False
         # menu_plugin creator-dan mətn gözləyir (broadcast mətni, premium üçün ID/@username)
         waiting = getattr(context, "menu_waiting_text", None)
         if waiting and waiting(message.from_user.id):
@@ -1032,6 +1035,9 @@ def setup(context):
 
     # digər plugin-lər (links_plugin) üçün
     context.music_run_batch = run_batch
+    context.music_fetch_audio = fetch_audio          # depo_filler_plugin: mahnını depoya yükləmək üçün
+    context.music_resolve_youtube = resolve_youtube
+    context.music_songlink = get_songlink
     context.music_batch_busy = lambda uid: uid != context.creator_id and any(
         j["owner"] == uid for j in batch_jobs.values())
 

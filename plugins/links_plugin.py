@@ -47,7 +47,7 @@ def pick_image(images, target=300):
     return (chosen.get("url") or "").split("?")[0] or None
 
 
-def sp_item(name: str, artists: list, duration_ms: int, image_url=None) -> dict:
+def sp_item(name: str, artists: list, duration_ms: int, image_url=None, sp_id=None) -> dict:
     artist = ", ".join([a for a in artists if a][:3]) or "Naməlum"
     first = artists[0] if artists else ""
     return {
@@ -57,6 +57,7 @@ def sp_item(name: str, artists: list, duration_ms: int, image_url=None) -> dict:
         "raw_duration": int((duration_ms or 0) // 1000),
         "meta": {"artist": artist, "track": name},
         "thumb": image_url,
+        "sp_id": sp_id,                           # song.link ilə dəqiq YouTube uyğunluğu üçün
     }
 
 
@@ -154,7 +155,9 @@ async def spotify_embed(kind: str, sid: str) -> dict:
     else:
         for t in entity.get("trackList") or []:
             artists = [s.strip() for s in (t.get("subtitle") or "").replace("\u00a0", " ").split(",")]
-            items.append(sp_item(t.get("title") or "", artists, t.get("duration") or 0, cover))
+            uri = t.get("uri") or ""
+            items.append(sp_item(t.get("title") or "", artists, t.get("duration") or 0, cover,
+                                 uri.split(":")[-1] if uri.startswith("spotify:track:") else None))
     return {"name": name, "items": [i for i in items if i["meta"]["track"]]}
 
 
@@ -212,7 +215,7 @@ def setup(context):
         name = art.get("name", "İfaçı")
         top = sp.artist_top_tracks(sid, country="US").get("tracks", [])
         top_items = [sp_item(t["name"], [x["name"] for x in t["artists"]], t["duration_ms"],
-                             pick_image(t["album"].get("images"))) for t in top]
+                             pick_image(t["album"].get("images")), t.get("id")) for t in top]
 
         albums, seen_album = [], set()
         res = sp.artist_albums(sid, include_groups="album,single", country="US", limit=50)
@@ -243,7 +246,7 @@ def setup(context):
                         continue
                     seen_track.add(k)
                     items.append(sp_item(t["name"], [x["name"] for x in t.get("artists", [])],
-                                         t.get("duration_ms") or 0, cover))
+                                         t.get("duration_ms") or 0, cover, t.get("id")))
                     added += 1
                 res = sp.next(res) if res.get("next") else None
             if added:
@@ -496,5 +499,6 @@ def setup(context):
             self.from_user = type("U", (), {"id": uid})()
             self.message_id = mid
 
+    context.links_spotify_data = spotify_data        # depo_filler_plugin üçün
     logger.info("✅ Links plugin yükləndi (YouTube + Spotify)")
 

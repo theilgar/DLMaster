@@ -1305,6 +1305,7 @@ def setup(context):
             "💰 <b>Gəlir</b>\n"
             f"   Cəmi: <b>{summ['stars']}⭐</b> · {summ['n']} ödəniş · {summ['buyers']} alıcı\n"
             f"   Son 30 gün: <b>{summ['stars_30d']}⭐</b> · {summ['n_30d']} ödəniş\n"
+            + (f"   💝 O cümlədən bəxşiş: <b>{summ['tips_stars']}⭐</b> · {summ['tips_n']} dəfə\n" if summ.get("tips_n") else "")
             + (f"   ↩️ Geri qaytarılıb: {summ['refunded_n']} ({summ['refunded_stars']}⭐)\n" if summ["refunded_n"] else "")
             + ("\n<i>İstifadəçilər /premium yazanda satışdakı planları görüb ulduzla ala bilər.</i>"
                if on_sale else "\n⚠️ <i>Heç bir plan satışda deyil — qiymət təyin et.</i>")
@@ -1340,7 +1341,7 @@ def setup(context):
         if rows:
             lines = []
             for r in rows:
-                label = PLAN_MAP.get(r["plan"], (None, r["plan"]))[1]
+                label = "💝 Bəxşiş" if r["plan"] == "tip" else PLAN_MAP.get(r["plan"], (None, r["plan"]))[1]
                 mark = " ↩️ <i>qaytarılıb</i>" if r["refunded"] else ""
                 lines.append(f"#{r['id']} · {fmt_dt(r['ts'])} · <b>{r['stars']}⭐</b> · {escape(label)}\n"
                              f"    {user_label(r, r['user_id'])}{mark}")
@@ -1365,7 +1366,7 @@ def setup(context):
         r = await asyncio.to_thread(get_db().get_payment, pid)
         if not r:
             return "❌ Ödəniş tapılmadı.", InlineKeyboardMarkup(inline_keyboard=[nav_row(f"st_pay:{page}")])
-        label = PLAN_MAP.get(r["plan"], (None, r["plan"]))[1]
+        label = "💝 Bəxşiş" if r["plan"] == "tip" else PLAN_MAP.get(r["plan"], (None, r["plan"]))[1]
         prem = await asyncio.to_thread(get_db().get_premium, r["user_id"])
         text = (
             f"🧾 <b>Ödəniş #{r['id']}</b>\n\n"
@@ -1925,7 +1926,8 @@ def setup(context):
                     text, kb = await payment_card(pid, page)
                 else:
                     days = PLAN_MAP.get(r["plan"], (None, ""))[0]
-                    effect = ("premium tam silinəcək" if days is None
+                    effect = ("premiuma toxunulmayacaq (bəxşişdir)" if r["plan"] == "tip"
+                              else "premium tam silinəcək" if days is None
                               else f"premiumdan {days} gün çıxılacaq")
                     text = (f"⚠️ <b>Ödəniş #{pid} geri qaytarılsın?</b>\n\n"
                             f"⭐ {r['stars']} ulduz istifadəçiyə qaytarılacaq, {effect}.")
@@ -1950,7 +1952,10 @@ def setup(context):
                         return
                     await asyncio.to_thread(get_db().mark_refunded, pid)
                     days = PLAN_MAP.get(r["plan"], (None, ""))[0]
-                    res = await asyncio.to_thread(get_db().shorten_premium, r["user_id"], days)
+                    if r["plan"] == "tip":
+                        res = "tip"                    # bəxşiş — premiuma toxunulmur
+                    else:
+                        res = await asyncio.to_thread(get_db().shorten_premium, r["user_id"], days)
                     await cb.answer("↩️ Ulduzlar qaytarıldı")
                     try:
                         await context.bot.send_message(
@@ -1963,6 +1968,7 @@ def setup(context):
                     except Exception:
                         pass
                     note = {"revoked": "💎 Premium silindi.", "lifetime": "💎 Ömürlük premium toxunulmadı.",
+                            "tip": "💝 Bəxşiş idi — premiuma toxunulmadı.",
                             None: "ℹ️ İstifadəçinin aktiv premiumu yox idi."}.get(
                         res, f"💎 Premium yeni bitmə: {fmt_dt(res)}" if isinstance(res, int) else "")
                     text, kb = await payment_card(pid, page, f"✅ Qaytarıldı. {note}")

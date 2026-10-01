@@ -340,8 +340,11 @@ class Database:
                    FROM payments WHERE refunded=0""", (now - 30 * 86400, now - 30 * 86400)).fetchone()
             refunded = self._conn.execute(
                 "SELECT COUNT(*), COALESCE(SUM(stars),0) FROM payments WHERE refunded=1").fetchone()
+            tips = self._conn.execute(
+                "SELECT COUNT(*), COALESCE(SUM(stars),0) FROM payments WHERE refunded=0 AND plan='tip'").fetchone()
         out = dict(row)
         out["refunded_n"], out["refunded_stars"] = refunded[0], refunded[1]
+        out["tips_n"], out["tips_stars"] = tips[0], tips[1]
         return out
 
     def premium_count(self) -> int:

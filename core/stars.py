@@ -23,6 +23,10 @@ PLANS = [
 PLAN_MAP = {key: (days, label) for key, days, label in PLANS}
 MIN_STARS, MAX_STARS = 1, 10000
 
+# ⭐ Bəxşiş (əməyə dəstək) — hazır məbləğlər; istifadəçi öz məbləğini də yaza bilər
+TIP_AMOUNTS = [10, 25, 50, 100, 250, 500]
+TIP_PLAN = "tip"
+
 
 def get_price(plan: str):
     """Planın qiyməti (⭐) və ya None (satışda deyil)."""
@@ -70,6 +74,19 @@ def buy_keyboard(current_until_is_lifetime: bool = False):
 
 def make_payload(plan: str, user_id: int, price: int) -> str:
     return f"prem:{plan}:{user_id}:{price}"
+
+
+def make_tip_payload(user_id: int, amount: int) -> str:
+    return f"tip:{user_id}:{amount}"
+
+
+def parse_tip_payload(payload: str):
+    """(user_id, amount) və ya None"""
+    try:
+        kind, uid, amount = (payload or "").split(":")
+        return (int(uid), int(amount)) if kind == "tip" else None
+    except ValueError:
+        return None
 
 
 def parse_payload(payload: str):
