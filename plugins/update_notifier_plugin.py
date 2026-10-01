@@ -856,7 +856,7 @@ def setup(context):
     async def status_view(fetch: bool = False):
         info = await asyncio.to_thread(repo_status, root, fetch)
         if info.get("error"):
-            return f"🌿 <b>GitHub</b>\n\n❌ {escape(info['error'])}", InlineKeyboardMarkup(inline_keyboard=[nav("menu:main")])
+            return f"🌿 <b>GitHub</b>\n\n❌ {escape(info['error'])}", InlineKeyboardMarkup(inline_keyboard=[nav("menu:sys")])
         lines = ["🌿 <b>GitHub</b>\n"]
         repo = f'<a href="{info["web"]}">{escape(info["web"].replace("https://github.com/", ""))}</a>' \
             if info.get("web") else escape(info.get("remote_url") or "remote yoxdur")
@@ -886,7 +886,7 @@ def setup(context):
         if info["changes"] or info.get("ahead"):
             kb.append([btn("📦 Hamısını göndər", "ghf:prep")])
         kb.append([btn("🔄 Yenilə", "ghf:open"), btn("📡 GitHub-la yoxla", "ghf:fetch")])
-        kb.append(nav("menu:main"))
+        kb.append(nav("menu:sys"))
         return "\n".join(lines), InlineKeyboardMarkup(inline_keyboard=kb)
 
     async def full_confirm_view():

@@ -99,6 +99,7 @@ def build_keyboard(url: str, sl=None, owner_id: int = 0):
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
+KB_HIDE_AFTER = 15                # mahnının altındakı 🔀 Mix / 🙈 Gizlət neçə saniyə sonra özü yox olsun
 BATCH_MAX_DURATION = 15 * 60      # toplu yükləmədə bundan uzun videolar (mix, albom) ötürülür
 
 
@@ -576,6 +577,21 @@ def setup(context):
     async def handle_private_music_request(message: types.Message):
         await handle_music_search(message, message.text, "music")
 
+    # ═════════════ ⏱ Düymələrin avtomatik gizlənməsi ═════════════
+    def hide_keyboard_later(chat_id=None, message_id=None, inline_message_id=None, delay=None):
+        """Mahnı göndəriləndən KB_HIDE_AFTER saniyə sonra altındakı düymələri silir."""
+        async def _hide():
+            await asyncio.sleep(KB_HIDE_AFTER if delay is None else delay)
+            with contextlib.suppress(Exception):
+                if inline_message_id:
+                    await context.bot.edit_message_reply_markup(inline_message_id=inline_message_id,
+                                                                reply_markup=None)
+                elif chat_id and message_id:
+                    await context.bot.edit_message_reply_markup(chat_id=chat_id, message_id=message_id,
+                                                                reply_markup=None)
+        if inline_message_id or (chat_id and message_id):
+            asyncio.create_task(_hide())
+
     # ═════════════ 📦 Keş + depo kanalı ═════════════
     async def fetch_thumb(thumb_url: str):
         """Üz qabığı (məs. Spotify albom şəkli) — Telegram thumbnail limiti 200 KB."""
@@ -681,7 +697,7 @@ def setup(context):
                     raise DownloadCancelled("İstifadəçi yükləməni dayandırdı")
                 try:
                     if res["file_id"]:
-                        await callback.message.answer_audio(
+                        sent = await callback.message.answer_audio(
                             audio=res["file_id"], caption=caption, parse_mode="HTML", reply_markup=kb,
                         )
                     else:
@@ -693,6 +709,7 @@ def setup(context):
                         )
                         await asyncio.to_thread(audio_cache.save_from_message, res["vid"], sent,
                                                 track_name, artist, duration)
+                    hide_keyboard_later(sent.chat.id, sent.message_id)
                     break
                 except Exception as e:
                     if attempt == 1 and res["cached"] and audio_cache.is_bad_file_id(e):
@@ -874,8 +891,8 @@ def setup(context):
                 for flood_try in range(3):
                     try:
                         if res["file_id"]:
-                            await target.answer_audio(audio=res["file_id"], caption=caption,
-                                                      parse_mode="HTML", reply_markup=kb)
+                            sent = await target.answer_audio(audio=res["file_id"], caption=caption,
+                                                             parse_mode="HTML", reply_markup=kb)
                         else:
                             sent = await target.answer_audio(
                                 audio=FSInputFile(res["path"], filename=res["fname"]),
@@ -884,6 +901,7 @@ def setup(context):
                             )
                             await asyncio.to_thread(audio_cache.save_from_message, res["vid"], sent,
                                                     res["track"], res["artist"], duration)
+                        hide_keyboard_later(sent.chat.id, sent.message_id)
                         break
                     except Exception as e:
                         wait = getattr(e, "retry_after", None)       # Telegram flood limiti
@@ -1232,6 +1250,7 @@ def setup(context):
                         ),
                         reply_markup=build_keyboard(url, sl, owner),
                     )
+                    hide_keyboard_later(inline_message_id=inline_id)
                     break
                 except Exception as e:
                     if attempt == 1 and res["cached"] and audio_cache.is_bad_file_id(e):

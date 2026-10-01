@@ -251,7 +251,7 @@ def setup(context):
             lines.append(f"⏸ <code>{escape(n)}</code> <i>(söndürülüb)</i>")
         lines.append("\n<i>Yeni plugin üçün .py faylını bota göndər.</i>")
         rows = [[btn(f"{'⏸' if n in off else '🧩'} {n}"[:40], f"pm:open:{n}")] for n in active + off]
-        rows.append([btn("⬅️ Menyu", "menu:main"), btn("❌ Bağla", "pm:close")])
+        rows.append([btn("⬅️ Sistem", "menu:sys"), btn("❌ Bağla", "pm:close")])
         return "\n".join(lines), InlineKeyboardMarkup(inline_keyboard=rows)
 
     def card_view(name: str, note: str = ""):

@@ -14,6 +14,7 @@
 Məlumatlar SQLite bazasında saxlanır (core/database.py).
 """
 import asyncio
+import contextlib
 import csv
 import io
 import json
@@ -314,14 +315,11 @@ def _btn(text, data):
 
 def main_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
-        [_btn("🚀 Speedtest", "speed"), _btn("🖥 Fastfetch", "fetch")],
-        [_btn("📊 Statistika", "stats"),
-         InlineKeyboardButton(text="🌿 GitHub", callback_data="ghf:open")],   # update_notifier_plugin
+        [_btn("📊 Statistika", "stats"), _btn("🖥 Sistem", "sys")],
         [_btn("📢 Broadcast", "bc"), _btn("💎 Premium", "prm:0")],
         [_btn(f"💬 Caption (mənim): {'✅ Açıq' if creator_caption_enabled() else '❌ Bağlı'}", "cap")],
         [_btn("🎨 Mesaj və media", "ms")],
-        [InlineKeyboardButton(text="📦 Depo doldurucu", callback_data="df:panel"),    # depo_filler_plugin
-         InlineKeyboardButton(text="🧩 Plugin-lər", callback_data="pm:list")],       # plugin_manager_plugin
+        [InlineKeyboardButton(text="📦 Depo doldurucu", callback_data="df:panel")],   # depo_filler_plugin
         [_btn("✖️ Bağla", "close")],
     ])
 
@@ -344,8 +342,35 @@ def sub_kb(refresh=None):
     rows = []
     if refresh:
         rows.append([_btn("🔄 Yenilə", refresh)])
-    rows.append(nav_row("main"))
+    rows.append(nav_row("sys"))
     return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+SYS_TEXT = (
+    "🖥 <b>Sistem və server</b>\n"
+    "━━━━━━━━━━━━━━━━━━\n"
+    "🚀 <b>Speedtest</b> — serverin internet sürəti\n"
+    "🖥 <b>Fastfetch</b> — sistem məlumatı, <i>canlı · 3 san.</i>\n"
+    "📈 <b>htop</b> — CPU / RAM / proseslər, <i>canlı · 3 san.</i>\n"
+    "🌿 <b>GitHub</b> — kod dəyişiklikləri, push\n"
+    "🧩 <b>Plugin-lər</b> — quraşdır, yenilə, söndür\n"
+    "━━━━━━━━━━━━━━━━━━"
+)
+
+
+def sys_kb():
+    """Sistem alətləri — ayrıca, iki sütunlu blok."""
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [_btn("🚀 Speedtest", "speed"), _btn("🖥 Fastfetch", "fetch")],
+        [InlineKeyboardButton(text="📈 htop", callback_data="htop:start"),          # htop_plugin
+         InlineKeyboardButton(text="🌿 GitHub", callback_data="ghf:open")],         # update_notifier_plugin
+        [InlineKeyboardButton(text="🧩 Plugin-lər", callback_data="pm:list")],      # plugin_manager_plugin
+        nav_row("main"),
+    ])
+
+
+FETCH_INTERVAL = 3          # fastfetch yenilənməsi (san.)
+FETCH_MAX_RUNTIME = 180     # avtomatik dayanma
 
 
 MAIN_TEXT = "🛠 <b>Admin menyusu</b>\n\n<i>Nəyi yoxlamaq istəyirsən?</i>"
@@ -1414,6 +1439,74 @@ def setup(context):
             logger.warning(f"Ulduz paneli yenilənmədi: {e}")
         logger.info(f"⭐ Qiymət dəyişdi: {key} = {raw}")
 
+    # ═════════════ 🖥 Canlı fastfetch ═════════════
+    fetch_sessions = {}        # (chat_id, msg_id) -> {"paused", "stop", "until"}
+
+    def fetch_kb(sess, running=True):
+        if not running:
+            return InlineKeyboardMarkup(inline_keyboard=[[_btn("▶️ Yenidən başlat", "fetch")], nav_row("sys")])
+        return InlineKeyboardMarkup(inline_keyboard=[
+            [_btn("▶️ Davam" if sess["paused"] else "⏸ Fasilə", "fetch_pause"), _btn("⏹ Dayandır", "fetch_stop")],
+            nav_row("sys"),
+        ])
+
+    def start_fetch_live(key, message):
+        for k, old in list(fetch_sessions.items()):
+            if k[0] == key[0]:
+                old["stop"] = True           # bir çatda bir canlı fastfetch
+        sess = {"paused": False, "stop": False, "until": time.time() + FETCH_MAX_RUNTIME, "closed": False}
+        fetch_sessions[key] = sess
+
+        async def loop():
+            last = None
+            out = ""
+            try:
+                while not sess["stop"] and time.time() < sess["until"]:
+                    if not sess["paused"] or not out:
+                        try:
+                            out = await run_fastfetch()
+                            body = f"<pre>{escape(out)}</pre>"
+                        except Exception as e:
+                            body = f"❌ <code>{escape(str(e))[:400]}</code>"
+                            sess["stop"] = True
+                    now = datetime.now(get_tz()[0]).strftime("%H:%M:%S")
+                    state = "⏸ fasilə" if sess["paused"] else f"🔄 hər {FETCH_INTERVAL} san."
+                    text = f"🖥 <b>Fastfetch</b> · <i>{now} · {state}</i>\n\n{body}"
+                    if sess["paused"] and last and "⏸ fasilə" in last:
+                        text = last                  # fasilədə mesaj dəyişmir
+                    if text != last:
+                        try:
+                            await message.bot.edit_message_text(
+                                chat_id=key[0], message_id=key[1], text=text[:4000], parse_mode="HTML",
+                                reply_markup=fetch_kb(sess, running=not sess["stop"]))
+                            last = text
+                        except Exception as e:
+                            err = str(e).lower()
+                            if getattr(e, "retry_after", None):
+                                await asyncio.sleep(e.retry_after)
+                            elif "not found" in err or "can't be edited" in err:
+                                break
+                    if sess["stop"]:
+                        break
+                    await asyncio.sleep(FETCH_INTERVAL)
+            finally:
+                fetch_sessions.pop(key, None)
+                if not sess["closed"] and last:
+                    with contextlib.suppress(Exception):
+                        await message.bot.edit_message_text(
+                            chat_id=key[0], message_id=key[1],
+                            text=last.replace(f"🔄 hər {FETCH_INTERVAL} san.", "⏹ dayandı").replace("⏸ fasilə", "⏹ dayandı"),
+                            parse_mode="HTML", reply_markup=fetch_kb(sess, running=False))
+
+        sess["task"] = asyncio.create_task(loop())
+
+    def stop_fetch_on(message):
+        """Başqa pəncərəyə keçəndə həmin mesajdakı canlı fastfetch dayansın."""
+        if message:
+            sess = fetch_sessions.get((message.chat.id, message.message_id))
+            if sess:
+                sess["stop"] = sess["closed"] = True
+
     # ── /menu ──
     @dp.message(Command("menu"))
     async def menu_command(message: Message):
@@ -1441,6 +1534,8 @@ def setup(context):
 
         parts = cb.data.split(":")
         action = parts[1]
+        if action not in ("fetch", "fetch_pause", "fetch_stop"):
+            stop_fetch_on(cb.message)
 
         if action.startswith("bc") and bc.get("stage") == "sending" and action != "bc_stop":
             await cb.answer("Broadcast hələ gedir...", show_alert=True)
@@ -1778,16 +1873,27 @@ def setup(context):
                     text = f"🚀 <b>Speedtest</b>\n\n❌ <code>{escape(str(e))[:400]}</code>"
                 await edit(cb, text, sub_kb("speed"))
 
-        elif action == "fetch":
+        elif action == "sys":
+            await cb.answer()
+            reset_inputs()
+            await edit(cb, SYS_TEXT, sys_kb())
+
+        elif action in ("fetch", "fetch_pause", "fetch_stop"):
+            key = (cb.message.chat.id, cb.message.message_id)
+            sess = fetch_sessions.get(key)
+            if action == "fetch_pause" and sess:
+                sess["paused"] = not sess["paused"]
+                if not sess["paused"]:
+                    sess["until"] = max(sess["until"], time.time() + 60)
+                await cb.answer("⏸ Fasilə" if sess["paused"] else "▶️ Davam")
+                return
+            if action == "fetch_stop" and sess:
+                sess["stop"] = True
+                await cb.answer("⏹ Dayandırıldı")
+                return
             await cb.answer()
             await edit(cb, "🖥 <b>Fastfetch</b>\n\n⏳ <i>Yoxlanılır...</i>")
-            try:
-                out = await run_fastfetch()
-                text = f"🖥 <b>Fastfetch</b>\n\n<pre>{escape(out)}</pre>"
-            except Exception as e:
-                logger.error(f"Fastfetch xətası: {e}")
-                text = f"🖥 <b>Fastfetch</b>\n\n❌ <code>{escape(str(e))[:400]}</code>"
-            await edit(cb, text, sub_kb("fetch"))
+            start_fetch_live(key, cb.message)
 
         elif action in ("stats", "stats_chart", "stats_top"):
             await cb.answer()
