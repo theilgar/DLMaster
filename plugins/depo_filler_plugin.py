@@ -7,7 +7,8 @@ kimsə istəyəndə dərhal (yükləməsiz) göndərilsin.
 Mənbələr (növbə bu sıra ilə qurulur):
   1. 👥 İstifadəçilərin son 7 gündə ən çox yüklədiyi ifaçılar → Spotify-da onların top mahnıları
   2. 🔀 Ən çox yüklənən mahnıların YouTube Mix-i (oxşar mahnılar)
-  3. 📋 Sənin əlavə etdiyin mənbələr: Spotify playlist / albom / ifaçı, YouTube playlist
+  3. 📋 Sənin əlavə etdiyin mənbələr: Spotify playlist / albom / ifaçı, YouTube playlist,
+     ✈️ Telegram kanalı (public: t.me/kanal) — kanaldakı mahnıların adları ilə YouTube-dan
      (default: Spotify "Today's Top Hits" və "Top 50 Global")
 
 Spotify mahnısı üçün YouTube videosu əvvəl song.link ilə (dəqiq), alınmasa axtarışla tapılır.
@@ -26,7 +27,9 @@ import re
 import threading
 import time
 from collections import deque
-from html import escape
+from html import escape, unescape
+
+import aiohttp
 
 from aiogram import F, types
 from aiogram.filters import Command, CommandObject
@@ -47,6 +50,95 @@ SPEEDS = {"slow": 60, "normal": 25, "fast": 8}          # mahnılar arası fasil
 SPEED_LABELS = {"slow": "🐢 Yavaş", "normal": "🚶 Normal", "fast": "🏃 Sürətli"}
 MAX_DURATION = 15 * 60
 IDLE_SLEEP = 30 * 60                                   # növbə bitəndə yenidən qurmağa qədər
+
+
+# ───────────────────────── ✈️ Telegram kanalı ─────────────────────────
+TG_PAGES = 15                  # t.me/s/kanal — hər səhifə ~20 post
+_TG_NAME = re.compile(r"^(?:https?://)?(?:t\.me|telegram\.me)/(?:s/)?([A-Za-z][A-Za-z0-9_]{3,31})/?(?:\?.*)?$|^@([A-Za-z][A-Za-z0-9_]{3,31})$")
+_SIZE_RE = re.compile(r"^\s*[\d.,]+\s*(?:B|KB|MB|GB)\s*$", re.I)
+_TAG_RE = re.compile(r"<[^>]+>")
+
+
+def parse_tg_channel(text: str):
+    m = _TG_NAME.match((text or "").strip())
+    if not m:
+        return None
+    name = m.group(1) or m.group(2)
+    return None if name.lower() in ("s", "joinchat", "share", "addstickers", "proxy") else name
+
+
+def _clean(html_part: str) -> str:
+    return unescape(_TAG_RE.sub("", html_part or "")).strip()
+
+
+def tg_item(artist: str, title: str) -> dict:
+    artist, title = (artist or "").strip(), (title or "").strip()
+    full = f"{artist} - {title}" if artist else title
+    return {"title": full, "query": f"{artist} {title}".strip(), "url": None, "raw_duration": 0,
+            "meta": None, "thumb": None, "sp_id": None}
+
+
+def parse_tg_page(html: str) -> list:
+    """t.me/s/... səhifəsindən mahnılar: audio postları (ad + ifaçı) və "Artist - Ad" mətnləri."""
+    items = []
+    for block in re.split(r'<div class="tgme_widget_message_wrap', html)[1:]:
+        found = False
+        for m in re.finditer(
+                r'tgme_widget_message_document_title[^>]*>(.*?)</div>\s*'
+                r'<div class="tgme_widget_message_document_extra[^>]*>(.*?)</div>', block, re.S):
+            title, extra = _clean(m.group(1)), _clean(m.group(2))
+            if not title:
+                continue
+            title = re.sub(r"\.(mp3|m4a|flac|ogg|wav|opus)$", "", title, flags=re.I)
+            if extra and not _SIZE_RE.match(extra):
+                items.append(tg_item(extra, title))           # audio: ifaçı "extra"-dadır
+            elif " - " in title:
+                a, t = title.split(" - ", 1)
+                items.append(tg_item(a, t))
+            else:
+                items.append(tg_item("", title))
+            found = True
+        if not found:
+            tm = re.search(r'tgme_widget_message_text[^>]*>(.*?)</div>', block, re.S)
+            text = _clean((tm.group(1) if tm else "").replace("<br/>", "\n").replace("<br>", "\n"))
+            first = text.split("\n")[0].strip() if text else ""
+            if " - " in first and len(first) <= 120 and "http" not in first:
+                a, t = first.split(" - ", 1)
+                items.append(tg_item(a, t))
+    return items
+
+
+async def tg_channel_items(name: str, pages: int = TG_PAGES) -> dict:
+    """Public kanalın son postlarından mahnı siyahısı (yeni → köhnə)."""
+    items, title, before = [], name, None
+    timeout = aiohttp.ClientTimeout(total=20)
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/124.0 Safari/537.36"}
+    async with aiohttp.ClientSession(timeout=timeout, headers=headers) as session:
+        for _ in range(pages):
+            url = f"https://t.me/s/{name}" + (f"?before={before}" if before else "")
+            async with session.get(url) as r:
+                if r.status != 200:
+                    break
+                html = await r.text()
+            if "tgme_channel_info" not in html and "tgme_widget_message" not in html:
+                raise RuntimeError("Kanal tapılmadı və ya public deyil")
+            t = re.search(r'tgme_channel_info_header_title[^>]*>(.*?)</div>', html, re.S)
+            if t:
+                title = _clean(t.group(1)) or title
+            page_items = parse_tg_page(html)
+            items += page_items[::-1]             # səhifədə köhnə → yeni; bizə yeni → köhnə lazımdır
+            m = re.search(r'data-before="(\d+)"', html) or re.search(r'\?before=(\d+)', html)
+            nb = m.group(1) if m else None
+            if not nb or nb == before:
+                break
+            before = nb
+    seen, uniq = set(), []
+    for it in items:
+        k = it["query"].lower()
+        if k and k not in seen:
+            seen.add(k)
+            uniq.append(it)
+    return {"name": title, "items": uniq}
 
 
 def btn(text, data):
@@ -191,6 +283,10 @@ class Filler:
                     data = await ym.playlist_entries(yt_list_url(src["id"]), limit=200)
                     for it in data["entries"]:
                         self._add(it)
+                elif src["kind"] == "tg_channel":
+                    data = await tg_channel_items(src["id"])
+                    for it in data["items"]:
+                        self._add(it)
             except Exception as e:
                 logger.warning(f"Doldurucu: mənbə {src.get('label') or src['id']}: {e}")
 
@@ -299,10 +395,25 @@ def setup(context):
 
     async def add_source(link_text: str):
         """(ok, mesaj) — linki mənbə kimi yoxlayıb əlavə edir."""
+        tg = next((n for n in map(parse_tg_channel, (link_text or "").split()) if n), None)
+        if tg:
+            try:
+                data = await tg_channel_items(tg, pages=3)
+            except Exception as e:
+                return False, f"❌ Telegram kanalı açılmadı: <code>{escape(str(e))[:200]}</code>"
+            if not data["items"]:
+                return False, ("❌ Bu kanalın son postlarında mahnı tapılmadı.\n"
+                               "<i>Kanal public olmalıdır (t.me/kanal) və orada audio və ya \"Artist - Ad\" "
+                               "formatlı postlar olmalıdır.</i>")
+            src = {"kind": "tg_channel", "id": tg, "label": f"✈️ {data['name']} (@{tg})"}
+            srcs = [s for s in filler.sources() if s["id"] != tg] + [src]
+            filler.save_sources(srcs)
+            return True, (f"✅ Telegram kanalı əlavə olundu: <b>{escape(data['name'])}</b>\n"
+                          f"<i>Son postlarda {len(data['items'])}+ mahnı tapıldı — növbədə daha çoxu oxunacaq.</i>")
         parsed = parse_link(link_text)
         if not parsed or parsed["kind"] not in ("sp_playlist", "sp_album", "sp_artist", "yt_list", "yt_video_list"):
-            return False, ("❌ Spotify playlist / albom / ifaçı və ya YouTube playlist linki göndər.\n"
-                           "<i>Mahnı linki mənbə ola bilməz.</i>")
+            return False, ("❌ Spotify playlist / albom / ifaçı, YouTube playlist və ya Telegram kanalı "
+                           "(t.me/kanal, @kanal) göndər.\n<i>Mahnı linki mənbə ola bilməz.</i>")
         if parsed["kind"] == "yt_video_list":
             parsed = {"kind": "yt_list", "list": parsed["list"]}
         src = {"kind": parsed["kind"], "id": parsed.get("id") or parsed.get("list")}
@@ -352,6 +463,11 @@ def setup(context):
         except Exception:
             cs = {"songs": 0, "hits": 0, "size": 0}
         on = filler.running
+        fix_count = getattr(context, "fix_artist_count", None)      # fix_artist_plugin
+        try:
+            bad = fix_count() if fix_count else 0
+        except Exception:
+            bad = 0
         uptime = ""
         if on and st["started"]:
             m = int((time.time() - st["started"]) / 60)
@@ -375,11 +491,13 @@ def setup(context):
         lines.append(f"\n📋 <b>Mənbələr</b> ({len(srcs)}) + 👥 istifadəçilərin sevdikləri + 🔀 Mix")
         for s in srcs[:8]:
             lines.append(f"   • {escape(s.get('label') or s['id'])}")
-        lines.append("\n<i>Mənbə əlavə et:</i> <code>/depo add &lt;Spotify / YouTube linki&gt;</code>")
+        lines.append("\n<i>Mənbə əlavə et:</i> <code>/depo add &lt;Spotify / YouTube / t.me linki&gt;</code>")
         rows = [
             [btn("⏸ Söndür", "df:off") if on else btn("▶️ İşə sal", "df:on"), btn("🔄 Yenilə", "df:panel")],
             [btn(("• " if filler.speed == k else "") + v, f"df:speed:{k}") for k, v in SPEED_LABELS.items()],
             [btn("🔁 Növbəni yenidən qur", "df:rebuild"), btn("📋 Mənbələr", "df:sources")],
+            *([[btn(f"🩹 Artist düzəlişi ({bad})" if bad else "🩹 Artist düzəlişi", "fx:panel")]]
+              if fix_count else []),
             [btn("⬅️ Menyu", "menu:main"), btn("❌ Bağla", "df:close")],
         ]
         return "\n".join(lines), InlineKeyboardMarkup(inline_keyboard=rows)
@@ -468,7 +586,8 @@ def setup(context):
                 "➕ <b>Mənbə əlavə et</b>\n\n"
                 "Linki göndər (adi link kimi, komandasız):\n"
                 "• Spotify playlist / albom / ifaçı\n"
-                "• YouTube playlist\n\n"
+                "• YouTube playlist\n"
+                "• ✈️ Telegram kanalı: <code>https://t.me/kanal</code> və ya <code>@kanal</code>\n\n"
                 "<i>məs.</i> <code>https://open.spotify.com/playlist/...</code>",
                 InlineKeyboardMarkup(inline_keyboard=[[btn("⬅️ Geri", "df:sources"), btn("❌ Bağla", "df:close")]]),
             )
@@ -490,6 +609,24 @@ def setup(context):
         else:
             await cb.answer()
         await show(*panel())
+
+    @dp.channel_post(F.audio)
+    async def tg_source_post(post: types.Message):
+        """Mənbə kimi əlavə olunmuş kanala (bot orada admin olanda) yeni mahnı düşdü → dərhal növbəyə."""
+        name = (post.chat.username or "").lower()
+        if not any(s["kind"] == "tg_channel" and s["id"].lower() == name for s in filler.sources()):
+            return
+        a = post.audio
+        title = a.title or os.path.splitext(a.file_name or "")[0]
+        if not title:
+            return
+        item = tg_item(a.performer or "", title)
+        item["raw_duration"] = a.duration or 0
+        key = item["query"].lower()
+        if key not in filler.seen:
+            filler.seen.add(key)
+            filler.queue.appendleft(item)
+            logger.info(f"📦 Kanal postu növbəyə: {item['title']}")
 
     # Restartdan sonra: əvvəl açıq idisə davam et
     if filler.enabled:

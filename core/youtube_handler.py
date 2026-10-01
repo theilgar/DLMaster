@@ -108,6 +108,25 @@ async def convert_to_m4a(src_path: str, base_name: str, cancel_event=None) -> st
 # 🎞 ffmpeg:     m4a axını yoxdursa (və ya birbaşa rejim söndürülübsə) ən yaxşı audio endirilib m4a-ya çevrilir
 DL_STATS = {"direct": 0, "converted": 0, "original": 0}
 
+# Son yüklənən videoların YouTube metadata-sı (video_id → artist / track / kanal) — music_plugin oxuyur
+VIDEO_META = {}
+
+
+def remember_meta(info: dict):
+    vid = info.get("id")
+    if not vid:
+        return
+    artists = info.get("artists") or []
+    VIDEO_META[vid] = {
+        "artist": info.get("artist") or (", ".join(artists[:3]) if artists else None),   # YouTube Music metadata
+        "track": info.get("track"),
+        "channel": info.get("channel") or info.get("uploader"),
+        "title": info.get("title"),
+    }
+    if len(VIDEO_META) > 2000:
+        for k in list(VIDEO_META)[:1000]:
+            VIDEO_META.pop(k, None)
+
 
 def _setting_on(key: str, default: bool = True) -> bool:
     try:
@@ -188,6 +207,7 @@ async def download_as_m4a(url: str, base_name: str, browser: str, cookies=None, 
             logger.info(f"Yükləmə cəhdi: {label}")
             with YoutubeDL(ydl_opts) as ydl:
                 info = await asyncio.to_thread(ydl.extract_info, url, download=True)
+                remember_meta(info)
                 downloads = info.get('requested_downloads') or []
                 src_path = downloads[0]['filepath'] if downloads else ydl.prepare_filename(info)
 

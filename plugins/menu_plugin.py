@@ -355,6 +355,7 @@ SYS_TEXT = (
     "🌿 <b>GitHub</b> — kod dəyişiklikləri, push\n"
     "🧩 <b>Plugin-lər</b> — quraşdır, yenilə, söndür\n"
     "🎧 <b>Yükləmə formatı</b> — birbaşa m4a / ffmpeg çevirmə\n"
+    "📜 <b>Loglar</b> — bot loglarını kanala göndər (interval)\n"
     "━━━━━━━━━━━━━━━━━━"
 )
 
@@ -367,6 +368,7 @@ def sys_kb():
          InlineKeyboardButton(text="🌿 GitHub", callback_data="ghf:open")],         # update_notifier_plugin
         [InlineKeyboardButton(text="🧩 Plugin-lər", callback_data="pm:list"),      # plugin_manager_plugin
          _btn("🎧 Yükləmə formatı", "dlf")],
+        [InlineKeyboardButton(text="📜 Loglar", callback_data="lg:panel")],         # logs_plugin
         nav_row("main"),
     ])
 

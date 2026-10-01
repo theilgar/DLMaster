@@ -6,6 +6,7 @@ from aiogram.types import (
 )
 from core.utilities import sanitize_filename
 from core.youtube_handler import YoutubeManager, DownloadCancelled
+from core import youtube_handler as yt_handler
 from core import audio_cache
 from core.links import is_music_link
 from core.database import log_download, caption_for_user, is_premium
@@ -155,6 +156,35 @@ def parse_title(title: str):
     if len(parts) == 2 and parts[0].strip() and parts[1].strip():
         artist, track = parts[0].strip(), parts[1].strip()
     return artist, track
+
+
+_CHANNEL_SUFFIX = re.compile(r"(?:\s*-\s*topic|vevo|\s+official(?:\s+(?:channel|music|tv|youtube))?|\s+music)\s*$", re.I)
+
+
+def clean_channel(name: str) -> str:
+    """YouTube kanal adından artist: "Eminem - Topic" / "EminemVEVO" / "INNA Official" → "Eminem" / "INNA"."""
+    name = (name or "").strip()
+    for _ in range(2):
+        name = _CHANNEL_SUFFIX.sub("", name).strip()
+    return name
+
+
+def youtube_fallback_meta(vid: str, artist: str, track: str, src: str):
+    """
+    song.link metadata yoxdursa: 1) YouTube Music-in rəsmi artist/track sahələri
+    2) başlıqda "Artist - Ad" yoxdursa → YouTube kanalının adı artist olur.
+    """
+    if src == "songlink":
+        return artist, track, src
+    ym = getattr(yt_handler, "VIDEO_META", {}).get(vid) or {}
+    if ym.get("artist") and ym.get("track"):
+        return ym["artist"], ym["track"], "youtube-music"
+    if not artist or artist == "YouTube":
+        channel = clean_channel(ym.get("channel"))
+        if channel:
+            return channel, track, "kanal"
+        return "Naməlum", track, src     # "YouTube" saxlanmasın — yoxsa keş hər dəfə yenidən yüklənərdi
+    return artist, track, src
 
 
 def _tokens(s: str) -> set:
@@ -483,6 +513,10 @@ def setup(context):
         # payments_plugin bəxşiş məbləğini gözləyir
         if message.from_user.id in getattr(context, "tip_waiting", ()):
             return False
+        # depo doldurucusu mənbə linki (@kanal, t.me/...) gözləyir
+        depo_waiting = getattr(context, "depo_waiting", None)
+        if depo_waiting and depo_waiting(message.from_user.id):
+            return False
         # menu_plugin creator-dan mətn gözləyir (broadcast mətni, premium üçün ID/@username)
         waiting = getattr(context, "menu_waiting_text", None)
         if waiting and waiting(message.from_user.id):
@@ -619,6 +653,10 @@ def setup(context):
         sl_task = asyncio.create_task(get_songlink(url))
         async with (audio_cache.lock_for(vid) if vid else contextlib.nullcontext()):
             cached = await asyncio.to_thread(audio_cache.get_cached, vid)
+            if cached and (cached.get("performer") or "").strip() in ("", "YouTube"):
+                # köhnə keş: artist adı yoxdur — bir dəfə yenidən yüklənib düzgün artistlə depoya düşsün
+                await asyncio.to_thread(audio_cache.invalidate, vid)
+                cached = None
             if cached:
                 try:
                     sl = await asyncio.wait_for(asyncio.shield(sl_task), 2)   # keşdən göndərməni ləngitməsin
@@ -646,6 +684,7 @@ def setup(context):
                 artist, track, meta_src = meta["artist"], meta["track"], "spotify"   # dəqiq metadata verilib
             else:
                 artist, track, meta_src = resolve_meta(yt_title, sl)
+                artist, track, meta_src = youtube_fallback_meta(vid, artist, track, meta_src)
             logger.info(f"Metadata ({meta_src}): {artist} - {track}")
             fname = audio_filename(artist, track, path)
             thumb = await fetch_thumb(thumb_url)
