@@ -1,0 +1,740 @@
+2026.09.10 01:38:17 __main__             INFO     🤖 Starting bot...
+2026.09.10 01:38:17 __main__             INFO     🚀 Starting bot initialization...
+2026.09.10 01:38:17 core.spotify_handler INFO     Spotify API connection established.
+2026.09.10 01:38:17 __main__             INFO     ✅ Spotify service initialized
+2026.09.10 01:38:17 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.10 01:38:17 core.youtube_handler INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.10 01:38:17 __main__             INFO     ✅ YouTube services initialized (firefox)
+2026.09.10 01:38:17 __main__             INFO     🔌 Loading plugins...
+2026.09.10 01:38:17 core.utilities       INFO     🔍 Scanning plugins in: plugins
+2026.09.10 01:38:17 core.utilities       INFO     🔄 Loading: plugins.music_plugin
+2026.09.10 01:38:17 core.utilities       INFO     ✅ Loaded (sync): plugins.music_plugin
+2026.09.10 01:38:17 core.utilities       INFO     🔄 Loading: plugins.start_plugin
+2026.09.10 01:38:17 plugins.start_plugin INFO     ✅ Start plugin yükləndi
+2026.09.10 01:38:17 core.utilities       INFO     ✅ Loaded (async): plugins.start_plugin
+2026.09.10 01:38:17 core.utilities       INFO     🔄 Loading: plugins.spotify_plugin
+2026.09.10 01:38:17 core.utilities       INFO     ✅ Loaded (sync): plugins.spotify_plugin
+2026.09.10 01:38:17 core.utilities       INFO     🔄 Loading: plugins.youtube_plugin
+2026.09.10 01:38:17 core.utilities       INFO     ✅ Loaded (sync): plugins.youtube_plugin
+2026.09.10 01:38:17 __main__             INFO     🚀 Starting polling...
+2026.09.10 01:38:17 aiogram.dispatcher   INFO     Start polling
+2026.09.10 01:38:17 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.09.10 01:38:33 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.10 01:38:33 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.09.10 01:38:35 aiogram.event        INFO     Update id=875900616 is handled. Duration 2506 ms by bot id=8976652462
+2026.09.10 01:38:40 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.10 01:38:40 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.10 01:38:49 aiogram.event        INFO     Update id=875900617 is handled. Duration 9405 ms by bot id=8976652462
+2026.09.10 07:33:39 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.10 07:33:39 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.10 07:33:42 aiogram.event        INFO     Update id=875900618 is handled. Duration 2597 ms by bot id=8976652462
+2026.09.10 07:33:43 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.10 07:33:43 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.10 07:33:52 aiogram.event        INFO     Update id=875900619 is handled. Duration 8643 ms by bot id=8976652462
+2026.09.11 01:11:00 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.11 01:11:00 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.11 01:11:02 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.11 01:11:02 aiogram.dispatcher   WARNING  Sleep for 1.245361 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.11 01:11:04 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.11 01:11:04 aiogram.dispatcher   WARNING  Sleep for 1.452151 seconds and try again... (tryings = 2, bot id = 8976652462)
+2026.09.11 01:11:05 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.11 01:11:05 aiogram.dispatcher   WARNING  Sleep for 1.903988 seconds and try again... (tryings = 3, bot id = 8976652462)
+2026.09.11 01:11:07 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.11 01:11:07 aiogram.dispatcher   WARNING  Sleep for 2.317565 seconds and try again... (tryings = 4, bot id = 8976652462)
+2026.09.11 01:11:09 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.11 01:11:09 aiogram.dispatcher   WARNING  Sleep for 3.052669 seconds and try again... (tryings = 5, bot id = 8976652462)
+2026.09.11 01:11:12 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.11 01:11:12 aiogram.dispatcher   WARNING  Sleep for 4.007004 seconds and try again... (tryings = 6, bot id = 8976652462)
+2026.09.11 01:11:58 aiogram.dispatcher   INFO     Connection established (tryings = 7, bot id = 8976652462)
+2026.09.11 11:35:49 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:35:49 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:35:53 aiogram.event        INFO     Update id=875900620 is handled. Duration 4451 ms by bot id=8976652462
+2026.09.11 11:35:56 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:35:56 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.11 11:36:06 aiogram.event        INFO     Update id=875900621 is handled. Duration 10659 ms by bot id=8976652462
+2026.09.11 11:36:58 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:36:58 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.11 11:37:05 aiogram.event        INFO     Update id=875900622 is handled. Duration 7255 ms by bot id=8976652462
+2026.09.11 11:37:09 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:37:09 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:37:12 aiogram.event        INFO     Update id=875900623 is handled. Duration 3556 ms by bot id=8976652462
+2026.09.11 11:37:15 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:37:15 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:37:21 aiogram.event        INFO     Update id=875900624 is handled. Duration 5858 ms by bot id=8976652462
+2026.09.11 11:38:22 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:38:22 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:38:25 aiogram.event        INFO     Update id=875900625 is handled. Duration 2613 ms by bot id=8976652462
+2026.09.11 11:38:27 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:38:27 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.11 11:38:36 aiogram.event        INFO     Update id=875900626 is handled. Duration 9502 ms by bot id=8976652462
+2026.09.11 11:39:38 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:39:38 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.11 11:39:41 aiogram.event        INFO     Update id=875900627 is handled. Duration 3093 ms by bot id=8976652462
+2026.09.11 11:39:43 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:39:43 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.11 11:39:48 aiogram.event        INFO     Update id=875900628 is handled. Duration 5394 ms by bot id=8976652462
+2026.09.11 11:40:00 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:40:00 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.11 11:40:03 aiogram.event        INFO     Update id=875900629 is handled. Duration 2929 ms by bot id=8976652462
+2026.09.11 11:40:05 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:40:05 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:40:14 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:40:14 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.11 11:40:14 aiogram.event        INFO     Update id=875900630 is handled. Duration 9308 ms by bot id=8976652462
+2026.09.11 11:40:16 aiogram.event        INFO     Update id=875900631 is handled. Duration 2232 ms by bot id=8976652462
+2026.09.11 11:40:27 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:40:27 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.11 11:40:37 aiogram.event        INFO     Update id=875900632 is handled. Duration 10056 ms by bot id=8976652462
+2026.09.11 11:43:36 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:43:36 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:43:39 aiogram.event        INFO     Update id=875900633 is handled. Duration 3240 ms by bot id=8976652462
+2026.09.11 11:43:43 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:43:43 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:43:48 aiogram.event        INFO     Update id=875900634 is handled. Duration 5294 ms by bot id=8976652462
+2026.09.11 11:44:04 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:44:04 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.11 11:44:07 aiogram.event        INFO     Update id=875900635 is handled. Duration 2707 ms by bot id=8976652462
+2026.09.11 11:44:11 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:44:11 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:44:15 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:44:15 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.11 11:44:17 aiogram.event        INFO     Update id=875900637 is handled. Duration 2600 ms by bot id=8976652462
+2026.09.11 11:44:20 aiogram.event        INFO     Update id=875900636 is handled. Duration 9123 ms by bot id=8976652462
+2026.09.11 11:44:22 aiogram.event        INFO     Update id=875900638 is handled. Duration 0 ms by bot id=8976652462
+2026.09.11 11:44:30 aiogram.event        INFO     Update id=875900639 is handled. Duration 0 ms by bot id=8976652462
+2026.09.11 11:44:51 aiogram.event        INFO     Update id=875900640 is handled. Duration 0 ms by bot id=8976652462
+2026.09.11 11:44:59 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:44:59 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:45:01 aiogram.event        INFO     Update id=875900642 is handled. Duration 6 ms by bot id=8976652462
+2026.09.11 11:45:03 aiogram.event        INFO     Update id=875900641 is handled. Duration 3834 ms by bot id=8976652462
+2026.09.11 11:45:07 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:45:07 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.09.11 11:45:14 aiogram.event        INFO     Update id=875900643 is handled. Duration 6841 ms by bot id=8976652462
+2026.09.11 11:45:58 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:45:58 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:46:01 aiogram.event        INFO     Update id=875900644 is handled. Duration 3027 ms by bot id=8976652462
+2026.09.11 11:46:02 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:46:02 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:46:05 aiogram.event        INFO     Update id=875900645 is handled. Duration 3098 ms by bot id=8976652462
+2026.09.11 11:46:10 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:46:10 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.11 11:46:20 aiogram.event        INFO     Update id=875900646 is handled. Duration 10096 ms by bot id=8976652462
+2026.09.11 11:46:24 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:46:24 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.11 11:46:27 aiogram.event        INFO     Update id=875900647 is handled. Duration 3000 ms by bot id=8976652462
+2026.09.11 11:46:34 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:46:34 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.11 11:46:40 aiogram.event        INFO     Update id=875900648 is handled. Duration 6283 ms by bot id=8976652462
+2026.09.11 11:47:21 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:47:21 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.11 11:47:24 aiogram.event        INFO     Update id=875900649 is handled. Duration 3183 ms by bot id=8976652462
+2026.09.11 11:47:29 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:47:29 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.11 11:47:39 aiogram.event        INFO     Update id=875900650 is handled. Duration 9354 ms by bot id=8976652462
+2026.09.11 11:49:30 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:49:30 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.11 11:49:37 aiogram.event        INFO     Update id=875900651 is handled. Duration 7117 ms by bot id=8976652462
+2026.09.11 11:49:40 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:49:40 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:49:42 aiogram.event        INFO     Update id=875900652 is handled. Duration 2474 ms by bot id=8976652462
+2026.09.11 11:49:47 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:49:47 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:49:56 aiogram.event        INFO     Update id=875900653 is handled. Duration 9144 ms by bot id=8976652462
+2026.09.11 11:50:34 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:50:34 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.09.11 11:50:41 aiogram.event        INFO     Update id=875900654 is handled. Duration 6878 ms by bot id=8976652462
+2026.09.11 11:50:45 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:50:45 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:50:48 aiogram.event        INFO     Update id=875900655 is handled. Duration 3047 ms by bot id=8976652462
+2026.09.11 11:50:52 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:50:52 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:50:57 aiogram.event        INFO     Update id=875900656 is handled. Duration 4848 ms by bot id=8976652462
+2026.09.11 11:52:56 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:52:56 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:53:03 aiogram.event        INFO     Update id=875900657 is handled. Duration 7179 ms by bot id=8976652462
+2026.09.11 11:53:11 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:53:11 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.11 11:53:14 aiogram.event        INFO     Update id=875900658 is handled. Duration 2707 ms by bot id=8976652462
+2026.09.11 11:53:16 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:53:16 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:53:21 aiogram.event        INFO     Update id=875900659 is handled. Duration 4998 ms by bot id=8976652462
+2026.09.11 11:54:01 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:54:01 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.11 11:54:04 aiogram.event        INFO     Update id=875900660 is handled. Duration 2893 ms by bot id=8976652462
+2026.09.11 11:54:06 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:54:06 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.09.11 11:54:12 aiogram.event        INFO     Update id=875900661 is handled. Duration 5979 ms by bot id=8976652462
+2026.09.11 11:55:24 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:55:24 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.11 11:55:31 aiogram.event        INFO     Update id=875900662 is handled. Duration 6994 ms by bot id=8976652462
+2026.09.11 11:55:32 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:55:32 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.11 11:55:35 aiogram.event        INFO     Update id=875900663 is handled. Duration 3075 ms by bot id=8976652462
+2026.09.11 11:55:37 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:55:37 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.11 11:55:48 aiogram.event        INFO     Update id=875900664 is handled. Duration 10773 ms by bot id=8976652462
+2026.09.11 11:56:53 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:56:53 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.09.11 11:57:00 aiogram.event        INFO     Update id=875900665 is handled. Duration 7498 ms by bot id=8976652462
+2026.09.11 11:57:07 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:57:07 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 11:57:10 aiogram.event        INFO     Update id=875900666 is handled. Duration 3038 ms by bot id=8976652462
+2026.09.11 11:57:14 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 11:57:14 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.11 11:57:23 aiogram.event        INFO     Update id=875900667 is handled. Duration 9582 ms by bot id=8976652462
+2026.09.11 12:01:48 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 12:01:48 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.11 12:01:50 aiogram.event        INFO     Update id=875900668 is handled. Duration 2258 ms by bot id=8976652462
+2026.09.11 12:01:52 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 12:01:52 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 12:01:57 aiogram.event        INFO     Update id=875900669 is handled. Duration 5624 ms by bot id=8976652462
+2026.09.11 12:02:57 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 12:02:57 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 12:03:01 aiogram.event        INFO     Update id=875900670 is handled. Duration 3513 ms by bot id=8976652462
+2026.09.11 12:03:03 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 12:03:03 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.11 12:03:11 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 12:03:11 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.09.11 12:03:12 aiogram.event        INFO     Update id=875900671 is handled. Duration 9510 ms by bot id=8976652462
+2026.09.11 12:03:14 aiogram.event        INFO     Update id=875900672 is handled. Duration 2483 ms by bot id=8976652462
+2026.09.11 12:03:21 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 12:03:21 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.11 12:03:28 aiogram.event        INFO     Update id=875900673 is handled. Duration 6694 ms by bot id=8976652462
+2026.09.11 12:03:43 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 12:03:43 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 12:03:46 aiogram.event        INFO     Update id=875900674 is handled. Duration 2779 ms by bot id=8976652462
+2026.09.11 12:03:48 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 12:03:48 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.11 12:03:57 aiogram.event        INFO     Update id=875900675 is handled. Duration 9169 ms by bot id=8976652462
+2026.09.11 14:41:52 aiogram.event        INFO     Update id=875900676 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.11 17:18:08 core.utilities       INFO     User 6731426328 executed command: /start
+2026.09.11 17:18:09 aiogram.event        INFO     Update id=875900677 is handled. Duration 984 ms by bot id=8976652462
+2026.09.11 17:19:23 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 17:19:23 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.11 17:19:30 aiogram.event        INFO     Update id=875900678 is handled. Duration 7237 ms by bot id=8976652462
+2026.09.11 17:19:33 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 17:19:33 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 17:19:36 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 17:19:36 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.11 17:19:40 aiogram.event        INFO     Update id=875900680 is handled. Duration 3647 ms by bot id=8976652462
+2026.09.11 17:19:40 aiogram.event        INFO     Update id=875900679 is handled. Duration 6725 ms by bot id=8976652462
+2026.09.11 17:19:44 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 17:19:44 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 17:19:50 aiogram.event        INFO     Update id=875900681 is handled. Duration 5188 ms by bot id=8976652462
+2026.09.11 17:38:56 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 17:38:56 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.11 17:39:03 aiogram.event        INFO     Update id=875900682 is handled. Duration 6724 ms by bot id=8976652462
+2026.09.11 17:39:04 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 17:39:04 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.11 17:39:07 aiogram.event        INFO     Update id=875900683 is handled. Duration 2845 ms by bot id=8976652462
+2026.09.11 17:39:17 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.11 17:39:17 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.11 17:39:22 aiogram.event        INFO     Update id=875900684 is handled. Duration 5439 ms by bot id=8976652462
+2026.09.12 00:09:57 core.utilities       INFO     User 7577955392 executed command: /start
+2026.09.12 00:09:58 aiogram.event        INFO     Update id=875900685 is handled. Duration 971 ms by bot id=8976652462
+2026.09.12 01:11:02 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.12 01:11:02 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.12 01:11:03 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.12 01:11:03 aiogram.dispatcher   WARNING  Sleep for 1.234719 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.12 01:11:41 aiogram.dispatcher   INFO     Connection established (tryings = 2, bot id = 8976652462)
+2026.09.12 19:14:10 core.utilities       INFO     User 8502974425 executed command: /music dustağınam
+2026.09.12 19:14:10 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.12 19:14:10 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.12 19:14:14 aiogram.event        INFO     Update id=875900686 is handled. Duration 3282 ms by bot id=8976652462
+2026.09.12 19:14:19 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.12 19:14:19 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.12 19:14:29 aiogram.event        INFO     Update id=875900687 is handled. Duration 9637 ms by bot id=8976652462
+2026.09.13 00:35:30 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 00:35:30 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.09.13 00:35:33 aiogram.event        INFO     Update id=875900688 is handled. Duration 2838 ms by bot id=8976652462
+2026.09.13 00:35:35 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 00:35:35 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.09.13 00:35:38 aiogram.event        INFO     Update id=875900689 is handled. Duration 3263 ms by bot id=8976652462
+2026.09.13 01:10:57 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.13 01:10:57 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.13 01:11:01 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.13 01:11:01 aiogram.dispatcher   WARNING  Sleep for 1.215508 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.13 01:11:02 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.13 01:11:02 aiogram.dispatcher   WARNING  Sleep for 1.509641 seconds and try again... (tryings = 2, bot id = 8976652462)
+2026.09.13 01:11:04 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.13 01:11:04 aiogram.dispatcher   WARNING  Sleep for 2.085591 seconds and try again... (tryings = 3, bot id = 8976652462)
+2026.09.13 01:11:06 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.13 01:11:06 aiogram.dispatcher   WARNING  Sleep for 2.739893 seconds and try again... (tryings = 4, bot id = 8976652462)
+2026.09.13 01:11:09 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.13 01:11:09 aiogram.dispatcher   WARNING  Sleep for 3.451677 seconds and try again... (tryings = 5, bot id = 8976652462)
+2026.09.13 01:11:12 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.13 01:11:12 aiogram.dispatcher   WARNING  Sleep for 4.408270 seconds and try again... (tryings = 6, bot id = 8976652462)
+2026.09.13 01:11:57 aiogram.dispatcher   INFO     Connection established (tryings = 7, bot id = 8976652462)
+2026.09.13 01:19:48 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 01:19:48 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.13 01:19:50 aiogram.event        INFO     Update id=875900690 is handled. Duration 1898 ms by bot id=8976652462
+2026.09.13 01:19:55 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 01:19:55 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.13 01:20:05 aiogram.event        INFO     Update id=875900691 is handled. Duration 10290 ms by bot id=8976652462
+2026.09.13 11:42:43 core.utilities       INFO     User 8502974425 executed command: /music op slot spanker
+2026.09.13 11:42:44 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 11:42:44 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.13 11:42:46 aiogram.event        INFO     Update id=875900692 is handled. Duration 2770 ms by bot id=8976652462
+2026.09.13 11:42:49 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 11:42:49 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.13 11:42:58 aiogram.event        INFO     Update id=875900693 is handled. Duration 9268 ms by bot id=8976652462
+2026.09.13 12:09:30 aiogram.event        INFO     Update id=875900694 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.13 12:10:19 aiogram.event        INFO     Update id=875900695 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.13 12:10:27 aiogram.event        INFO     Update id=875900696 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.13 12:12:52 aiogram.event        INFO     Update id=875900697 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.13 12:14:03 aiogram.event        INFO     Update id=875900698 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.13 12:17:01 aiogram.event        INFO     Update id=875900699 is not handled. Duration 2 ms by bot id=8976652462
+2026.09.13 12:17:01 aiogram.event        INFO     Update id=875900700 is not handled. Duration 2 ms by bot id=8976652462
+2026.09.13 12:19:11 aiogram.event        INFO     Update id=875900701 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.13 12:19:53 aiogram.event        INFO     Update id=875900702 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.13 13:30:24 core.utilities       INFO     User 8502974425 executed command: /music ciddi rejim
+2026.09.13 13:30:24 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 13:30:24 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.13 13:30:27 aiogram.event        INFO     Update id=875900703 is handled. Duration 3376 ms by bot id=8976652462
+2026.09.13 13:30:29 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 13:30:29 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.13 13:30:40 aiogram.event        INFO     Update id=875900704 is handled. Duration 11042 ms by bot id=8976652462
+2026.09.13 14:02:21 core.utilities       INFO     User 8502974425 executed command: /music captus dj lancinhouse
+2026.09.13 14:02:21 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 14:02:21 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.13 14:02:24 aiogram.event        INFO     Update id=875900705 is handled. Duration 3072 ms by bot id=8976652462
+2026.09.13 14:02:34 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 14:02:34 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.13 14:02:40 aiogram.event        INFO     Update id=875900706 is handled. Duration 5837 ms by bot id=8976652462
+2026.09.13 14:02:46 core.utilities       INFO     User 8502974425 executed command: /music captus dj lancinhouse
+2026.09.13 14:02:46 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 14:02:46 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.13 14:02:48 aiogram.event        INFO     Update id=875900707 is handled. Duration 2488 ms by bot id=8976652462
+2026.09.13 14:02:59 aiogram.event        INFO     Update id=875900708 is handled. Duration 119 ms by bot id=8976652462
+2026.09.13 14:03:00 aiogram.event        INFO     Update id=875900709 is handled. Duration 61 ms by bot id=8976652462
+2026.09.13 14:03:02 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 14:03:02 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.13 14:03:08 aiogram.event        INFO     Update id=875900710 is handled. Duration 6176 ms by bot id=8976652462
+2026.09.13 14:05:51 core.utilities       INFO     User 8502974425 executed command: /music əlimdə qəlyanım var xeyal4x
+2026.09.13 14:05:51 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 14:05:51 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.13 14:05:54 aiogram.event        INFO     Update id=875900711 is handled. Duration 3416 ms by bot id=8976652462
+2026.09.13 14:05:56 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 14:05:56 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.13 14:06:03 aiogram.event        INFO     Update id=875900712 is handled. Duration 7260 ms by bot id=8976652462
+2026.09.13 14:37:29 core.utilities       INFO     User 8502974425 executed command: /music ağa Məmmədov ağ ölüm
+2026.09.13 14:37:29 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 14:37:29 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.13 14:37:32 aiogram.event        INFO     Update id=875900713 is handled. Duration 3043 ms by bot id=8976652462
+2026.09.13 14:37:35 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 14:37:35 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.13 14:37:46 aiogram.event        INFO     Update id=875900714 is handled. Duration 10981 ms by bot id=8976652462
+2026.09.13 20:59:34 core.utilities       INFO     User 8580068438 executed command: /start
+2026.09.13 20:59:35 aiogram.event        INFO     Update id=875900715 is handled. Duration 994 ms by bot id=8976652462
+2026.09.13 20:59:39 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 20:59:39 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.13 20:59:40 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 20:59:40 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.13 20:59:41 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.13 20:59:41 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.13 20:59:47 aiogram.event        INFO     Update id=875900716 is handled. Duration 7421 ms by bot id=8976652462
+2026.09.13 20:59:47 aiogram.event        INFO     Update id=875900717 is handled. Duration 7031 ms by bot id=8976652462
+2026.09.13 20:59:48 aiogram.event        INFO     Update id=875900718 is handled. Duration 6709 ms by bot id=8976652462
+2026.09.14 01:11:00 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.14 01:11:00 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.14 01:11:01 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.14 01:11:01 aiogram.dispatcher   WARNING  Sleep for 1.618314 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.14 01:11:03 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.14 01:11:03 aiogram.dispatcher   WARNING  Sleep for 2.101304 seconds and try again... (tryings = 2, bot id = 8976652462)
+2026.09.14 01:11:05 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.14 01:11:05 aiogram.dispatcher   WARNING  Sleep for 2.743399 seconds and try again... (tryings = 3, bot id = 8976652462)
+2026.09.14 01:11:44 aiogram.dispatcher   INFO     Connection established (tryings = 4, bot id = 8976652462)
+2026.09.14 03:38:24 core.utilities       INFO     User 7941446709 executed command: /start
+2026.09.14 03:38:25 aiogram.event        INFO     Update id=875900719 is handled. Duration 772 ms by bot id=8976652462
+2026.09.14 03:38:30 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 03:38:30 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.14 03:38:37 aiogram.event        INFO     Update id=875900720 is handled. Duration 7029 ms by bot id=8976652462
+2026.09.14 17:13:41 aiogram.event        INFO     Update id=875900721 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.14 18:11:01 core.utilities       INFO     User 8502974425 executed command: /music act a fool
+2026.09.14 18:11:01 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 18:11:01 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.14 18:11:04 aiogram.event        INFO     Update id=875900722 is handled. Duration 2790 ms by bot id=8976652462
+2026.09.14 18:11:11 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 18:11:11 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.14 18:11:21 aiogram.event        INFO     Update id=875900723 is handled. Duration 9734 ms by bot id=8976652462
+2026.09.14 18:11:29 core.utilities       INFO     User 8502974425 executed command: /music chingy right thurt
+2026.09.14 18:11:29 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 18:11:29 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.14 18:11:32 aiogram.event        INFO     Update id=875900724 is handled. Duration 2864 ms by bot id=8976652462
+2026.09.14 18:11:37 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 18:11:37 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.14 18:11:46 aiogram.event        INFO     Update id=875900725 is handled. Duration 9288 ms by bot id=8976652462
+2026.09.14 18:22:06 core.utilities       INFO     User 8502974425 executed command: /music el silento
+2026.09.14 18:22:06 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 18:22:06 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.09.14 18:22:09 aiogram.event        INFO     Update id=875900726 is handled. Duration 2998 ms by bot id=8976652462
+2026.09.14 18:22:26 core.utilities       INFO     User 8502974425 executed command: /music el silento rkt
+2026.09.14 18:22:26 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 18:22:26 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.14 18:22:26 aiogram.event        INFO     Update id=875900727 is handled. Duration 5370 ms by bot id=8976652462
+2026.09.14 18:22:29 aiogram.event        INFO     Update id=875900728 is handled. Duration 3085 ms by bot id=8976652462
+2026.09.14 18:22:40 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 18:22:40 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.14 18:22:45 aiogram.event        INFO     Update id=875900729 is handled. Duration 5248 ms by bot id=8976652462
+2026.09.14 18:24:00 core.utilities       INFO     User 8502974425 executed command: /music siente el boom
+2026.09.14 18:24:00 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 18:24:00 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.14 18:24:04 aiogram.event        INFO     Update id=875900730 is handled. Duration 3240 ms by bot id=8976652462
+2026.09.14 18:24:08 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 18:24:08 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.14 18:24:17 aiogram.event        INFO     Update id=875900731 is handled. Duration 9151 ms by bot id=8976652462
+2026.09.14 18:46:47 core.utilities       INFO     User 8502974425 executed command: /music mystikal shake that ass
+2026.09.14 18:46:48 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 18:46:48 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.14 18:46:50 aiogram.event        INFO     Update id=875900732 is handled. Duration 2720 ms by bot id=8976652462
+2026.09.14 18:46:56 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 18:46:56 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.09.14 18:47:03 core.youtube_handler ERROR    Yükləmə xətası: [0;31mERROR:[0m [youtube] Ic28JniSYY4: Requested format is not available. Use --list-formats for a list of available formats
+2026.09.14 18:47:03 aiogram.event        INFO     Update id=875900733 is handled. Duration 7721 ms by bot id=8976652462
+2026.09.14 18:47:09 core.utilities       INFO     User 8502974425 executed command: /music mystikal shake that ass
+2026.09.14 18:47:10 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 18:47:10 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.14 18:47:12 aiogram.event        INFO     Update id=875900734 is handled. Duration 2613 ms by bot id=8976652462
+2026.09.14 18:47:14 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 18:47:14 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.14 18:47:20 aiogram.event        INFO     Update id=875900735 is handled. Duration 6530 ms by bot id=8976652462
+2026.09.14 18:50:08 core.utilities       INFO     User 8502974425 executed command: /music joe budden pump it up
+2026.09.14 18:50:08 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 18:50:08 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.14 18:50:10 aiogram.event        INFO     Update id=875900736 is handled. Duration 2784 ms by bot id=8976652462
+2026.09.14 18:50:14 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 18:50:14 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.14 18:50:20 aiogram.event        INFO     Update id=875900737 is handled. Duration 6023 ms by bot id=8976652462
+2026.09.14 18:51:09 aiogram.event        INFO     Update id=875900738 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.14 20:27:57 core.utilities       INFO     User 8226742717 executed command: /start
+2026.09.14 20:27:59 aiogram.event        INFO     Update id=875900739 is handled. Duration 1236 ms by bot id=8976652462
+2026.09.14 20:28:04 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 20:28:04 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.14 20:28:06 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 20:28:06 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.14 20:28:08 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 20:28:08 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.14 20:28:11 aiogram.event        INFO     Update id=875900740 is handled. Duration 7118 ms by bot id=8976652462
+2026.09.14 20:28:13 aiogram.event        INFO     Update id=875900741 is handled. Duration 7188 ms by bot id=8976652462
+2026.09.14 20:28:15 aiogram.event        INFO     Update id=875900742 is handled. Duration 7302 ms by bot id=8976652462
+2026.09.14 23:42:43 core.utilities       INFO     User 8502974425 executed command: /music la fucking fiesta
+2026.09.14 23:42:43 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 23:42:43 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.14 23:42:45 aiogram.event        INFO     Update id=875900743 is handled. Duration 1902 ms by bot id=8976652462
+2026.09.14 23:42:50 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.14 23:42:50 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.14 23:42:55 core.youtube_handler ERROR    Yükləmə xətası: [0;31mERROR:[0m [youtube] CWYWisMxel4: Requested format is not available. Use --list-formats for a list of available formats
+2026.09.14 23:42:55 aiogram.event        INFO     Update id=875900744 is handled. Duration 5240 ms by bot id=8976652462
+2026.09.15 01:11:01 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.15 01:11:01 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.15 01:11:02 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.15 01:11:02 aiogram.dispatcher   WARNING  Sleep for 1.339021 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.15 01:11:03 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.15 01:11:03 aiogram.dispatcher   WARNING  Sleep for 1.685627 seconds and try again... (tryings = 2, bot id = 8976652462)
+2026.09.15 01:11:05 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.15 01:11:05 aiogram.dispatcher   WARNING  Sleep for 2.069042 seconds and try again... (tryings = 3, bot id = 8976652462)
+2026.09.15 01:11:07 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.15 01:11:07 aiogram.dispatcher   WARNING  Sleep for 2.657097 seconds and try again... (tryings = 4, bot id = 8976652462)
+2026.09.15 01:11:10 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.15 01:11:10 aiogram.dispatcher   WARNING  Sleep for 3.474951 seconds and try again... (tryings = 5, bot id = 8976652462)
+2026.09.15 01:11:13 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.15 01:11:13 aiogram.dispatcher   WARNING  Sleep for 4.316972 seconds and try again... (tryings = 6, bot id = 8976652462)
+2026.09.15 01:11:57 aiogram.dispatcher   INFO     Connection established (tryings = 7, bot id = 8976652462)
+2026.09.15 08:26:23 aiogram.event        INFO     Update id=875900745 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.15 08:26:47 aiogram.event        INFO     Update id=875900746 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.15 13:07:45 core.utilities       INFO     User 8502974425 executed command: /music inna
+2026.09.15 13:07:45 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.15 13:07:45 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.15 13:07:48 aiogram.event        INFO     Update id=875900747 is handled. Duration 3662 ms by bot id=8976652462
+2026.09.15 13:07:57 aiogram.event        INFO     Update id=875900748 is handled. Duration 5189 ms by bot id=8976652462
+2026.09.15 14:07:56 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.15 14:07:56 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.15 14:08:00 aiogram.event        INFO     Update id=875900749 is handled. Duration 3967 ms by bot id=8976652462
+2026.09.15 14:08:02 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.15 14:08:02 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.15 14:08:11 aiogram.event        INFO     Update id=875900750 is handled. Duration 9319 ms by bot id=8976652462
+2026.09.15 18:23:31 core.utilities       INFO     User 8502974425 executed command: /music sen çaşmaz idin ey dost
+2026.09.15 18:23:31 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.15 18:23:31 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.15 18:23:34 aiogram.event        INFO     Update id=875900751 is handled. Duration 3587 ms by bot id=8976652462
+2026.09.15 18:23:36 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.15 18:23:36 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.15 18:23:44 aiogram.event        INFO     Update id=875900752 is handled. Duration 7524 ms by bot id=8976652462
+2026.09.15 18:27:29 aiogram.event        INFO     Update id=875900753 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.16 01:11:00 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.16 01:11:00 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.16 01:11:01 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.16 01:11:01 aiogram.dispatcher   WARNING  Sleep for 1.175400 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.16 01:11:02 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.16 01:11:02 aiogram.dispatcher   WARNING  Sleep for 1.480474 seconds and try again... (tryings = 2, bot id = 8976652462)
+2026.09.16 01:11:03 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.16 01:11:03 aiogram.dispatcher   WARNING  Sleep for 1.879371 seconds and try again... (tryings = 3, bot id = 8976652462)
+2026.09.16 01:11:05 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.16 01:11:05 aiogram.dispatcher   WARNING  Sleep for 2.438411 seconds and try again... (tryings = 4, bot id = 8976652462)
+2026.09.16 01:11:08 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.16 01:11:08 aiogram.dispatcher   WARNING  Sleep for 3.212665 seconds and try again... (tryings = 5, bot id = 8976652462)
+2026.09.16 01:11:40 aiogram.dispatcher   INFO     Connection established (tryings = 6, bot id = 8976652462)
+2026.09.16 17:16:50 core.utilities       INFO     User 8502974425 executed command: /music@dllmasterbot
+2026.09.16 17:17:02 core.utilities       INFO     User 8502974425 executed command: /music hələki heçnə yolunda getmir
+2026.09.16 17:17:02 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.16 17:17:02 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.16 17:17:05 aiogram.event        INFO     Update id=875900755 is handled. Duration 2897 ms by bot id=8976652462
+2026.09.16 17:17:09 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.16 17:17:09 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.16 17:17:10 aiogram.event        INFO     Update id=875900754 is handled. Duration 20370 ms by bot id=8976652462
+2026.09.16 17:17:14 aiogram.event        INFO     Update id=875900756 is handled. Duration 4927 ms by bot id=8976652462
+2026.09.16 17:34:26 core.utilities       INFO     User 8502974425 executed command: /music xzibit
+2026.09.16 17:34:26 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.16 17:34:26 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.16 17:34:29 aiogram.event        INFO     Update id=875900757 is handled. Duration 2703 ms by bot id=8976652462
+2026.09.16 17:34:31 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.16 17:34:31 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.16 17:34:41 aiogram.event        INFO     Update id=875900758 is handled. Duration 9565 ms by bot id=8976652462
+2026.09.16 17:34:55 core.utilities       INFO     User 8502974425 executed command: /music xzibit
+2026.09.16 17:34:56 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.16 17:34:56 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.09.16 17:34:58 aiogram.event        INFO     Update id=875900759 is handled. Duration 2584 ms by bot id=8976652462
+2026.09.16 17:35:03 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.16 17:35:03 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.16 17:35:09 aiogram.event        INFO     Update id=875900760 is handled. Duration 6384 ms by bot id=8976652462
+2026.09.16 17:52:56 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.16 17:52:56 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.16 17:52:59 aiogram.event        INFO     Update id=875900761 is handled. Duration 2661 ms by bot id=8976652462
+2026.09.16 17:53:03 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.16 17:53:03 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.16 17:53:13 aiogram.event        INFO     Update id=875900762 is handled. Duration 9554 ms by bot id=8976652462
+2026.09.16 22:56:52 aiogram.event        INFO     Update id=875900763 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.16 22:59:24 aiogram.event        INFO     Update id=875900764 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.16 23:15:35 aiogram.event        INFO     Update id=875900765 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.17 01:11:01 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.17 01:11:01 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.17 01:11:02 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.17 01:11:02 aiogram.dispatcher   WARNING  Sleep for 1.178131 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.17 01:11:03 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.17 01:11:03 aiogram.dispatcher   WARNING  Sleep for 1.414855 seconds and try again... (tryings = 2, bot id = 8976652462)
+2026.09.17 01:11:04 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.17 01:11:04 aiogram.dispatcher   WARNING  Sleep for 1.799037 seconds and try again... (tryings = 3, bot id = 8976652462)
+2026.09.17 01:11:06 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.17 01:11:06 aiogram.dispatcher   WARNING  Sleep for 2.260115 seconds and try again... (tryings = 4, bot id = 8976652462)
+2026.09.17 01:11:53 aiogram.dispatcher   INFO     Connection established (tryings = 5, bot id = 8976652462)
+2026.09.17 14:36:15 aiogram.event        INFO     Update id=875900766 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.17 14:58:05 aiogram.event        INFO     Update id=875900767 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.17 19:13:08 aiogram.event        INFO     Update id=875900768 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.18 01:11:02 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.18 01:11:02 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.18 01:11:03 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.18 01:11:03 aiogram.dispatcher   WARNING  Sleep for 1.283925 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.18 01:11:04 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.18 01:11:04 aiogram.dispatcher   WARNING  Sleep for 1.706445 seconds and try again... (tryings = 2, bot id = 8976652462)
+2026.09.18 01:11:06 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.18 01:11:06 aiogram.dispatcher   WARNING  Sleep for 2.092349 seconds and try again... (tryings = 3, bot id = 8976652462)
+2026.09.18 01:11:08 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.18 01:11:08 aiogram.dispatcher   WARNING  Sleep for 2.516256 seconds and try again... (tryings = 4, bot id = 8976652462)
+2026.09.18 01:11:49 aiogram.dispatcher   INFO     Connection established (tryings = 5, bot id = 8976652462)
+2026.09.18 08:13:46 aiogram.event        INFO     Update id=875900769 is not handled. Duration 3 ms by bot id=8976652462
+2026.09.18 14:41:15 core.utilities       INFO     User 8125905404 executed command: /start
+2026.09.18 14:41:17 aiogram.event        INFO     Update id=875900770 is handled. Duration 1162 ms by bot id=8976652462
+2026.09.18 14:41:43 aiogram.event        INFO     Update id=875900771 is handled. Duration 20141 ms by bot id=8976652462
+2026.09.19 01:11:00 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.19 01:11:00 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.19 01:11:01 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.19 01:11:01 aiogram.dispatcher   WARNING  Sleep for 1.188441 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.19 01:11:03 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.19 01:11:03 aiogram.dispatcher   WARNING  Sleep for 1.560685 seconds and try again... (tryings = 2, bot id = 8976652462)
+2026.09.19 01:11:04 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.19 01:11:04 aiogram.dispatcher   WARNING  Sleep for 1.959493 seconds and try again... (tryings = 3, bot id = 8976652462)
+2026.09.19 01:11:06 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.19 01:11:06 aiogram.dispatcher   WARNING  Sleep for 2.488080 seconds and try again... (tryings = 4, bot id = 8976652462)
+2026.09.19 01:11:37 aiogram.dispatcher   INFO     Connection established (tryings = 5, bot id = 8976652462)
+2026.09.19 06:05:21 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.19 06:05:21 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.19 06:05:29 aiogram.event        INFO     Update id=875900772 is handled. Duration 7395 ms by bot id=8976652462
+2026.09.19 22:26:38 aiogram.event        INFO     Update id=875900773 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.19 22:51:37 aiogram.event        INFO     Update id=875900774 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.20 01:10:56 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.20 01:10:56 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.20 01:10:57 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.20 01:10:57 aiogram.dispatcher   WARNING  Sleep for 1.200327 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.20 01:10:58 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.20 01:10:58 aiogram.dispatcher   WARNING  Sleep for 1.474858 seconds and try again... (tryings = 2, bot id = 8976652462)
+2026.09.20 01:11:01 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.20 01:11:01 aiogram.dispatcher   WARNING  Sleep for 1.858542 seconds and try again... (tryings = 3, bot id = 8976652462)
+2026.09.20 01:11:36 aiogram.dispatcher   INFO     Connection established (tryings = 4, bot id = 8976652462)
+2026.09.20 06:27:41 core.utilities       INFO     User 7915698369 executed command: /start
+2026.09.20 06:27:41 aiogram.event        INFO     Update id=875900775 is handled. Duration 764 ms by bot id=8976652462
+2026.09.20 06:27:46 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.20 06:27:46 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.20 06:27:47 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.20 06:27:47 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.20 06:27:48 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.20 06:27:48 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.09.20 06:27:49 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.20 06:27:49 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.20 06:27:50 aiogram.event        INFO     Update id=875900779 is handled. Duration 1795 ms by bot id=8976652462
+2026.09.20 06:27:53 aiogram.event        INFO     Update id=875900776 is handled. Duration 7109 ms by bot id=8976652462
+2026.09.20 06:27:54 aiogram.event        INFO     Update id=875900777 is handled. Duration 7015 ms by bot id=8976652462
+2026.09.20 06:27:55 aiogram.event        INFO     Update id=875900778 is handled. Duration 7537 ms by bot id=8976652462
+2026.09.20 10:03:22 core.utilities       INFO     User 8779726070 executed command: /start
+2026.09.20 10:03:23 aiogram.event        INFO     Update id=875900780 is handled. Duration 1588 ms by bot id=8976652462
+2026.09.20 10:04:03 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.20 10:04:03 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.20 10:04:10 aiogram.event        INFO     Update id=875900781 is handled. Duration 8015 ms by bot id=8976652462
+2026.09.21 01:10:46 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.21 01:10:46 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.21 01:10:47 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.21 01:10:47 aiogram.dispatcher   WARNING  Sleep for 1.356246 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.21 01:10:48 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.21 01:10:48 aiogram.dispatcher   WARNING  Sleep for 1.748867 seconds and try again... (tryings = 2, bot id = 8976652462)
+2026.09.21 01:10:50 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.21 01:10:50 aiogram.dispatcher   WARNING  Sleep for 2.345500 seconds and try again... (tryings = 3, bot id = 8976652462)
+2026.09.21 01:10:53 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.21 01:10:53 aiogram.dispatcher   WARNING  Sleep for 3.243964 seconds and try again... (tryings = 4, bot id = 8976652462)
+2026.09.21 01:11:26 aiogram.dispatcher   INFO     Connection established (tryings = 5, bot id = 8976652462)
+2026.09.21 04:12:04 core.utilities       INFO     User 8502974425 executed command: /music nəşə səni icad eliyən
+2026.09.21 04:12:04 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.21 04:12:04 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.21 04:12:07 aiogram.event        INFO     Update id=875900782 is handled. Duration 3060 ms by bot id=8976652462
+2026.09.21 04:12:13 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.21 04:12:13 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.21 04:12:20 aiogram.event        INFO     Update id=875900783 is handled. Duration 6647 ms by bot id=8976652462
+2026.09.21 04:12:29 core.utilities       INFO     User 8502974425 executed command: /music nəşə səni icad eliyən
+2026.09.21 04:12:29 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.21 04:12:29 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.21 04:12:31 aiogram.event        INFO     Update id=875900784 is handled. Duration 1822 ms by bot id=8976652462
+2026.09.21 04:12:35 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.21 04:12:35 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.21 04:12:39 aiogram.event        INFO     Update id=875900785 is handled. Duration 4751 ms by bot id=8976652462
+2026.09.21 04:12:59 core.utilities       INFO     User 8502974425 executed command: /music nəşə səni icad eliyən
+2026.09.21 04:12:59 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.21 04:12:59 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.21 04:13:01 aiogram.event        INFO     Update id=875900786 is handled. Duration 1708 ms by bot id=8976652462
+2026.09.21 04:13:13 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.21 04:13:13 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.21 04:13:17 aiogram.event        INFO     Update id=875900787 is handled. Duration 3788 ms by bot id=8976652462
+2026.09.21 10:53:26 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.21 10:53:26 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.21 10:53:29 aiogram.event        INFO     Update id=875900788 is handled. Duration 3565 ms by bot id=8976652462
+2026.09.21 10:53:35 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.21 10:53:35 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.21 10:53:44 aiogram.event        INFO     Update id=875900789 is handled. Duration 9138 ms by bot id=8976652462
+2026.09.22 00:34:14 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.22 00:34:14 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.22 00:34:21 aiogram.event        INFO     Update id=875900790 is handled. Duration 7070 ms by bot id=8976652462
+2026.09.22 01:11:00 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.22 01:11:00 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.22 01:11:01 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.22 01:11:01 aiogram.dispatcher   WARNING  Sleep for 1.271497 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.22 01:11:32 aiogram.dispatcher   INFO     Connection established (tryings = 2, bot id = 8976652462)
+2026.09.22 11:18:41 core.utilities       INFO     User 8502974425 executed command: /music la fucking fiesta
+2026.09.22 11:18:41 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.22 11:18:41 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.22 11:18:44 aiogram.event        INFO     Update id=875900791 is handled. Duration 2404 ms by bot id=8976652462
+2026.09.22 11:18:48 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.22 11:18:48 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.22 11:18:53 core.youtube_handler ERROR    Yükləmə xətası: [0;31mERROR:[0m [youtube] CWYWisMxel4: Requested format is not available. Use --list-formats for a list of available formats
+2026.09.22 11:18:53 aiogram.event        INFO     Update id=875900792 is handled. Duration 5698 ms by bot id=8976652462
+2026.09.22 11:19:00 core.utilities       INFO     User 8502974425 executed command: /music la fucking fiesta
+2026.09.22 11:19:00 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.22 11:19:00 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.22 11:19:03 aiogram.event        INFO     Update id=875900793 is handled. Duration 2925 ms by bot id=8976652462
+2026.09.22 11:19:13 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.22 11:19:13 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.09.22 11:19:23 aiogram.event        INFO     Update id=875900794 is handled. Duration 9525 ms by bot id=8976652462
+2026.09.22 11:41:21 aiogram.event        INFO     Update id=875900795 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.22 11:57:45 aiogram.event        INFO     Update id=875900796 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.23 01:11:01 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.23 01:11:01 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.23 01:11:02 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.23 01:11:02 aiogram.dispatcher   WARNING  Sleep for 1.292574 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.23 01:11:31 aiogram.dispatcher   INFO     Connection established (tryings = 2, bot id = 8976652462)
+2026.09.23 22:15:58 core.utilities       INFO     User 8502974425 executed command: /music mahir ara uşağları
+2026.09.23 22:15:58 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.23 22:15:58 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.23 22:16:00 aiogram.event        INFO     Update id=875900797 is handled. Duration 2851 ms by bot id=8976652462
+2026.09.23 22:16:04 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.23 22:16:04 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.23 22:16:15 aiogram.event        INFO     Update id=875900798 is handled. Duration 10770 ms by bot id=8976652462
+2026.09.24 01:10:59 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.24 01:10:59 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.24 01:11:02 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.24 01:11:02 aiogram.dispatcher   WARNING  Sleep for 1.301689 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.24 01:11:03 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.24 01:11:03 aiogram.dispatcher   WARNING  Sleep for 1.757115 seconds and try again... (tryings = 2, bot id = 8976652462)
+2026.09.24 01:11:33 aiogram.dispatcher   INFO     Connection established (tryings = 3, bot id = 8976652462)
+2026.09.24 12:34:43 core.utilities       INFO     User 8502974425 executed command: /music laki bass
+2026.09.24 12:34:43 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.24 12:34:43 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.24 12:34:47 aiogram.event        INFO     Update id=875900799 is handled. Duration 3540 ms by bot id=8976652462
+2026.09.24 12:34:52 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.24 12:34:52 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.24 12:34:57 aiogram.event        INFO     Update id=875900800 is handled. Duration 5951 ms by bot id=8976652462
+2026.09.24 12:37:17 core.utilities       INFO     User 8502974425 executed command: /music laki bass
+2026.09.24 12:37:17 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.24 12:37:17 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.24 12:37:20 aiogram.event        INFO     Update id=875900801 is handled. Duration 3680 ms by bot id=8976652462
+2026.09.24 12:37:27 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.24 12:37:27 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.24 12:37:33 aiogram.event        INFO     Update id=875900802 is handled. Duration 5986 ms by bot id=8976652462
+2026.09.24 15:02:56 aiogram.event        INFO     Update id=875900803 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.25 01:11:00 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.25 01:11:00 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.25 01:11:01 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.25 01:11:01 aiogram.dispatcher   WARNING  Sleep for 1.227475 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.25 01:11:02 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.25 01:11:02 aiogram.dispatcher   WARNING  Sleep for 1.587156 seconds and try again... (tryings = 2, bot id = 8976652462)
+2026.09.25 01:11:05 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.25 01:11:05 aiogram.dispatcher   WARNING  Sleep for 2.095860 seconds and try again... (tryings = 3, bot id = 8976652462)
+2026.09.25 01:11:07 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.25 01:11:07 aiogram.dispatcher   WARNING  Sleep for 2.761542 seconds and try again... (tryings = 4, bot id = 8976652462)
+2026.09.25 01:11:10 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.25 01:11:10 aiogram.dispatcher   WARNING  Sleep for 3.599794 seconds and try again... (tryings = 5, bot id = 8976652462)
+2026.09.25 01:11:47 aiogram.dispatcher   INFO     Connection established (tryings = 6, bot id = 8976652462)
+2026.09.25 07:25:44 core.utilities       INFO     User 5935888652 executed command: /start
+2026.09.25 07:25:45 aiogram.event        INFO     Update id=875900804 is handled. Duration 833 ms by bot id=8976652462
+2026.09.25 07:34:54 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.25 07:34:54 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.25 07:35:01 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.25 07:35:01 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.25 07:35:02 aiogram.event        INFO     Update id=875900805 is handled. Duration 7370 ms by bot id=8976652462
+2026.09.25 07:35:04 aiogram.event        INFO     Update id=875900806 is handled. Duration 3222 ms by bot id=8976652462
+2026.09.25 07:38:22 aiogram.event        INFO     Update id=875900807 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.25 10:20:34 aiogram.event        INFO     Update id=875900808 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.25 10:20:43 core.utilities       INFO     User 8502974425 executed command: /music aygün bəylər tut ağacı
+2026.09.25 10:20:43 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.25 10:20:43 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.25 10:20:46 aiogram.event        INFO     Update id=875900809 is handled. Duration 3550 ms by bot id=8976652462
+2026.09.25 10:20:49 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.25 10:20:49 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.25 10:20:53 core.youtube_handler ERROR    Yükləmə xətası: [0;31mERROR:[0m [youtube] ES3Qs17ZrRM: Requested format is not available. Use --list-formats for a list of available formats
+2026.09.25 10:20:53 aiogram.event        INFO     Update id=875900810 is handled. Duration 4161 ms by bot id=8976652462
+2026.09.25 10:43:21 aiogram.dispatcher   WARNING  Received SIGINT signal
+2026.09.25 10:43:21 aiogram.dispatcher   INFO     Polling stopped for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.09.25 10:43:21 aiogram.dispatcher   INFO     Polling stopped
+2026.09.25 10:43:21 __main__             INFO     🛑 Polling stopped
+2026.09.25 10:43:21 __main__             INFO     🔴 Bot stopped

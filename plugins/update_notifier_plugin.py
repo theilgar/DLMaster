@@ -15,6 +15,9 @@ müqayisə olunur. Dəyişiklik varsa creator-a:
   2) Fayl: bütün dəyişikliklərin tam diff-i (update_....diff)
   3) Layihə git repo-dursa: [✅ GitHub-a göndər] [❌ İmtina] [✏️ Commit mesajı] düymələri.
      Təsdiqdə yalnız hesabatdakı fayllar commit olunur və push edilir.
+  4) 📦 Hamısını göndər (full update) — repodakı BÜTÜN commit edilməmiş dəyişikliklər
+     (.gitignore və həssas fayllar istisna) bir commit-də göndərilir. Hesabatdan və ya
+     /menu → 🌿 GitHub panelindən.
 
 GitHub ayarları (config.env, hamısı könüllü):
   GITHUB_REMOTE=origin          push ediləcək remote (default: origin)
@@ -24,6 +27,7 @@ import ast
 import asyncio
 import base64
 import difflib
+import fnmatch
 import hashlib
 import json
 import logging
@@ -409,7 +413,7 @@ def redact(text: str) -> str:
     return text
 
 
-def git(root: Path, *args, timeout=60, auth=False):
+def git(root: Path, *args, timeout=60, auth=False, raw=False):
     cmd = ["git", "-C", str(root)]
     if auth and _token():
         basic = base64.b64encode(f"x-access-token:{_token()}".encode()).decode()
@@ -419,7 +423,7 @@ def git(root: Path, *args, timeout=60, auth=False):
         r = subprocess.run(cmd + list(args), capture_output=True, text=True, timeout=timeout, env=env)
     except subprocess.TimeoutExpired:
         return 124, "", f"git {args[0]}: vaxt bitdi ({timeout} san.)"
-    return r.returncode, r.stdout.strip(), redact(r.stderr.strip())
+    return r.returncode, (r.stdout if raw else r.stdout.strip()), redact(r.stderr.strip())
 
 
 def github_web_url(remote_url: str):
@@ -480,18 +484,21 @@ def push_update(root: Path, paths: list, message: str) -> dict:
     res["branch"] = branch
 
     # Yalnız mövcud və ya izlənən, .gitignore-a düşməyən fayllar
-    use = []
+    use, to_add = [], []
     for p in paths:
         tracked = git(root, "ls-files", "--error-unmatch", "--", p)[0] == 0
-        if not tracked and not (root / p).exists():
+        in_head = bool(git(root, "ls-tree", "--name-only", "HEAD", "--", p)[1])   # silinmiş / adı dəyişmiş fayl
+        if not tracked and not in_head and not (root / p).exists():
             continue
         if git(root, "check-ignore", "-q", "--", p)[0] == 0:
             continue
         use.append(p)
+        if tracked or (root / p).exists():
+            to_add.append(p)        # silinməsi artıq indeksdə olan (git mv / git rm) fayl üçün add lazım deyil
     res["files"] = use
 
     if use:
-        rc, _, err = git(root, "add", "-A", "--", *use)
+        rc, _, err = git(root, "add", "-A", "--", *to_add) if to_add else (0, "", "")
         if rc != 0:
             res["error"] = f"git add:\n{short_error(err)}"
             return res
@@ -524,11 +531,115 @@ def push_update(root: Path, paths: list, message: str) -> dict:
     return res
 
 
+# ───────────────────────── Full update (hamısını göndər) ─────────────────────────
+# .gitignore-da olmasa belə BU fayllar heç vaxt avtomatik göndərilmir (token, baza, cookies ...)
+SENSITIVE_PATTERNS = [
+    "config.env", ".env", "*.env", ".env.*", "*.db", "*.db-wal", "*.db-shm", "*.sqlite", "*.sqlite3",
+    "*cookies*.txt", "*.pem", "*.key", "*.session", "*.session-journal",
+    "data/*", "download/*", "logs/*",
+]
+STATUS_ICONS = {"new": "🆕", "modified": "✏️", "deleted": "🗑", "renamed": "🔀"}
+
+
+def is_sensitive(path: str) -> bool:
+    name = path.rsplit("/", 1)[-1]
+    return any(fnmatch.fnmatch(path, pat) or fnmatch.fnmatch(name, pat) for pat in SENSITIVE_PATTERNS)
+
+
+def working_changes(root: Path):
+    """Commit edilməmiş bütün dəyişikliklər → ([(növ, yol)], [həssas olduğu üçün çıxarılan yollar])."""
+    rc, out, _ = git(root, "status", "--porcelain=v1", "-z", "-uall", raw=True)
+    if rc != 0:
+        return [], []
+    items = out.split("\0")
+    changes, excluded, i = [], [], 0
+    while i < len(items):
+        entry = items[i]
+        i += 1
+        if len(entry) < 4:
+            continue
+        xy, path = entry[:2], entry[3:]
+        if "R" in xy or "C" in xy:
+            old = items[i] if i < len(items) else ""
+            i += 1
+            kind = "renamed"
+            # köhnə ad da commit-ə düşməlidir ki, repoda silinsin
+            if old and "R" in xy:
+                if is_sensitive(old):
+                    excluded.append(old)
+                else:
+                    changes.append(("deleted", old))
+        elif xy == "??":
+            kind = "new"
+        elif "D" in xy:
+            kind = "deleted"
+        else:
+            kind = "modified"
+        if is_sensitive(path):
+            excluded.append(path)
+        else:
+            changes.append((kind, path))
+    return changes, excluded
+
+
+def repo_status(root: Path, fetch: bool = False) -> dict:
+    """GitHub paneli üçün: branch, remote, son commit, ahead/behind, dəyişikliklər."""
+    info = {}
+    if git(root, "rev-parse", "--is-inside-work-tree")[0] != 0:
+        info["error"] = "Layihə git repo deyil."
+        return info
+    remote = os.getenv("GITHUB_REMOTE", "origin")
+    info["remote"] = remote
+    rc, url, _ = git(root, "remote", "get-url", remote)
+    info["remote_url"] = url if rc == 0 else None
+    info["web"] = github_web_url(url) if rc == 0 else None
+    info["branch"] = git(root, "rev-parse", "--abbrev-ref", "HEAD")[1]
+    rc, last, _ = git(root, "log", "-1", "--format=%h%x1f%s%x1f%ct")
+    if rc == 0 and last:
+        h, subj, ts = last.split("\x1f")
+        info["last"] = {"hash": h, "subject": subj, "ts": int(ts)}
+    if fetch and info["remote_url"]:
+        rc, _, err = git(root, "fetch", remote, timeout=30, auth=True)
+        info["fetch_error"] = short_error(err) if rc != 0 else None
+    rc, counts, _ = git(root, "rev-list", "--left-right", "--count", "@{u}...HEAD")
+    if rc == 0 and counts:
+        behind, ahead = (int(x) for x in counts.split())
+        info["behind"], info["ahead"] = behind, ahead
+    info["changes"], info["excluded"] = working_changes(root)
+    return info
+
+
+def full_commit_message(changes, started: float) -> str:
+    groups = {}
+    for kind, path in changes:
+        groups.setdefault(kind, []).append(Path(path).name)
+    title = f"Tam yeniləmə ({datetime.fromtimestamp(started, get_tz()).strftime('%d.%m.%Y %H:%M')})"
+    labels = [("modified", "Dəyişən"), ("new", "Yeni"), ("deleted", "Silinən"), ("renamed", "Adı dəyişən")]
+    body = []
+    for key, label in labels:
+        names = groups.get(key)
+        if names:
+            shown = ", ".join(names[:15]) + (f" və daha {len(names) - 15}" if len(names) > 15 else "")
+            body.append(f"{label} ({len(names)}): {shown}")
+    return title + ("\n\n" + "\n".join(body) if body else "")
+
+
+def push_all(root: Path, message: str) -> dict:
+    """Bütün (həssas olmayan) dəyişiklikləri commit edib push edir."""
+    changes, excluded = working_changes(root)
+    paths = sorted({p for _, p in changes})
+    res = push_update(root, paths, message)
+    res["excluded"] = excluded
+    res["changes"] = changes
+    return res
+
+
 def gh_kb(pid: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="✅ GitHub-a göndər", callback_data=f"gh:push:{pid}"),
          InlineKeyboardButton(text="❌ İmtina", callback_data=f"gh:skip:{pid}")],
-        [InlineKeyboardButton(text="✏️ Commit mesajı", callback_data=f"gh:msg:{pid}")],
+        [InlineKeyboardButton(text="✏️ Commit mesajı", callback_data=f"gh:msg:{pid}"),
+         InlineKeyboardButton(text="📦 Hamısını göndər", callback_data="ghf:prep:new")],
     ])
 
 
@@ -546,12 +657,13 @@ def setup(context):
     root = Path(BASE_DIR)
     push_lock = asyncio.Lock()
     gh_state = {"await_msg": None}      # commit mesajı gözlənilirsə: pending id
+    gh_full = {"message": None, "await": False, "chat_id": None, "panel_id": None}   # 📦 full update
 
     # menu_plugin-dəki "creator mətn yazır" yoxlamasına əlavə et (music_plugin axtarış etməsin)
     prev_waiting = getattr(context, "menu_waiting_text", None)
 
     def waiting_text(user_id: int) -> bool:
-        if user_id == creator and gh_state["await_msg"]:
+        if user_id == creator and (gh_state["await_msg"] or gh_full["await"]):
             return True
         return bool(prev_waiting and prev_waiting(user_id))
 
@@ -676,10 +788,21 @@ def setup(context):
         await cb.answer()
 
     async def waiting_commit_msg(message: Message) -> bool:
-        return bool(gh_state["await_msg"]) and message.from_user and message.from_user.id == creator
+        return bool(gh_state["await_msg"] or gh_full["await"]) and message.from_user \
+            and message.from_user.id == creator
 
     @dp.message(F.chat.type == "private", F.text, ~F.text.startswith("/"), waiting_commit_msg)
     async def gh_commit_message(message: Message):
+        if gh_full["await"]:
+            gh_full["await"] = False
+            gh_full["message"] = message.text.strip()[:2000]
+            try:
+                await message.delete()
+            except Exception:
+                pass
+            text, kb = await full_confirm_view()
+            await edit_full_panel(text, kb)
+            return
         pid = gh_state["await_msg"]
         gh_state["await_msg"] = None
         p = await asyncio.to_thread(load_pending)
@@ -693,6 +816,200 @@ def setup(context):
             parse_mode="HTML",
             reply_markup=gh_kb(pid),
         )
+
+    # ═════════════ 📦 Full update / 🌿 GitHub paneli ═════════════
+    def nav(back: str):
+        """menu_plugin-in naviqasiyası ilə eyni: ⬅️ Geri · 🏠 Menyu · ❌ Ləğv et"""
+        row = [InlineKeyboardButton(text="⬅️ Geri", callback_data=back)]
+        if back != "menu:main":
+            row.append(InlineKeyboardButton(text="🏠 Menyu", callback_data="menu:main"))
+        row.append(InlineKeyboardButton(text="❌ Ləğv et", callback_data="menu:cancel"))
+        return row
+
+    def btn(text, data=None, url=None):
+        return InlineKeyboardButton(text=text, url=url) if url else InlineKeyboardButton(text=text, callback_data=data)
+
+    async def edit_full_panel(text: str, kb):
+        try:
+            await bot.edit_message_text(chat_id=gh_full["chat_id"], message_id=gh_full["panel_id"],
+                                        text=text, parse_mode="HTML", reply_markup=kb,
+                                        disable_web_page_preview=True)
+        except Exception as e:
+            if "not modified" not in str(e):
+                logger.warning(f"GitHub paneli yenilənmədi: {e}")
+
+    def changes_block(changes, excluded, limit=25) -> str:
+        counts = {}
+        for kind, _ in changes:
+            counts[kind] = counts.get(kind, 0) + 1
+        summary = " · ".join(f"{STATUS_ICONS[k]} {v}" for k, v in counts.items()) or "—"
+        lines = [f"📁 <b>Dəyişikliklər:</b> {len(changes)} ({summary})"]
+        for kind, path in changes[:limit]:
+            lines.append(f"   {STATUS_ICONS[kind]} <code>{escape(path)}</code>")
+        if len(changes) > limit:
+            lines.append(f"   <i>… və daha {len(changes) - limit} fayl</i>")
+        if excluded:
+            lines.append(f"\n🔒 <b>Göndərilməyəcək (həssas):</b> {len(excluded)}")
+            lines += [f"   🔒 <code>{escape(p)}</code>" for p in excluded[:10]]
+        return "\n".join(lines)
+
+    async def status_view(fetch: bool = False):
+        info = await asyncio.to_thread(repo_status, root, fetch)
+        if info.get("error"):
+            return f"🌿 <b>GitHub</b>\n\n❌ {escape(info['error'])}", InlineKeyboardMarkup(inline_keyboard=[nav("menu:main")])
+        lines = ["🌿 <b>GitHub</b>\n"]
+        repo = f'<a href="{info["web"]}">{escape(info["web"].replace("https://github.com/", ""))}</a>' \
+            if info.get("web") else escape(info.get("remote_url") or "remote yoxdur")
+        lines.append(f"📦 Repo: {repo}")
+        lines.append(f"🌿 Branch: <code>{escape(info['branch'])}</code>")
+        if info.get("last"):
+            l = info["last"]
+            lines.append(f"🕒 Son commit: <code>{escape(l['hash'])}</code> — {escape(l['subject'][:60])} "
+                         f"<i>({fmt_time(l['ts'])})</i>")
+        if "ahead" in info:
+            sync = []
+            if info["ahead"]:
+                sync.append(f"⬆️ {info['ahead']} commit göndərilməyib")
+            if info["behind"]:
+                sync.append(f"⬇️ GitHub-da {info['behind']} yeni commit var")
+            lines.append("🔄 " + (" · ".join(sync) if sync else "GitHub ilə sinxrondur"))
+        else:
+            lines.append("🔄 <i>Upstream branch qurulmayıb — ilk push onu yaradacaq</i>")
+        if info.get("fetch_error"):
+            lines.append(f"⚠️ fetch alınmadı: <code>{escape(info['fetch_error'][:150])}</code>")
+        lines.append("")
+        lines.append(changes_block(info["changes"], info["excluded"], limit=15))
+        if not info["changes"] and not info.get("ahead"):
+            lines.append("\n✅ <i>Göndəriləcək heç nə yoxdur.</i>")
+
+        kb = []
+        if info["changes"] or info.get("ahead"):
+            kb.append([btn("📦 Hamısını göndər", "ghf:prep")])
+        kb.append([btn("🔄 Yenilə", "ghf:open"), btn("📡 GitHub-la yoxla", "ghf:fetch")])
+        kb.append(nav("menu:main"))
+        return "\n".join(lines), InlineKeyboardMarkup(inline_keyboard=kb)
+
+    async def full_confirm_view():
+        info = await asyncio.to_thread(repo_status, root, False)
+        if info.get("error"):
+            return f"❌ {escape(info['error'])}", InlineKeyboardMarkup(inline_keyboard=[nav("ghf:open")])
+        changes = info["changes"]
+        if not gh_full["message"]:
+            gh_full["message"] = full_commit_message(changes, time.time())
+        lines = ["📦 <b>Tam yeniləmə — GitHub-a göndərilsin?</b>\n",
+                 f"🌿 <code>{escape(info['branch'])}</code> → <code>{escape(info['remote'])}</code>"]
+        if info.get("ahead"):
+            lines.append(f"⬆️ Əvvəldən göndərilməmiş {info['ahead']} commit də push olunacaq")
+        if info.get("behind"):
+            lines.append(f"⚠️ GitHub-da sizdə olmayan {info['behind']} commit var — push rədd oluna bilər")
+        lines.append("")
+        lines.append(changes_block(changes, info["excluded"]))
+        lines.append(f"\n📝 <b>Commit mesajı:</b>\n<pre>{escape(gh_full['message'][:600])}</pre>")
+        kb = []
+        if changes or info.get("ahead"):
+            kb.append([btn("✅ Təsdiqlə və göndər", "ghf:go")])
+            kb.append([btn("✏️ Commit mesajı", "ghf:msg")])
+        kb.append(nav("ghf:open"))
+        return "\n".join(lines)[:4000], InlineKeyboardMarkup(inline_keyboard=kb)
+
+    @dp.callback_query(F.data.startswith("ghf:"))
+    async def gh_full_callback(cb: CallbackQuery):
+        if cb.from_user.id != creator:
+            await cb.answer("⛔ İcazə yoxdur", show_alert=True)
+            return
+        parts = cb.data.split(":")
+        action = parts[1]
+        new_msg = len(parts) > 2 and parts[2] == "new"
+
+        if action in ("open", "fetch"):
+            await cb.answer("GitHub yoxlanılır..." if action == "fetch" else None)
+            gh_full.update(chat_id=cb.message.chat.id, panel_id=cb.message.message_id)
+            gh_full["await"] = False
+            text, kb = await status_view(fetch=(action == "fetch"))
+            await edit_full_panel(text, kb)
+            return
+
+        if action == "prep":
+            await cb.answer()
+            gh_full["message"] = None
+            gh_full["await"] = False
+            if new_msg:
+                # hesabatın altından: hesabat qalsın, yeni mesaj göndərilsin
+                sent = await bot.send_message(creator, "⏳ <i>Hazırlanır...</i>", parse_mode="HTML")
+                gh_full.update(chat_id=sent.chat.id if getattr(sent, "chat", None) else creator,
+                               panel_id=sent.message_id)
+            else:
+                gh_full.update(chat_id=cb.message.chat.id, panel_id=cb.message.message_id)
+            text, kb = await full_confirm_view()
+            await edit_full_panel(text, kb)
+            return
+
+        if action == "msg":
+            await cb.answer()
+            gh_full["await"] = True
+            gh_full.update(chat_id=cb.message.chat.id, panel_id=cb.message.message_id)
+            await edit_full_panel(
+                "✏️ <b>Commit mesajını yazın</b>\n\n"
+                f"Hazırkı:\n<pre>{escape((gh_full['message'] or '')[:600])}</pre>",
+                InlineKeyboardMarkup(inline_keyboard=[nav("ghf:back")]),
+            )
+            return
+
+        if action == "back":          # commit mesajı yazmaqdan imtina → təsdiq pəncərəsi
+            await cb.answer()
+            gh_full["await"] = False
+            text, kb = await full_confirm_view()
+            await edit_full_panel(text, kb)
+            return
+
+        if action == "go":
+            if push_lock.locked():
+                await cb.answer("Artıq göndərilir...")
+                return
+            await cb.answer("Göndərilir...")
+            gh_full["await"] = False
+            gh_full.update(chat_id=cb.message.chat.id, panel_id=cb.message.message_id)
+            message = gh_full["message"] or full_commit_message([], time.time())
+            async with push_lock:
+                await edit_full_panel("⏳ <i>GitHub-a göndərilir...</i>", None)
+                try:
+                    res = await asyncio.to_thread(push_all, root, message)
+                except Exception as e:
+                    logger.error(f"Full push xətası: {e}", exc_info=True)
+                    res = {"ok": False, "committed": False, "error": redact(str(e)), "hint": "", "excluded": []}
+
+            if res["ok"]:
+                gh_full["message"] = None
+                # gözləyən hesabat da bu commit-ə daxil oldu
+                p = await asyncio.to_thread(load_pending)
+                if p:
+                    await asyncio.to_thread(save_pending, None)
+                    await set_report_kb(p, status_kb(f"✅ GitHub-da: {res['hash']}", res.get("url")))
+                lines = [
+                    "✅ <b>Tam yeniləmə GitHub-a göndərildi</b>\n",
+                    f"🌿 <code>{escape(res['branch'])}</code> · commit <code>{escape(res['hash'])}</code>",
+                    f"📁 {len(res.get('files', []))} fayl"
+                    + ("" if res["committed"] else " <i>(yeni commit lazım olmadı, yalnız push edildi)</i>"),
+                ]
+                if res.get("excluded"):
+                    lines.append(f"🔒 {len(res['excluded'])} həssas fayl göndərilmədi")
+                kb = []
+                if res.get("url"):
+                    kb.append([btn("🔗 Commit-ə bax", url=res["url"])])
+                kb.append(nav("ghf:open"))
+                await edit_full_panel("\n".join(lines), InlineKeyboardMarkup(inline_keyboard=kb))
+                logger.info(f"📦 Full push: {res['hash']} ({len(res.get('files', []))} fayl)")
+            else:
+                note = "\n\n<i>Commit lokal olaraq yaradıldı, yalnız push alınmadı — yenidən cəhd edə bilərsən.</i>" \
+                    if res.get("committed") else ""
+                hint = f"\n\n💡 {res['hint']}" if res.get("hint") else ""
+                await edit_full_panel(
+                    f"❌ <b>Göndərilmədi</b>\n\n<code>{escape(res['error'])}</code>{hint}{note}",
+                    InlineKeyboardMarkup(inline_keyboard=[[btn("🔁 Yenidən cəhd et", "ghf:prep")], nav("ghf:open")]),
+                )
+            return
+
+        await cb.answer()
 
     async def check_updates():
         await asyncio.sleep(DELAY_AFTER_START)

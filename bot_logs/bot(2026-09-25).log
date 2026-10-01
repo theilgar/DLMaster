@@ -1,0 +1,179 @@
+2026.09.25 10:44:12 __main__             INFO     🤖 Starting bot...
+2026.09.25 10:44:12 __main__             INFO     🚀 Starting bot initialization...
+2026.09.25 10:44:12 core.spotify_handler INFO     Spotify API connection established.
+2026.09.25 10:44:12 __main__             INFO     ✅ Spotify service initialized
+2026.09.25 10:44:12 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.25 10:44:12 core.youtube_handler INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.25 10:44:12 __main__             INFO     ✅ YouTube services initialized (firefox)
+2026.09.25 10:44:12 __main__             INFO     🔌 Loading plugins...
+2026.09.25 10:44:12 core.utilities       INFO     🔍 Scanning plugins in: plugins
+2026.09.25 10:44:12 core.utilities       INFO     🔄 Loading: plugins.music_plugin
+2026.09.25 10:44:12 core.utilities       INFO     ✅ Loaded (sync): plugins.music_plugin
+2026.09.25 10:44:12 core.utilities       INFO     🔄 Loading: plugins.start_plugin
+2026.09.25 10:44:12 plugins.start_plugin INFO     ✅ Start plugin yükləndi
+2026.09.25 10:44:12 core.utilities       INFO     ✅ Loaded (async): plugins.start_plugin
+2026.09.25 10:44:12 core.utilities       INFO     🔄 Loading: plugins.spotify_plugin
+2026.09.25 10:44:12 core.utilities       INFO     ✅ Loaded (sync): plugins.spotify_plugin
+2026.09.25 10:44:12 core.utilities       INFO     🔄 Loading: plugins.youtube_plugin
+2026.09.25 10:44:12 core.utilities       INFO     ✅ Loaded (sync): plugins.youtube_plugin
+2026.09.25 10:44:12 __main__             INFO     🚀 Starting polling...
+2026.09.25 10:44:12 aiogram.dispatcher   INFO     Start polling
+2026.09.25 10:44:12 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.09.25 12:13:18 core.utilities       INFO     User 8502974425 executed command: /music sənində kayfın yamandır mənimdə
+2026.09.25 12:13:18 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.25 12:13:18 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.25 12:13:22 aiogram.event        INFO     Update id=875900811 is handled. Duration 3353 ms by bot id=8976652462
+2026.09.25 12:13:25 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.25 12:13:25 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.25 12:13:29 core.youtube_handler ERROR    Yükləmə xətası: [0;31mERROR:[0m [youtube] 9QVFmVGYc7Y: Requested format is not available. Use --list-formats for a list of available formats
+2026.09.25 12:13:29 aiogram.event        INFO     Update id=875900812 is handled. Duration 4281 ms by bot id=8976652462
+2026.09.25 14:33:07 core.utilities       INFO     User 7719114031 executed command: /start
+2026.09.25 14:33:08 aiogram.event        INFO     Update id=875900813 is handled. Duration 755 ms by bot id=8976652462
+2026.09.25 14:36:34 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.25 14:36:34 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.25 14:36:37 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.25 14:36:37 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.25 14:36:41 aiogram.event        INFO     Update id=875900814 is handled. Duration 7513 ms by bot id=8976652462
+2026.09.25 14:36:45 aiogram.event        INFO     Update id=875900815 is handled. Duration 8422 ms by bot id=8976652462
+2026.09.25 17:50:35 aiogram.event        INFO     Update id=875900816 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.25 21:14:53 aiogram.event        INFO     Update id=875900817 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.25 21:33:04 core.utilities       INFO     User 6133950300 executed command: /start
+2026.09.25 21:33:05 aiogram.event        INFO     Update id=875900818 is handled. Duration 818 ms by bot id=8976652462
+2026.09.26 01:10:59 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.26 01:10:59 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.26 01:11:00 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.26 01:11:00 aiogram.dispatcher   WARNING  Sleep for 1.229225 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.26 01:11:01 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.26 01:11:01 aiogram.dispatcher   WARNING  Sleep for 1.705076 seconds and try again... (tryings = 2, bot id = 8976652462)
+2026.09.26 01:11:03 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.26 01:11:03 aiogram.dispatcher   WARNING  Sleep for 2.079788 seconds and try again... (tryings = 3, bot id = 8976652462)
+2026.09.26 01:11:05 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.26 01:11:05 aiogram.dispatcher   WARNING  Sleep for 2.783303 seconds and try again... (tryings = 4, bot id = 8976652462)
+2026.09.26 01:11:08 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.26 01:11:08 aiogram.dispatcher   WARNING  Sleep for 3.758361 seconds and try again... (tryings = 5, bot id = 8976652462)
+2026.09.26 01:11:53 aiogram.dispatcher   INFO     Connection established (tryings = 6, bot id = 8976652462)
+2026.09.26 02:52:13 aiogram.event        INFO     Update id=875900819 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.26 12:12:37 aiogram.event        INFO     Update id=875900820 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.27 01:10:53 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.27 01:10:53 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.27 01:10:54 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.27 01:10:54 aiogram.dispatcher   WARNING  Sleep for 1.354641 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.27 01:10:56 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.27 01:10:56 aiogram.dispatcher   WARNING  Sleep for 1.837476 seconds and try again... (tryings = 2, bot id = 8976652462)
+2026.09.27 01:10:58 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.27 01:10:58 aiogram.dispatcher   WARNING  Sleep for 2.417377 seconds and try again... (tryings = 3, bot id = 8976652462)
+2026.09.27 01:11:01 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.27 01:11:01 aiogram.dispatcher   WARNING  Sleep for 3.034343 seconds and try again... (tryings = 4, bot id = 8976652462)
+2026.09.27 01:11:04 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.27 01:11:04 aiogram.dispatcher   WARNING  Sleep for 3.910982 seconds and try again... (tryings = 5, bot id = 8976652462)
+2026.09.27 01:11:08 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.27 01:11:08 aiogram.dispatcher   WARNING  Sleep for 4.939990 seconds and try again... (tryings = 6, bot id = 8976652462)
+2026.09.27 01:11:52 aiogram.dispatcher   INFO     Connection established (tryings = 7, bot id = 8976652462)
+2026.09.27 02:54:19 aiogram.event        INFO     Update id=875900821 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.27 03:48:30 aiogram.event        INFO     Update id=875900822 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.27 03:49:07 aiogram.event        INFO     Update id=875900823 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.27 05:53:47 aiogram.event        INFO     Update id=875900824 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.27 06:21:09 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.09.27 06:21:09 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.27 06:21:20 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.09.27 07:31:06 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 104] Connection reset by peer
+2026.09.27 07:31:06 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.27 07:31:17 aiogram.dispatcher   INFO     Connection established (tryings = 1, bot id = 8976652462)
+2026.09.27 20:32:45 aiogram.event        INFO     Update id=875900825 is not handled. Duration 0 ms by bot id=8976652462
+2026.09.28 01:10:59 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.28 01:10:59 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.28 01:11:00 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.28 01:11:00 aiogram.dispatcher   WARNING  Sleep for 1.377419 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.28 01:11:35 aiogram.dispatcher   INFO     Connection established (tryings = 2, bot id = 8976652462)
+2026.09.28 11:20:05 core.utilities       INFO     User 7623853562 executed command: /start
+2026.09.28 11:20:06 aiogram.event        INFO     Update id=875900826 is handled. Duration 933 ms by bot id=8976652462
+2026.09.28 11:20:55 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.28 11:20:55 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.09.28 11:20:58 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.28 11:20:58 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.28 11:21:00 aiogram.event        INFO     Update id=875900828 is handled. Duration 2473 ms by bot id=8976652462
+2026.09.28 11:21:03 aiogram.event        INFO     Update id=875900827 is handled. Duration 7746 ms by bot id=8976652462
+2026.09.28 14:37:08 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.28 14:37:08 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.28 14:37:12 aiogram.event        INFO     Update id=875900829 is handled. Duration 3748 ms by bot id=8976652462
+2026.09.28 14:37:41 aiogram.event        INFO     Update id=875900830 is handled. Duration 5216 ms by bot id=8976652462
+2026.09.28 14:38:17 aiogram.event        INFO     Update id=875900831 is not handled. Duration 0 ms by bot id=8976652462
+2026.09.28 14:38:18 aiogram.event        INFO     Update id=875900832 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.28 14:38:39 aiogram.event        INFO     Update id=875900833 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.28 14:38:42 aiogram.event        INFO     Update id=875900834 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.28 14:38:52 aiogram.event        INFO     Update id=875900835 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.28 14:39:23 aiogram.event        INFO     Update id=875900836 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.28 14:41:00 core.utilities       INFO     User 8502974425 executed command: /music toz pembe
+2026.09.28 14:41:01 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.28 14:41:01 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36
+2026.09.28 14:41:04 aiogram.event        INFO     Update id=875900837 is handled. Duration 4171 ms by bot id=8976652462
+2026.09.28 14:41:06 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.28 14:41:06 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.28 14:41:11 core.youtube_handler ERROR    Yükləmə xətası: [0;31mERROR:[0m [youtube] 0pg0raFMNIU: Requested format is not available. Use --list-formats for a list of available formats
+2026.09.28 14:41:12 aiogram.event        INFO     Update id=875900838 is handled. Duration 6103 ms by bot id=8976652462
+2026.09.28 14:43:58 aiogram.event        INFO     Update id=875900839 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.28 14:43:58 aiogram.event        INFO     Update id=875900840 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.28 14:44:43 aiogram.event        INFO     Update id=875900841 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.28 14:44:59 aiogram.event        INFO     Update id=875900842 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.28 14:45:28 aiogram.event        INFO     Update id=875900843 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.28 14:45:48 aiogram.event        INFO     Update id=875900844 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.28 14:48:06 aiogram.event        INFO     Update id=875900845 is not handled. Duration 1 ms by bot id=8976652462
+2026.09.28 14:48:46 aiogram.event        INFO     Update id=875900846 is not handled. Duration 0 ms by bot id=8976652462
+2026.09.28 15:31:11 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.28 15:31:11 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.28 15:31:15 aiogram.event        INFO     Update id=875900847 is handled. Duration 3939 ms by bot id=8976652462
+2026.09.28 15:31:18 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.28 15:31:18 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.09.28 15:31:21 core.youtube_handler ERROR    Yükləmə xətası: [0;31mERROR:[0m [youtube] bu-O2rNdRcs: Requested format is not available. Use --list-formats for a list of available formats
+2026.09.28 15:31:21 aiogram.event        INFO     Update id=875900848 is handled. Duration 3691 ms by bot id=8976652462
+2026.09.29 01:11:07 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.29 01:11:07 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.29 01:11:08 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.29 01:11:08 aiogram.dispatcher   WARNING  Sleep for 1.250119 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.29 01:11:10 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'GetUpdates'. Retry in 5 seconds.
+Original description: Too Many Requests: retry after 5
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2026.09.29 01:11:10 aiogram.dispatcher   WARNING  Sleep for 1.681584 seconds and try again... (tryings = 2, bot id = 8976652462)
+2026.09.29 01:11:13 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.29 01:11:13 aiogram.dispatcher   WARNING  Sleep for 2.195264 seconds and try again... (tryings = 3, bot id = 8976652462)
+2026.09.29 01:11:52 aiogram.dispatcher   INFO     Connection established (tryings = 4, bot id = 8976652462)
+2026.09.29 02:41:35 core.utilities       INFO     User 7380140928 executed command: /start
+2026.09.29 02:41:36 aiogram.event        INFO     Update id=875900849 is handled. Duration 878 ms by bot id=8976652462
+2026.09.29 02:41:42 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.29 02:41:42 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.29 02:41:42 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.29 02:41:42 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36
+2026.09.29 02:41:43 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.29 02:41:43 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.29 02:41:44 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.09.29 02:41:44 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.09.29 02:41:46 aiogram.event        INFO     Update id=875900852 is handled. Duration 2774 ms by bot id=8976652462
+2026.09.29 02:41:46 aiogram.event        INFO     Update id=875900851 is handled. Duration 3647 ms by bot id=8976652462
+2026.09.29 02:41:48 aiogram.event        INFO     Update id=875900850 is handled. Duration 6577 ms by bot id=8976652462
+2026.09.29 02:41:51 aiogram.event        INFO     Update id=875900853 is handled. Duration 6568 ms by bot id=8976652462
+2026.09.30 01:11:00 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.30 01:11:00 aiogram.dispatcher   WARNING  Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8976652462)
+2026.09.30 01:11:01 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.30 01:11:01 aiogram.dispatcher   WARNING  Sleep for 1.314746 seconds and try again... (tryings = 1, bot id = 8976652462)
+2026.09.30 01:11:03 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.30 01:11:03 aiogram.dispatcher   WARNING  Sleep for 1.875657 seconds and try again... (tryings = 2, bot id = 8976652462)
+2026.09.30 01:11:05 aiogram.dispatcher   ERROR    Failed to fetch updates - TelegramServerError: Telegram server says - Bad Gateway
+2026.09.30 01:11:05 aiogram.dispatcher   WARNING  Sleep for 2.478790 seconds and try again... (tryings = 3, bot id = 8976652462)
+2026.09.30 01:11:47 aiogram.dispatcher   INFO     Connection established (tryings = 4, bot id = 8976652462)
+2026.09.30 07:34:25 aiogram.dispatcher   WARNING  Received SIGINT signal
+2026.09.30 07:34:25 aiogram.dispatcher   INFO     Polling stopped for bot @dllmasterbot id=8976652462 - 'DLLMaster'
+2026.09.30 07:34:25 aiogram.dispatcher   INFO     Polling stopped
+2026.09.30 07:34:25 __main__             INFO     🛑 Polling stopped
+2026.09.30 07:34:25 __main__             INFO     🔴 Bot stopped

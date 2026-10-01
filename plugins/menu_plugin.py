@@ -314,7 +314,8 @@ def _btn(text, data):
 def main_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
         [_btn("🚀 Speedtest", "speed"), _btn("🖥 Fastfetch", "fetch")],
-        [_btn("📊 Statistika", "stats")],
+        [_btn("📊 Statistika", "stats"),
+         InlineKeyboardButton(text="🌿 GitHub", callback_data="ghf:open")],   # update_notifier_plugin
         [_btn("📢 Broadcast", "bc"), _btn("💎 Premium", "prm:0")],
         [_btn(f"💬 Caption (mənim): {'✅ Açıq' if creator_caption_enabled() else '❌ Bağlı'}", "cap")],
         [_btn("🖼 Media", "wm"), _btn("📝 Mesajlar", "tx")],

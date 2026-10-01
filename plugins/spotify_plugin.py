@@ -2,12 +2,13 @@ from aiogram import types, F
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.exceptions import TelegramRetryAfter
 from core.utilities import sanitize_filename, format_duration
+from core.database import caption_for_user
 import asyncio
 import os
 import logging
 
 logger = logging.getLogger(__name__)
-caption = "<i>via @dllmasterbot</i>"
+CAPTION = "<i>via @dllmasterbot</i>"
 
 async def send_audio_with_retry(message, file_path, title, performer, duration, thumbnail_url, creator_info, max_retries=3):
     retries = 0
@@ -20,7 +21,8 @@ async def send_audio_with_retry(message, file_path, title, performer, duration, 
                 duration=duration,
                 thumbnail=types.URLInputFile(thumbnail_url) if thumbnail_url else None,
                 parse_mode="HTML",
-                caption=caption
+                # Free: həmişə · Premium: heç vaxt · Creator: /menu-dakı seçimi
+                caption=CAPTION if caption_for_user(message.from_user.id if message.from_user else None) else None
             )
             return True
         except TelegramRetryAfter as e:

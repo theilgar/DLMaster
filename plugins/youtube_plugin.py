@@ -2,6 +2,7 @@ from aiogram import types, F
 from aiogram.filters import Command
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from core.utilities import sanitize_filename, format_duration
+from core.database import caption_for_user
 import asyncio
 import os
 import logging
@@ -85,7 +86,10 @@ def setup(context):
                         audio=types.FSInputFile(file_path),
                         title=track['title'][:64],
                         performer=track.get('artist', 'YouTube')[:64],
-                        duration=int(track.get('duration', 0))
+                        duration=int(track.get('duration', 0)),
+                        # Free: həmişə · Premium: heç vaxt · Creator: /menu-dakı seçimi
+                        caption="<i>via @dllmasterbot</i>" if caption_for_user(user_id) else None,
+                        parse_mode="HTML",
                     )
 
                     # Record download (simplified)
