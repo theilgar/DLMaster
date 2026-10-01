@@ -808,7 +808,7 @@ def setup(context):
 
 
     # ═════════════ ⬇️ Hamısını yüklə (💎 premium) ═════════════
-    batch_jobs = {}      # user_id -> {"event", "msg_id", "chat_id"}
+    batch_jobs = {}      # (chat_id, msg_id) -> {"event", "owner"} — hər siyahı mesajı üçün ayrıca iş
 
     async def send_track(target: types.Message, selected: dict, user_id: int, event) -> tuple:
         """Bir mahnını keş/depo və ya yükləmə ilə göndərir → (artist, ad). handle_choice ilə eyni məntiq."""
@@ -872,8 +872,10 @@ def setup(context):
                 show_alert=True,
             )
             return
-        if user_id in batch_jobs:
-            await callback.answer("Artıq bir toplu yükləmə gedir", show_alert=True)
+        # Eyni anda yalnız 1 toplu yükləmə — creator üçün limit yoxdur
+        if user_id != context.creator_id and any(j["owner"] == user_id for j in batch_jobs.values()):
+            await callback.answer("Artıq bir toplu yükləmə gedir — bitməsini gözlə və ya ⏹ Dayandır",
+                                  show_alert=True)
             return
 
         # dublikatları və çox uzun videoları çıxar
@@ -897,7 +899,8 @@ def setup(context):
         user_searches.pop(user_id, None)          # siyahı artıq bu iş üçündür
         event = threading.Event()
         chat_id = callback.message.chat.id
-        batch_jobs[user_id] = {"event": event, "msg_id": callback.message.message_id, "chat_id": chat_id}
+        job_key = (chat_id, callback.message.message_id)
+        batch_jobs[job_key] = {"event": event, "owner": user_id}
         delay = 1.0 if callback.message.chat.type == "private" else 3.2   # qrupda ~20 mesaj/dəq limiti
 
         ok = failed = 0
@@ -928,7 +931,7 @@ def setup(context):
                     logger.warning(f"Toplu yükləmə xətası ({item.get('url')}): {e}")
                 await asyncio.sleep(delay)
         finally:
-            batch_jobs.pop(user_id, None)
+            batch_jobs.pop(job_key, None)
 
         stopped = event.is_set()
         with contextlib.suppress(Exception):
@@ -948,17 +951,13 @@ def setup(context):
 
     @dp.callback_query(F.data == "dlall_stop")
     async def handle_download_all_stop(callback: types.CallbackQuery):
-        job = batch_jobs.get(callback.from_user.id)
-        if not job or job["msg_id"] != callback.message.message_id:
-            owner = next((u for u, j in batch_jobs.items() if j["msg_id"] == callback.message.message_id), None)
-            if owner is not None and callback.from_user.id == context.creator_id:
-                job = batch_jobs[owner]
-            elif owner is not None:
-                await callback.answer("⛔ Yalnız yükləməni başladan dayandıra bilər", show_alert=True)
-                return
-            else:
-                await callback.answer("Yükləmə artıq bitib")
-                return
+        job = batch_jobs.get((callback.message.chat.id, callback.message.message_id))
+        if not job:
+            await callback.answer("Yükləmə artıq bitib")
+            return
+        if callback.from_user.id not in (job["owner"], context.creator_id):
+            await callback.answer("⛔ Yalnız yükləməni başladan dayandıra bilər", show_alert=True)
+            return
         job["event"].set()
         await callback.answer("⏹ Dayandırılır...")
 
