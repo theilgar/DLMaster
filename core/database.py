@@ -122,6 +122,13 @@ class Database:
             if "chat_id" not in cols:
                 self._conn.execute("ALTER TABLE downloads ADD COLUMN chat_id INTEGER")
             self._conn.execute("CREATE INDEX IF NOT EXISTS idx_downloads_chat ON downloads(chat_id, ts)")
+            # Köhnə bazalar üçün: depo mahnısının YouTube adı (ad uyğunluğu yoxlaması) və yoxlanma vaxtı
+            cols = {r["name"] for r in self._conn.execute("PRAGMA table_info(audio_cache)")}
+            if "yt_title" not in cols:
+                self._conn.execute("ALTER TABLE audio_cache ADD COLUMN yt_title TEXT")
+            if "checked" not in cols:
+                self._conn.execute("ALTER TABLE audio_cache ADD COLUMN checked INTEGER")
+            self._conn.execute("CREATE INDEX IF NOT EXISTS idx_cache_msg ON audio_cache(chat_id, message_id)")
             self._conn.commit()
             self._settings = {
                 r["key"]: r["value"] for r in self._conn.execute("SELECT key, value FROM settings")
@@ -266,20 +273,67 @@ class Database:
         return dict(row) if row else None
 
     def cache_put(self, video_id, file_id, unique_id=None, title=None, performer=None, duration=None,
-                  size=None, chat_id=None, message_id=None):
+                  size=None, chat_id=None, message_id=None, yt_title=None):
         with self._lock:
             self._conn.execute(
                 """INSERT INTO audio_cache(video_id, file_id, unique_id, title, performer, duration, size,
-                                           chat_id, message_id, created)
-                   VALUES(?,?,?,?,?,?,?,?,?,?)
+                                           chat_id, message_id, created, yt_title)
+                   VALUES(?,?,?,?,?,?,?,?,?,?,?)
                    ON CONFLICT(video_id) DO UPDATE SET
                        file_id=excluded.file_id, unique_id=excluded.unique_id, title=excluded.title,
                        performer=excluded.performer, duration=excluded.duration, size=excluded.size,
-                       chat_id=excluded.chat_id, message_id=excluded.message_id""",
+                       chat_id=excluded.chat_id, message_id=excluded.message_id,
+                       yt_title=COALESCE(excluded.yt_title, audio_cache.yt_title)""",
                 (video_id, file_id, unique_id, title, performer, duration, size, chat_id, message_id,
-                 int(time.time())),
+                 int(time.time()), yt_title),
             )
             self._conn.commit()
+
+    def cache_all(self) -> list:
+        """Depo indeksi / təmizlik üçün bütün keş sətirləri."""
+        with self._lock:
+            return [dict(r) for r in self._conn.execute(
+                """SELECT video_id, file_id, unique_id, title, performer, duration, size, chat_id, message_id,
+                          created, hits, yt_title, checked FROM audio_cache""").fetchall()]
+
+    def cache_repoint(self, old_chat_id, old_message_id, new: dict, video_ids=None) -> int:
+        """Köhnə posta (və ya verilən video_id-lərə) bağlı bütün sətirləri yeni fayla yönəldir."""
+        fields = (new["file_id"], new.get("unique_id"), new.get("title"), new.get("performer"),
+                  new.get("duration"), new.get("size"), new.get("chat_id"), new.get("message_id"))
+        sql = """UPDATE audio_cache SET file_id=?, unique_id=?, title=?, performer=?, duration=?, size=?,
+                                        chat_id=?, message_id=?"""
+        with self._lock:
+            if video_ids:
+                q = ",".join("?" * len(video_ids))
+                cur = self._conn.execute(f"{sql} WHERE video_id IN ({q})", fields + tuple(video_ids))
+            else:
+                cur = self._conn.execute(f"{sql} WHERE chat_id=? AND message_id=?",
+                                         fields + (old_chat_id, old_message_id))
+            self._conn.commit()
+            return cur.rowcount
+
+    def cache_set_yt_title(self, video_id: str, yt_title: str):
+        with self._lock:
+            self._conn.execute("UPDATE audio_cache SET yt_title=? WHERE video_id=?", (yt_title, video_id))
+            self._conn.commit()
+
+    def cache_mark_checked(self, video_ids):
+        if not video_ids:
+            return
+        with self._lock:
+            q = ",".join("?" * len(video_ids))
+            self._conn.execute(f"UPDATE audio_cache SET checked=? WHERE video_id IN ({q})",
+                               (int(time.time()), *video_ids))
+            self._conn.commit()
+
+    def cache_cached_ids(self, video_ids) -> set:
+        video_ids = [v for v in video_ids if v]
+        if not video_ids:
+            return set()
+        with self._lock:
+            q = ",".join("?" * len(video_ids))
+            return {r[0] for r in self._conn.execute(
+                f"SELECT video_id FROM audio_cache WHERE video_id IN ({q})", tuple(video_ids)).fetchall()}
 
     def cache_hit(self, video_id: str):
         with self._lock:
@@ -293,11 +347,14 @@ class Database:
             self._conn.commit()
 
     def cache_stats(self, depo_chat_id=None) -> dict:
+        # birləşdirilmiş dublikatlar eyni posta baxır — mahnı sayı/ölçü posta görə hesablanır
         with self._lock:
             row = self._conn.execute(
                 """SELECT COUNT(*) AS songs, COALESCE(SUM(hits),0) AS hits, COALESCE(SUM(size),0) AS size,
-                          COALESCE(SUM(chat_id = ?),0) AS in_depo
-                   FROM audio_cache""", (depo_chat_id or 0,)).fetchone()
+                          COALESCE(SUM(in_depo),0) AS in_depo
+                   FROM (SELECT SUM(hits) AS hits, MAX(size) AS size, MAX(chat_id = ?) AS in_depo
+                         FROM audio_cache GROUP BY COALESCE(unique_id, file_id))""",
+                (depo_chat_id or 0,)).fetchone()
         return dict(row)
 
     # ───────────── ⭐ Stars ödənişləri ─────────────

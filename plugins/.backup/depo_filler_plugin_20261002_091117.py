@@ -25,7 +25,7 @@ Komandalar:
   /scan_chat <link/ID> [mesaj_sayı]  — çatı birdəfəlik skan et (mənbə kimi saxlamadan)
   /stop_scan                         — cari skanı dayandır
   /userbot                           — userbot statusu
-  .alive / .info / .fastfetch / .clear — userbot_tools_plugin.py
+  .alive  (öz hesabından, istənilən çatda) — reaksiya + 2 san. sonra silinir
 """
 import asyncio
 import json
@@ -1336,7 +1336,24 @@ def setup(context):
     if tg.own_client:
         client = tg.client
 
-        # .alive / .info / .fastfetch / .clear — userbot_tools_plugin.py-dadır
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^\.alive$"))
+        async def on_alive(event):
+            try:
+                peer = await event.get_input_chat()
+                for emo in ("\u2705", "👍", "🔥"):
+                    try:
+                        await client(SendReactionRequest(peer=peer, msg_id=event.id,
+                                                         reaction=[ReactionEmoji(emoticon=emo)]))
+                        break
+                    except Exception:
+                        continue
+            except Exception:
+                pass
+            await asyncio.sleep(2)
+            try:
+                await event.delete()
+            except Exception as e:
+                logger.error(f".alive silinmə xətası: {e}")
 
         @client.on(events.NewMessage())
         async def on_new_audio(event):

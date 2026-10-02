@@ -2,12 +2,13 @@ from aiogram import types, F
 from aiogram.filters import Command, CommandObject
 from aiogram.types import (
     BufferedInputFile, FSInputFile, InlineKeyboardMarkup, InlineKeyboardButton,
-    InlineQueryResultArticle, InputTextMessageContent, InputMediaAudio,
+    InlineQueryResultArticle, InlineQueryResultCachedAudio, InputTextMessageContent, InputMediaAudio,
 )
 from core.utilities import sanitize_filename
 from core.youtube_handler import YoutubeManager, DownloadCancelled
 from core import youtube_handler as yt_handler
 from core import audio_cache
+from core import song_names
 from core.links import is_music_link
 from core.database import log_download, caption_for_user, is_premium
 import asyncio
@@ -127,46 +128,20 @@ def odesli_meta(data: dict):
     return None, None
 
 
-# Mötərizədə bu sözlərdən biri varsa, həmin hissə atılır: (Official Music Video), [Lyrics], (HD) ...
-_NOISE_IN_BRACKETS = re.compile(
-    r"\b(official|video|audio|lyrics?|visuali[sz]er|mv|m/v|hd|hq|4k|klip|clip|rəsmi|премьера|клип)\b", re.I
-)
-_BRACKETS = re.compile(r"\s*[\(\[【]([^\)\]】]*)[\)\]】]")
-_TRAILING_NOISE = re.compile(
-    r"(?:\s*[-–—|]\s*|\s+)(?:official\s+)?(?:music\s+|lyrics?\s+)?(?:video|audio)(?:\s+clip)?\s*$"
-    r"|(?:\s*[-–—|]\s*|\s+)official\s*$",
-    re.I,
-)
-
-
+# Ad təmizləmə core/song_names.py-dadır (depo, təmizlik plugin-i və s. eyni qaydanı işlədir):
+# (Official Video), [HD], tarix (12.05.2024), "Yeni 2024", #hashtag, @kanal, emoji, "| Albom" ...
 def clean_youtube_title(title: str) -> str:
-    t = _BRACKETS.sub(lambda mt: "" if _NOISE_IN_BRACKETS.search(mt.group(1)) else mt.group(0), title)
-    t = re.split(r"\s+(?:\||//)\s+", t, maxsplit=1)[0]      # "... | Albom adı" hissəsi
-    for _ in range(2):
-        t = _TRAILING_NOISE.sub("", t)
-    t = re.sub(r"\s{2,}", " ", t).strip(" -–—|")
-    return t or title
+    return song_names.clean_title(title) or title
 
 
 def parse_title(title: str):
     """YouTube adını təmizləyib (artist, ad) kimi ayırır."""
-    title = clean_youtube_title(title)
-    artist, track = "YouTube", title
-    parts = re.split(r"\s+[-–—]\s+", title, maxsplit=1)
-    if len(parts) == 2 and parts[0].strip() and parts[1].strip():
-        artist, track = parts[0].strip(), parts[1].strip()
-    return artist, track
-
-
-_CHANNEL_SUFFIX = re.compile(r"(?:\s*-\s*topic|vevo|\s+official(?:\s+(?:channel|music|tv|youtube))?|\s+music)\s*$", re.I)
+    return song_names.split_title(title)
 
 
 def clean_channel(name: str) -> str:
     """YouTube kanal adından artist: "Eminem - Topic" / "EminemVEVO" / "INNA Official" → "Eminem" / "INNA"."""
-    name = (name or "").strip()
-    for _ in range(2):
-        name = _CHANNEL_SUFFIX.sub("", name).strip()
-    return name
+    return song_names.clean_artist(name or "") if name else ""
 
 
 def youtube_fallback_meta(vid: str, artist: str, track: str, src: str):
@@ -194,14 +169,12 @@ def _tokens(s: str) -> set:
 def resolve_meta(yt_title: str, sl=None):
     """
     (artist, ad, mənbə) qaytarır.
-    Əvvəl song.link (Spotify/Apple Music və s.), tapılmasa və ya YouTube adı ilə
-    heç uyğun gəlmirsə — təmizlənmiş YouTube adı.
+    Əvvəl song.link (Spotify/Apple Music və s.) — yalnız YouTube adı ilə həqiqətən uyğun gələndə;
+    yoxsa təmizlənmiş YouTube adı (adlar YouTube-dakı ilə eyni qalsın).
     """
     if sl and sl.get("title") and sl.get("artist"):
-        yt = _tokens(yt_title)
-        # Səhv uyğunlaşmaya qarşı: song.link adı/artisti YouTube adında heç keçmirsə istifadə etmə
-        if not yt or (_tokens(sl["title"]) | _tokens(sl["artist"])) & yt:
-            return sl["artist"], sl["title"], "songlink"
+        if song_names.meta_matches(sl["artist"], sl["title"], yt_title):
+            return song_names.clean_artist(sl["artist"]), song_names.clean_track(sl["title"]), "songlink"
         logger.info(f"song.link uyğun gəlmədi: '{sl['artist']} - {sl['title']}' ≠ '{yt_title}'")
     artist, track = parse_title(yt_title)
     return artist, track, "youtube"
@@ -227,6 +200,49 @@ def setup(context):
     if not hasattr(context, 'youtube_manager'):
         context.youtube_manager = YoutubeManager(browser="firefox")
 
+    def fmt_duration(sec) -> str:
+        sec = int(sec or 0)
+        return f"{sec // 3600}:{sec % 3600 // 60:02d}:{sec % 60:02d}" if sec >= 3600 else f"{sec // 60}:{sec % 60:02d}"
+
+    def result_button(res: dict, index: int) -> InlineKeyboardButton:
+        text = f"{'📦 ' if res.get('depo') else ''}{res['title']} ({res.get('duration', '')})"
+        return InlineKeyboardButton(text=text[:64], callback_data=f"choice_{index}")
+
+    def depo_result(row: dict) -> dict:
+        title = f"{row.get('performer')} - {row.get('title')}" if row.get("performer") else (row.get("title") or "")
+        return {"title": title, "original_title": title, "url": f"https://www.youtube.com/watch?v={row['video_id']}",
+                "duration": fmt_duration(row.get("duration")), "raw_duration": int(row.get("duration") or 0),
+                "thumbnail": f"https://i.ytimg.com/vi/{row['video_id']}/hqdefault.jpg", "depo": True,
+                "file_id": row.get("file_id")}
+
+    async def depo_first(query: str, yt_results: list, depo_limit: int = 5) -> list:
+        """Depoda olan mahnılar siyahının başında; YouTube nəticələrindən depoda olanlar da 📦 ilə yuxarı."""
+        try:
+            hits = await asyncio.to_thread(audio_cache.search_depo, query, depo_limit)
+        except Exception as e:
+            logger.debug(f"Depo axtarışı: {e}")
+            hits = []
+        yt_results = [dict(r) for r in (yt_results or [])]
+        for r in yt_results:
+            r.setdefault("original_title", r.get("title"))
+        vids = [video_id_from_url(r.get("url")) for r in yt_results]
+        cached = await asyncio.to_thread(audio_cache.cached_ids, [v for v in vids if v])
+        seen_files = {h.get("file_id") for h in hits}
+        top = [depo_result(h) for h in hits]
+        in_depo, rest = [], []
+        for r, v in zip(yt_results, vids):
+            if v and v in cached:
+                c = await asyncio.to_thread(audio_cache.get_cached, v)
+                if c and c.get("file_id") in seen_files:
+                    continue                          # eyni depo mahnısı artıq yuxarıdadır
+                r["depo"] = True
+                if c and c.get("performer") and c.get("performer") != "YouTube" and c.get("title"):
+                    r["title"] = f"{c['performer']} - {c['title']}"     # depodakı təmiz ad
+                in_depo.append(r)
+            else:
+                rest.append(r)
+        return top + in_depo + rest
+
     async def handle_music_search(message: types.Message, search_query: str, command_used: str = "music"):
         try:
             if not search_query:
@@ -246,14 +262,20 @@ def setup(context):
             user_id = message.from_user.id
 
             search_msg = await message.answer("<i>🔍 Axtarılır...</i>", parse_mode="HTML")
-            results = await context.youtube_manager.youtube_search(search_query)
-            
+            try:
+                yt_results = await context.youtube_manager.youtube_search(search_query)
+            except Exception as e:
+                logger.warning(f"YouTube axtarışı alınmadı: {e}")
+                yt_results = []
+            # 📦 əvvəl depodakı mahnılar (dərhal göndərilir), sonra YouTube
+            results = await depo_first(search_query, yt_results)
+
             if not results:
+                try:
+                    await search_msg.delete()
+                except Exception:
+                    pass
                 raise ValueError("Nəticə tapılmadı")
-            
-            # Clean titles in search results
-            for result in results:
-                result['original_title'] = result['title']
             
             total_pages = (len(results) + 4) // 5
             current_page = 0
@@ -262,14 +284,13 @@ def setup(context):
 
             response = [
                 f"<b>🎵 Tapılan Mahnılar (Səhifə {current_page +1}/{total_pages}):</b>",
-                ""
+                "<i>📦 — depoda var, dərhal göndərilir</i>" if any(r.get("depo") for r in results) else "",
             ]
 
             keyboard_rows = []
             for i, res in enumerate(current_results):
                 original_index = start + i
-                button_text = f"{res['title']} ({res['duration']})"[:64]
-                keyboard_rows.append([InlineKeyboardButton(text=button_text, callback_data=f"choice_{original_index}")])
+                keyboard_rows.append([result_button(res, original_index)])
 
             pagination_buttons = []
             if total_pages > 1:
@@ -336,8 +357,7 @@ def setup(context):
         keyboard_rows = []
         for i, res in enumerate(current_results):
             original_index = start + i
-            button_text = f"{res['title']} ({res['duration']})"[:64]
-            keyboard_rows.append([InlineKeyboardButton(text=button_text, callback_data=f"choice_{original_index}")])
+            keyboard_rows.append([result_button(res, original_index)])
 
         pagination_buttons = []
         if total_pages > 1:
@@ -416,7 +436,7 @@ def setup(context):
         total_pages = max(1, (len(results) + MIX_PAGE - 1) // MIX_PAGE)
         start = page * MIX_PAGE
         rows = [
-            [InlineKeyboardButton(text=f"{r['title']} ({r['duration']})"[:64], callback_data=f"choice_{start + i}")]
+            [result_button(r, start + i)]
             for i, r in enumerate(results[start:start + MIX_PAGE])
         ]
         nav = []
@@ -668,6 +688,24 @@ def setup(context):
                         "artist": cached.get("performer") or artist, "track": cached.get("title") or track,
                         "cached": True}
 
+            # 🔁 Eyni mahnı başqa video kimi depoda artıq varsa — yükləmə, depodakını ver (dublikat olmasın)
+            try:
+                sl_early = await asyncio.wait_for(asyncio.shield(sl_task), 4)
+            except (asyncio.TimeoutError, Exception):
+                sl_early = None
+            if meta and meta.get("artist") and meta.get("track"):
+                g_artist, g_track = meta["artist"], meta["track"]
+            else:
+                g_artist, g_track, _ = resolve_meta(yt_title, sl_early)
+            same = None
+            if g_artist and g_artist not in ("YouTube", "Naməlum"):
+                same = await asyncio.to_thread(audio_cache.find_same, g_artist, g_track, duration)
+            if same and vid:
+                await asyncio.to_thread(audio_cache.alias, vid, same, yt_title)
+                return {"file_id": same["file_id"], "path": None, "fname": None, "vid": vid, "sl": sl_early,
+                        "artist": same.get("performer") or g_artist, "track": same.get("title") or g_track,
+                        "cached": True}
+
             async with (sem or contextlib.nullcontext()):
                 if cancel_event.is_set():
                     raise DownloadCancelled("İstifadəçi yükləməni dayandırdı")
@@ -685,17 +723,22 @@ def setup(context):
             else:
                 artist, track, meta_src = resolve_meta(yt_title, sl)
                 artist, track, meta_src = youtube_fallback_meta(vid, artist, track, meta_src)
+            track = song_names.clean_track(track)
+            if artist not in ("YouTube", "Naməlum"):
+                artist = song_names.clean_artist(artist)
             logger.info(f"Metadata ({meta_src}): {artist} - {track}")
             fname = audio_filename(artist, track, path)
             thumb = await fetch_thumb(thumb_url)
-            file_id = await audio_cache.upload_to_depo(bot, path, fname, track, artist, duration, url, vid, thumb)
+            file_id = await audio_cache.upload_to_depo(bot, path, fname, track, artist, duration, url, vid, thumb,
+                                                       yt_title=yt_title)
             if not file_id and need_file_id and fallback_chat:
                 # depo əlçatan deyil — inline üçün file_id mütləq lazımdır
                 msg = await bot.send_audio(
                     chat_id=fallback_chat, audio=FSInputFile(path, filename=fname),
                     title=track[:64], performer=artist[:64], duration=duration or None,
                 )
-                file_id = await asyncio.to_thread(audio_cache.save_from_message, vid, msg, track, artist, duration)
+                file_id = await asyncio.to_thread(audio_cache.save_from_message, vid, msg, track, artist, duration,
+                                                  yt_title)
             return {"file_id": file_id, "path": path, "fname": fname, "vid": vid, "sl": sl,
                     "artist": artist, "track": track, "cached": False}
 
@@ -719,7 +762,8 @@ def setup(context):
             await callback.message.bot.edit_message_text(
                 chat_id=callback.message.chat.id,
                 message_id=user_data['search_message_id'],
-                text=f"<i>⏳ Yüklənir:</i>\n <b>{selected['title']}</b> <b>{selected['duration']}</b>",
+                text=(f"<i>{'📦 Depodan göndərilir' if selected.get('depo') else '⏳ Yüklənir'}:</i>\n"
+                      f" <b>{escape(selected['title'])}</b> <b>{selected['duration']}</b>"),
                 parse_mode="HTML",
                 reply_markup=stop_keyboard(f"dlstop:{user_data['search_message_id']}"),
             )
@@ -727,7 +771,8 @@ def setup(context):
             duration = int(selected.get('raw_duration', 0) or 0)
             for attempt in (1, 2):
                 # 📦 əvvəl depo/keş, yoxdursa yüklə (song.link paralel)
-                res = await fetch_audio(selected['url'], selected['title'], duration, job["event"])
+                res = await fetch_audio(selected['url'], selected.get('original_title') or selected['title'],
+                                        duration, job["event"])
                 file_path = res["path"]
                 sl, artist, track_name = res["sl"], res["artist"], res["track"]
                 caption = build_caption(selected['url'], sl, callback.from_user.id)
@@ -1121,14 +1166,14 @@ def setup(context):
     MIX_PAGE_SIZE = 5
     MIX_MAX_PAGES = 5
 
-    def make_article(res):
+    def make_article(res, in_depo: bool = False):
         vid = video_id_from_url(res.get("url"))
         if not vid:
             return None
         inline_cache[vid] = res
         if len(inline_cache) > 3000:
             inline_cache.pop(next(iter(inline_cache)))
-        title = res["title"]
+        title = ("📦 " if in_depo else "") + res["title"]
         return InlineQueryResultArticle(
             id=vid,
             title=title[:100],
@@ -1143,7 +1188,8 @@ def setup(context):
             reply_markup=stop_keyboard(f"inl_stop:{vid}"),
         )
 
-    @dp.inline_query()
+    # "ub:" — userbot menyusu (userbot_tools_plugin) üçün ayrılıb, musiqi axtarışı deyil
+    @dp.inline_query(~F.query.startswith("ub:"))
     async def handle_inline_query(q: types.InlineQuery):
         text = (q.query or "").strip()
 
@@ -1207,10 +1253,30 @@ def setup(context):
             if len(search_cache) > 200:
                 search_cache.pop(next(iter(search_cache)))
 
-        articles = [a for a in (make_article(r) for r in (results or [])[:10]) if a]
+        # 📦 Depodakı mahnılar əvvəl — seçilən kimi dərhal göndərilir (yükləmə yoxdur)
+        try:
+            hits = await asyncio.to_thread(audio_cache.search_depo, text, 5)
+        except Exception:
+            hits = []
+        depo_cards, depo_vids = [], set()
+        for h in hits:
+            depo_vids.add(h["video_id"])
+            url_h = f"https://www.youtube.com/watch?v={h['video_id']}"
+            depo_cards.append(InlineQueryResultCachedAudio(
+                id=f"dp:{h['video_id']}"[:64],
+                audio_file_id=h["file_id"],
+                caption=build_caption(url_h, None, q.from_user.id),
+                parse_mode="HTML",
+                reply_markup=build_keyboard(url_h, None, q.from_user.id),
+            ))
+        yt = [r for r in (results or [])[:10] if video_id_from_url(r.get("url")) not in depo_vids]
+        cached = await asyncio.to_thread(audio_cache.cached_ids, [video_id_from_url(r.get("url")) for r in yt])
+        articles = depo_cards + [a for a in (make_article(r, video_id_from_url(r.get("url")) in cached)
+                                             for r in yt) if a]
 
         try:
-            await q.answer(articles, cache_time=30, is_personal=False)
+            # depo kartlarında caption/düymə istifadəçiyə görədir → personal
+            await q.answer(articles[:50], cache_time=30, is_personal=bool(depo_cards))
         except Exception as e:
             # sorğunun vaxtı keçibsə (query too old) səssizcə keç
             logger.warning(f"Inline answer alınmadı: {e}")
@@ -1252,6 +1318,15 @@ def setup(context):
 
         bot = context.bot
         vid = chosen.result_id
+        if vid.startswith("dp:"):
+            # 📦 depodan hazır audio getdi — yalnız statistika və düymələrin gizlədilməsi
+            vid = vid[3:]
+            await asyncio.to_thread(audio_cache.mark_hit, vid)
+            c = await asyncio.to_thread(audio_cache.get_cached, vid) or {}
+            await log_download(chosen.from_user.id, f"{c.get('performer') or ''} - {c.get('title') or ''}".strip(" -"),
+                               f"https://www.youtube.com/watch?v={vid}", "inline")
+            hide_keyboard_later(inline_message_id=inline_id)
+            return
         info = inline_cache.get(vid) or {}
         url = info.get("url") or f"https://www.youtube.com/watch?v={vid}"
         title = info.get("title") or chosen.query
