@@ -440,8 +440,8 @@ def search_source_view(note: str = ""):
         "🔎 <b>Axtarış mənbəyi</b>\n━━━━━━━━━━━━━━━━━━\n"
         f"📌 <b>Hazırda:</b> {SEARCH_SOURCES[cur]}\n\n"
         "▶️ <b>YouTube</b> — adi axtarış: klip, cover, live, remix — hamısı.\n\n"
-        "🎵 <b>YouTube Music</b> — əvvəl YT Music-də mahnılar axtarılır (rəsmi audio, təmiz ad). "
-        "Orada uyğun mahnı tapılmasa YouTube nəticələri göstərilir. <i>(default)</i>\n\n"
+        "🎵 <b>YouTube Music</b> — yalnız mahnılar (rəsmi audio, təmiz ad). "
+        "Nəticə tapılmasa avtomatik YouTube-a keçir.\n\n"
         "🔀 <b>Hər ikisi</b> — paralel axtarış, nəticələr növbə ilə qarışdırılır, təkrarlar silinir. "
         "Siyahıda 🎵 — YouTube Music-dən gələn nəticədir.\n"
         "━━━━━━━━━━━━━━━━━━\n"
@@ -807,13 +807,13 @@ def setup(context):
             if cur:
                 text = (
                     f"💎 <b>Status: Premium</b>\n⏳ {fmt_until(cur['until'])}\n\n"
-                    "✨ Mahnılar \"via | song.link\" yazısı olmadan göndərilir."
+                    "✨ Mahnılar \"via @dllmasterbot\" yazısı olmadan göndərilir."
                     + ("\n\n⭐ <b>Uzatmaq üçün plan seç</b> — müddət üstünə əlavə olunur:" if kb else "")
                 )
             else:
                 text = (
                     "🆓 <b>Status: Free</b>\n\n"
-                    "💎 <i>Premium ilə mahnılar \"via | song.link\" yazısı olmadan göndərilir.</i>"
+                    "💎 <i>Premium ilə mahnılar \"via @dllmasterbot\" yazısı olmadan göndərilir.</i>"
                     + ("\n\n⭐ <b>Telegram Stars ilə premium al:</b>" if kb else "")
                 )
             await message.answer(text, parse_mode="HTML", reply_markup=kb)
@@ -1759,7 +1759,7 @@ def setup(context):
                 await context.bot.send_message(
                     user_id,
                     f"🎉 <b>Sizə Premium verildi!</b>\n⏳ {fmt_until(until)}\n\n"
-                    "✨ Mahnılar artıq \"via | song.link\" yazısı olmadan göndəriləcək.",
+                    "✨ Mahnılar artıq \"via @dllmasterbot\" yazısı olmadan göndəriləcək.",
                     parse_mode="HTML",
                 )
                 notified = True
@@ -1818,7 +1818,7 @@ def setup(context):
             enabled = not creator_caption_enabled()
             await asyncio.to_thread(set_creator_caption, enabled)
             await cb.answer(
-                ("✅ Caption açıldı: sənə göndərilən mahnıların altında \"via | song.link\" yazılacaq"
+                ("✅ Caption açıldı: sənə göndərilən mahnıların altında \"via @dllmasterbot\" yazılacaq"
                  if enabled else "❌ Caption bağlandı: sənə göndərilən mahnılar yazısız olacaq")
                 + "\n\n🆓 Free: həmişə açıq · 💎 Premium: həmişə bağlı",
                 show_alert=True,

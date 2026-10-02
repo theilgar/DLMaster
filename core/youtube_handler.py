@@ -1,6 +1,7 @@
 import os
 import logging
 import asyncio
+import re
 import shutil
 from yt_dlp import YoutubeDL
 from yt_dlp.utils import DownloadCancelled   # plugin-lər "dayandırıldı" halını tanımaq üçün import edir
@@ -241,6 +242,83 @@ async def download_as_m4a(url: str, base_name: str, browser: str, cookies=None, 
     raise last_error
 
 
+# ───────────────────────── Axtarış mənbəyi (/menu → 🖥 Sistem → 🔎 Axtarış mənbəyi) ─────────────────────────
+# yt   — adi YouTube axtarışı (klip, cover, live — hamısı)
+# ytm  — YouTube Music, yalnız mahnılar (rəsmi audio, təmiz ad); nəticə olmasa YouTube-a keçir
+# both — ikisi paralel, nəticələr növbə ilə qarışdırılır, təkrarlar silinir
+SEARCH_SOURCES = {
+    "yt": "▶️ YouTube",
+    "ytm": "🎵 YouTube Music",
+    "both": "🔀 Hər ikisi",
+}
+SEARCH_SETTING = "search:source"
+DEFAULT_SOURCE = "ytm"          # /menu-dan heç nə seçilməyibsə: əvvəl YouTube Music
+
+# ── YT Music nəticəsi sorğuya həqiqətən uyğundurmu? ──
+# YTM demək olar həmişə "nəsə" qaytarır; mahnı orada yoxdursa da oxşar adlı başqa mahnılar gəlir.
+# Ona görə ilk nəticələrdə sorğunun sözlərinin çoxu yoxdursa → "tapılmadı" sayılır və YouTube göstərilir.
+_AZ_MAP = str.maketrans("əışçğöüƏIŞÇĞÖÜİ", "eiscgouEISCGOUI")
+_RELEVANT_TOP = 5               # yoxlanılan ilk nəticələr
+_RELEVANT_MIN = 0.6             # sorğu sözlərinin ən az 60%-i nəticədə olmalıdır
+
+
+def _words(text: str) -> list:
+    import unicodedata
+    text = unicodedata.normalize("NFKD", (text or "").translate(_AZ_MAP).lower())
+    text = "".join(ch for ch in text if not unicodedata.combining(ch))
+    return re.findall(r"\w+", text)
+
+
+def _word_match(word: str, words: list) -> bool:
+    from difflib import SequenceMatcher
+    for w in words:
+        if w == word or (len(word) >= 3 and (w.startswith(word) or word.startswith(w) and len(w) >= 3)):
+            return True
+        if len(word) >= 4 and SequenceMatcher(None, word, w).ratio() >= 0.8:   # kiçik yazı xətaları
+            return True
+    return False
+
+
+def ytm_relevant(query: str, results: list) -> bool:
+    q = [w for w in _words(query) if len(w) >= 2] or _words(query)
+    if not q:
+        return bool(results)
+    for r in results[:_RELEVANT_TOP]:
+        words = _words(r.get("title"))
+        if sum(_word_match(w, words) for w in q) / len(q) >= _RELEVANT_MIN:
+            return True
+    return False
+SEARCH_STATS = {"yt": 0, "ytm": 0, "fallback": 0}
+_VID_RE = re.compile(r"(?:v=|youtu\.be/|shorts/)([\w-]{11})")
+
+
+def search_source() -> str:
+    try:
+        from core.database import get_db
+        value = (get_db().get_setting(SEARCH_SETTING) or DEFAULT_SOURCE).strip().lower()
+    except Exception:
+        value = DEFAULT_SOURCE
+    return value if value in SEARCH_SOURCES else DEFAULT_SOURCE
+
+
+try:                                    # pip install ytmusicapi — artist + müddət ilə dəqiq nəticələr
+    from ytmusicapi import YTMusic
+except Exception:
+    YTMusic = None
+_ytmusic = None
+
+
+def ytmusicapi_available() -> bool:
+    return YTMusic is not None
+
+
+def _get_ytmusic():
+    global _ytmusic
+    if _ytmusic is None and YTMusic is not None:
+        _ytmusic = YTMusic()
+    return _ytmusic
+
+
 class YoutubeManagerPlaylist:
     def __init__(self, browser: str = "firefox"):
         self.browser = browser
@@ -312,21 +390,129 @@ class YoutubeManager:
             **JS_OPTS,
         }
 
-    async def youtube_search(self, query: str, limit: int = 25) -> list:
+    async def _yt_search(self, query: str, limit: int) -> list:
+        """Adi YouTube axtarışı (ytsearch)."""
+        with YoutubeDL(self.get_ydl_opts()) as ydl:
+            info = await asyncio.to_thread(ydl.extract_info, f"ytsearch{int(limit)}:{query}", download=False)
+        return [{
+            'title': entry.get('title', 'Naməlum Mahnı'),
+            'url': entry.get('url', ''),
+            'duration': format_duration(entry.get('duration', 0)),
+            'raw_duration': entry.get('duration', 0),
+            'source': 'yt',
+        } for entry in info.get('entries', []) if entry]
+
+    async def _ytm_search(self, query: str, limit: int) -> list:
+        """YouTube Music — yalnız mahnılar. ytmusicapi varsa onu, yoxdursa yt-dlp-ni istifadə edir."""
+        yt_music = _get_ytmusic()
+        if yt_music is not None:
+            items = await asyncio.to_thread(yt_music.search, query, filter="songs", limit=limit)
+            results = []
+            for it in items or []:
+                vid = it.get('videoId')
+                if not vid:
+                    continue
+                artists = ", ".join(a['name'] for a in (it.get('artists') or [])[:3] if a.get('name'))
+                title = it.get('title') or 'Naməlum Mahnı'
+                duration = int(it.get('duration_seconds') or 0)
+                results.append({
+                    'title': f"{artists} - {title}" if artists else title,
+                    'url': f"https://www.youtube.com/watch?v={vid}",
+                    'duration': format_duration(duration),
+                    'raw_duration': duration,
+                    'source': 'ytm',
+                })
+            return results[:limit]
+
+        # yt-dlp yolu (#songs bölməsi): çox vaxt yalnız mahnı adı gəlir, artist / müddət olmaya bilər
+        from urllib.parse import quote_plus
+        opts = self.get_ydl_opts()
+        opts['playlistend'] = limit
+        with YoutubeDL(opts) as ydl:
+            info = await asyncio.to_thread(
+                ydl.extract_info, f"https://music.youtube.com/search?q={quote_plus(query)}#songs", download=False)
+        results = []
+        for entry in info.get('entries') or []:
+            if not entry:
+                continue
+            vid = entry.get('id') or ''
+            if len(vid) != 11:
+                continue
+            title = entry.get('title') or 'Naməlum Mahnı'
+            artist = entry.get('artist') or entry.get('channel') or entry.get('uploader')
+            if artist and artist.lower() not in title.lower():
+                title = f"{artist} - {title}"
+            duration = entry.get('duration') or 0
+            results.append({
+                'title': title,
+                'url': f"https://www.youtube.com/watch?v={vid}",
+                'duration': format_duration(duration),
+                'raw_duration': duration,
+                'source': 'ytm',
+            })
+        return results[:limit]
+
+    async def youtube_search(self, query: str, limit: int = 25, source: str = None) -> list:
         """
-        YouTube-da axtarış edir və nəticələri qaytarır.
+        Axtarış — mənbə /menu-dan seçilir (search_source()): yt | ytm | both.
+        Nəticə formatı hər mənbədə eynidir: {title, url, duration, raw_duration, source}.
         """
+        source = source if source in SEARCH_SOURCES else search_source()
         try:
-            with YoutubeDL(self.get_ydl_opts()) as ydl:
-                info = await asyncio.to_thread(ydl.extract_info, f"ytsearch{int(limit)}:{query}", download=False)
-                return [{
-                    'title': entry.get('title', 'Naməlum Mahnı'),
-                    'url': entry.get('url', ''),
-                    'duration': format_duration(entry.get('duration', 0)),
-                    'raw_duration': entry.get('duration', 0)
-                } for entry in info.get('entries', []) if entry]
+            if source == "yt":
+                SEARCH_STATS["yt"] += 1
+                return await self._yt_search(query, limit)
+
+            if source == "ytm":
+                try:
+                    results = await self._ytm_search(query, limit)
+                except Exception as e:
+                    logger.warning(f"YouTube Music axtarışı alınmadı, YouTube-a keçilir: {e}")
+                    results = []
+                if results and ytm_relevant(query, results):
+                    SEARCH_STATS["ytm"] += 1
+                    return results
+                # YT Music-də tapılmadı → YouTube nəticələri; YTM-in tapdıqları (varsa) siyahının sonunda qalır
+                SEARCH_STATS["fallback"] += 1
+                logger.info(f"YT Music-də uyğun nəticə yoxdur, YouTube göstərilir: {query!r}")
+                try:
+                    yt_res = await self._yt_search(query, limit)
+                except Exception as e:
+                    if results:
+                        logger.warning(f"YouTube axtarışı alınmadı, YT Music nəticələri qalır: {e}")
+                        return results
+                    raise
+                seen = {m.group(1) for r in yt_res if (m := _VID_RE.search(r.get('url') or ''))}
+                extra = [r for r in results if (m := _VID_RE.search(r['url'])) and m.group(1) not in seen]
+                return (yt_res + extra)[:limit]
+
+            # both — paralel; növbə ilə qarışdırılır (🎵, ▶️, 🎵, ▶️ ...), eyni video bir dəfə
+            ytm_res, yt_res = await asyncio.gather(
+                self._ytm_search(query, limit), self._yt_search(query, limit), return_exceptions=True)
+            if isinstance(ytm_res, Exception):
+                logger.warning(f"YouTube Music axtarışı alınmadı: {ytm_res}")
+                ytm_res = []
+            if isinstance(yt_res, Exception):
+                if not ytm_res:
+                    raise yt_res
+                logger.warning(f"YouTube axtarışı alınmadı: {yt_res}")
+                yt_res = []
+            SEARCH_STATS["ytm" if ytm_res else "fallback"] += 1
+            merged, seen = [], set()
+            for i in range(max(len(ytm_res), len(yt_res))):
+                for lst in (ytm_res, yt_res):
+                    if i >= len(lst):
+                        continue
+                    r = lst[i]
+                    m = _VID_RE.search(r.get('url') or '')
+                    key = m.group(1) if m else r.get('url')
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    merged.append(r)
+            return merged[:limit]
         except Exception as e:
-            logger.error(f"Axtarış xətası: {e}")
+            logger.error(f"Axtarış xətası ({source}): {e}")
             raise RuntimeError(f"Axtarış xətası: {str(e)}")
 
     async def playlist_entries(self, url: str, limit: int = 5000) -> dict:

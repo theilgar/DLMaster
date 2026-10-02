@@ -72,20 +72,12 @@ async def get_songlink(url: str):
     return result
 
 
-BOT_USERNAME = os.getenv("BOT_USERNAME", "dllmasterbot").lstrip("@")
-
-
 def build_caption(url: str, sl=None, user_id=None):
-    """
-    via | song.link — "via" botu açıb /start edir (t.me/<bot>?start=via),
-    song.link — bütün platformalar səhifəsi. Söndürülübsə None.
-    """
+    """via @dllmasterbot | song.link  (song.link — bütün platformalar səhifəsinə link). Söndürülübsə None."""
     if not caption_for_user(user_id):   # Free: həmişə · Premium: heç vaxt · Creator: /menu
         return None
     page = sl["page"] if sl else f"https://song.link/{url}"
-    start = f"https://t.me/{BOT_USERNAME}?start=via"
-    return (f'<i><a href="{escape(start, quote=True)}">via</a> | '
-            f'<a href="{escape(page, quote=True)}">song.link</a></i>')
+    return f'<i>via @dllmasterbot | <a href="{escape(page, quote=True)}">song.link</a></i>'
 
 
 def build_keyboard(url: str, sl=None, owner_id: int = 0):

@@ -18,21 +18,9 @@ trek nömrəsi, fayl uzantısı, "audio_2024-..." kimi fayl adları və s.), son
   Spotify axtarışı → (tapılmasa) iTunes axtarışı → song.link ilə dəqiq YouTube → (alınmasa) YouTube axtarışı.
 Tapılan rəsmi ad/ifaçı metadata kimi depoya yazılır. Nəticələr bazada yadda saxlanır (təkrar axtarış yoxdur).
 
-  4. 🎵 YouTube Music kataloqu (ytmusicapi, panel düyməsi və ya /depo ytm on):
-        bütün ölkələrin chartları + janrlar + istifadəçilərin ifaçıları → hər ifaçının BÜTÜN mahnıları,
-        albomları, sinqlları → oxşar və feat. ifaçılar → ... (bitməyən BFS, vəziyyət bazada — restartda davam edir).
-        Əsas mənbələr həmişə öndədir; YT Music növbəsi onlar boş olanda işlənir.
-
-Sürət / paralellik (paneldə ➖ ➕):
-  ⏱ fasilə — hər işçinin mahnılar arası gözləməsi (0 … 300 san.; /depo delay N ilə istənilən)
-  🧵 işçi sayı — 1 = tək-tək, 2…8 = eyni anda neçə mahnı yüklənsin (dərhal tətbiq olunur)
-
 Komandalar:
-  /depo                              — panel (status, fasilə, paralellik, mənbələr)
+  /depo                              — panel (status, sürət, mənbələr)
   /depo on | /depo off               — işə sal / söndür
-  /depo delay <san.>                 — mahnılar arası fasilə
-  /depo workers <1-8>                — paralel yükləmə sayı (1 = tək-tək)
-  /depo ytm on | off                 — YouTube Music kataloqunu yüklə
   /depo add <link> [mesaj_sayı]      — mənbə əlavə et (Telegram üçün dərhal skan da başlayır)
   /scan_chat <link/ID> [mesaj_sayı]  — çatı birdəfəlik skan et (mənbə kimi saxlamadan)
   /stop_scan                         — cari skanı dayandır
@@ -75,37 +63,15 @@ try:
 except ImportError:
     HAS_TELETHON = False
 
-try:
-    from ytmusicapi import YTMusic
-    HAS_YTM = True
-except ImportError:
-    HAS_YTM = False
-
 logger = logging.getLogger(__name__)
 PRIORITY = 60
-
-# 🎵 YouTube Music kataloqu: ifaçı qrafı üzrə BFS (chart → ifaçı → mahnılar/albomlar/sinqllar → oxşar ifaçılar ...)
-YTM_COUNTRIES = ["ZZ", "AZ", "TR", "RU", "US", "GB", "DE", "UA", "KZ", "UZ", "GE", "IR", "IN", "BR", "FR", "KR"]
-YTM_LOW_WATER = 150              # YT Music növbəsi bundan az olanda növbəti ifaçı skan edilir
-YTM_PAUSE = 1.0                  # ytmusicapi sorğuları arası (san.) — IP bloklanmasın
-YTM_MAX_ALBUMS = 60              # bir ifaçının ən çox neçə albom / sinqlı açılsın (hər bölmə üçün)
-YTM_MOOD_PLAYLISTS = 2           # seed: hər janr / əhval-ruhiyyədən neçə playlist
-YTM_RECRAWL = 14 * 86400         # skan olunmuş ifaçını 14 gündən sonra yeni relizlər üçün yenidən yoxla
-YTM_FAIL_RETRY = 3 * 86400
-YTM_SEEN_CAP = 300_000
 
 DEFAULT_SOURCES = [
     {"kind": "sp_playlist", "id": "37i9dQZF1DXcBWIGoYBM5M", "label": "Today's Top Hits"},
     {"kind": "sp_playlist", "id": "37i9dQZEVXbMDoHDwVN2tF", "label": "Top 50 Global"},
 ]
-# ⏱ Mahnılar arası fasilə (san.) — panelde ➖ / ➕ bu pillələrlə dəyişir, /depo delay N istənilən dəyər
-DELAY_STEPS = [0, 1, 2, 3, 5, 8, 10, 15, 20, 25, 30, 45, 60, 90, 120, 180, 300]
-DEFAULT_DELAY = 25
-MAX_DELAY = 3600
-OLD_SPEEDS = {"slow": 60, "normal": 25, "fast": 8}     # köhnə ayarı köçürmək üçün
-# 🧵 Paralel yükləmə: 1 = tək-tək, 2..MAX_WORKERS = eyni anda neçə mahnı
-DEFAULT_WORKERS = 1
-MAX_WORKERS = 8
+SPEEDS = {"slow": 60, "normal": 25, "fast": 8}          # mahnılar arası fasilə (san.)
+SPEED_LABELS = {"slow": "🐢 Yavaş", "normal": "🚶 Normal", "fast": "🏃 Sürətli"}
 MAX_DURATION = 15 * 60
 IDLE_SLEEP = 30 * 60                                   # növbə bitəndə yenidən qurmağa qədər
 NOTFOUND_RETRY = 3 * 86400                             # tapılmayan mahnını 3 gün sonra yenidən axtar
@@ -441,264 +407,6 @@ def btn(text, data):
     return InlineKeyboardButton(text=text, callback_data=data)
 
 
-# ───────────────────────── 🎵 YouTube Music kataloq skaneri ─────────────────────────
-def _ytm_duration(t) -> int:
-    if t.get("duration_seconds"):
-        return int(t["duration_seconds"])
-    d = str(t.get("duration") or "")
-    if re.fullmatch(r"\d{1,2}(?::\d{2}){1,2}", d):
-        sec = 0
-        for part in d.split(":"):
-            sec = sec * 60 + int(part)
-        return sec
-    return 0
-
-
-def _ytm_thumb(thumbs):
-    thumbs = sorted([x for x in thumbs or [] if x.get("url")], key=lambda x: x.get("width") or 0)
-    if not thumbs:
-        return None
-    fit = [x for x in thumbs if (x.get("width") or 0) <= 320]
-    return (fit[-1] if fit else thumbs[0])["url"]
-
-
-def ytm_item(t: dict, fallback_artists=None, fallback_thumbs=None):
-    """ytmusicapi trek obyekti → növbə elementi (rəsmi ad + ifaçı metadata kimi)."""
-    vid = t.get("videoId")
-    if not vid or t.get("isAvailable") is False:
-        return None
-    title = (t.get("title") or "").strip()
-    arts = [a["name"] for a in (t.get("artists") or fallback_artists or []) if a.get("name")]
-    if not title:
-        return None
-    artist = ", ".join(arts[:3])
-    dur = _ytm_duration(t)
-    if dur > MAX_DURATION:
-        return None
-    return {"title": f"{artist} - {title}" if artist else title,
-            "query": f"{arts[0] if arts else ''} {title}".strip(),
-            "url": f"https://www.youtube.com/watch?v={vid}", "vid": vid, "raw_duration": dur,
-            "meta": {"artist": artist, "track": title} if artist else None,
-            "thumb": _ytm_thumb(t.get("thumbnails") or fallback_thumbs), "sp_id": None, "src": "ytm"}
-
-
-class YtmCrawler:
-    """
-    YouTube Music-dəki mahnıları ifaçı qrafı üzrə gəzir (bitməyən BFS):
-      seed: hər ölkənin chart ifaçıları + janr/əhval-ruhiyyə playlistləri + istifadəçilərin sevdiyi ifaçılar
-      ifaçı: bütün mahnılar playlisti + bütün albomlar + sinqllar → növbə
-      yeni ifaçılar: «oxşar ifaçılar» + mahnılardakı feat. ifaçılar → bazaya (pending)
-    Vəziyyət bazada saxlanır (depo_ytm) — restartdan sonra qaldığı yerdən davam edir.
-    """
-
-    def __init__(self):
-        self.yt = None
-        self.stats = {"artist": None, "found": 0, "in_depo": 0, "note": ""}
-        try:
-            conn = get_db()._conn
-            conn.execute("""CREATE TABLE IF NOT EXISTS depo_ytm (
-                              aid TEXT PRIMARY KEY, name TEXT, state INTEGER DEFAULT 0,
-                              songs INTEGER DEFAULT 0, ts INTEGER DEFAULT 0)""")
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_depo_ytm_state ON depo_ytm(state, ts)")
-            conn.commit()
-        except Exception as e:
-            logger.warning(f"depo_ytm cədvəli yaradılmadı: {e}")
-
-    def client(self):
-        if self.yt is None:
-            try:
-                self.yt = YTMusic(language="en", location="AZ")
-            except TypeError:                          # köhnə ytmusicapi (location yoxdur)
-                self.yt = YTMusic()
-        return self.yt
-
-    # ── baza ──
-    def counts(self) -> dict:
-        try:
-            rows = get_db()._conn.execute("SELECT state, COUNT(*), SUM(songs) FROM depo_ytm GROUP BY state").fetchall()
-        except Exception:
-            return {"pending": 0, "done": 0, "failed": 0, "songs": 0}
-        c = {"pending": 0, "done": 0, "failed": 0, "songs": 0}
-        for st, n, songs in rows:
-            c[{0: "pending", 1: "done", 2: "failed"}.get(st, "pending")] += n
-            c["songs"] += songs or 0
-        return c
-
-    def add_artists(self, pairs) -> int:
-        pairs = [(a, n) for a, n in pairs if a and str(a).startswith("UC")]
-        if not pairs:
-            return 0
-        conn = get_db()._conn
-        before = conn.total_changes
-        conn.executemany("INSERT OR IGNORE INTO depo_ytm (aid, name, state, ts) VALUES (?, ?, 0, 0)", pairs)
-        conn.commit()
-        return conn.total_changes - before
-
-    def _next_pending(self):
-        return get_db()._conn.execute(
-            "SELECT aid, name FROM depo_ytm WHERE state = 0 ORDER BY rowid LIMIT 1").fetchone()
-
-    def _mark(self, aid, state, songs=0):
-        conn = get_db()._conn
-        conn.execute("UPDATE depo_ytm SET state = ?, songs = ?, ts = ? WHERE aid = ?",
-                     (state, songs, int(time.time()), aid))
-        conn.commit()
-
-    def _requeue_old(self) -> int:
-        now = int(time.time())
-        conn = get_db()._conn
-        before = conn.total_changes
-        conn.execute("""UPDATE depo_ytm SET state = 0 WHERE aid IN (
-                          SELECT aid FROM depo_ytm WHERE (state = 1 AND ts < ?) OR (state = 2 AND ts < ?)
-                          ORDER BY ts LIMIT 2000)""", (now - YTM_RECRAWL, now - YTM_FAIL_RETRY))
-        conn.commit()
-        return conn.total_changes - before
-
-    # ── ytmusicapi (sinxron — to_thread-də işləyir) ──
-    def _seed_sync(self, user_artists, stop) -> list:
-        yt, found = self.client(), {}
-        for country in YTM_COUNTRIES:
-            if stop.is_set():
-                break
-            try:
-                charts = yt.get_charts(country=country) or {}
-                for a in (charts.get("artists") or {}).get("items") or []:
-                    if a.get("browseId"):
-                        found[a["browseId"]] = a.get("title") or ""
-            except Exception as e:
-                logger.debug(f"YTM chart {country}: {e}")
-            time.sleep(YTM_PAUSE)
-        for name in user_artists:
-            if stop.is_set():
-                break
-            try:
-                res = yt.search(name, filter="artists", limit=1) or []
-                if res and res[0].get("browseId"):
-                    found[res[0]["browseId"]] = res[0].get("artist") or name
-            except Exception as e:
-                logger.debug(f"YTM ifaçı axtarışı {name}: {e}")
-            time.sleep(YTM_PAUSE)
-        try:
-            cats = yt.get_mood_categories() or {}
-        except Exception as e:
-            logger.debug(f"YTM janrlar: {e}")
-            cats = {}
-        for section in cats.values():
-            for mood in section or []:
-                if stop.is_set():
-                    break
-                try:
-                    pls = yt.get_mood_playlists(mood["params"]) or []
-                except Exception:
-                    continue
-                for pl in pls[:YTM_MOOD_PLAYLISTS]:
-                    try:
-                        tracks = (yt.get_playlist(pl["playlistId"], limit=100) or {}).get("tracks") or []
-                    except Exception:
-                        continue
-                    for t in tracks:
-                        for a in t.get("artists") or []:
-                            if a.get("id"):
-                                found[a["id"]] = a.get("name") or ""
-                    time.sleep(YTM_PAUSE)
-        return list(found.items())
-
-    def _artist_sync(self, aid, stop):
-        """→ (ad, [trek], [(oxşar_aid, ad)])"""
-        yt = self.client()
-        a = yt.get_artist(aid) or {}
-        name = a.get("name") or ""
-        tracks = []
-        songs = a.get("songs") or {}
-        if songs.get("browseId"):
-            try:
-                tracks += (yt.get_playlist(songs["browseId"], limit=None) or {}).get("tracks") or []
-            except Exception as e:
-                logger.debug(f"YTM {name}: mahnılar playlisti: {e}")
-                tracks += songs.get("results") or []
-            time.sleep(YTM_PAUSE)
-        else:
-            tracks += songs.get("results") or []
-        me = [{"name": name, "id": aid}]
-        for key in ("albums", "singles"):
-            sec = a.get(key) or {}
-            albums = sec.get("results") or []
-            if sec.get("browseId") and sec.get("params"):
-                try:
-                    albums = yt.get_artist_albums(sec["browseId"], sec["params"], limit=None) or albums
-                except TypeError:
-                    try:
-                        albums = yt.get_artist_albums(sec["browseId"], sec["params"]) or albums
-                    except Exception:
-                        pass
-                except Exception as e:
-                    logger.debug(f"YTM {name}: {key}: {e}")
-                time.sleep(YTM_PAUSE)
-            for al in albums[:YTM_MAX_ALBUMS]:
-                if stop.is_set():
-                    break
-                bid = al.get("browseId")
-                if not bid:
-                    continue
-                try:
-                    alb = yt.get_album(bid) or {}
-                except Exception:
-                    continue
-                for t in alb.get("tracks") or []:
-                    t["_fa"] = alb.get("artists") or me
-                    t["_ft"] = alb.get("thumbnails")
-                    tracks.append(t)
-                time.sleep(YTM_PAUSE)
-        related = [(r["browseId"], r.get("title") or "") for r in (a.get("related") or {}).get("results") or []
-                   if r.get("browseId")]
-        for t in tracks:                                     # feat. ifaçılar da qrafa düşsün
-            for x in t.get("artists") or []:
-                if x.get("id"):
-                    related.append((x["id"], x.get("name") or ""))
-        return name, tracks, related
-
-    # ── bir addım: bir ifaçı → mahnılar ──
-    async def step(self, add_items, user_artists_fn, stop) -> bool:
-        """Növbəyə mahnı əlavə edilə bildisə True; heç nə yoxdursa False (çağıran gözləsin)."""
-        row = self._next_pending()
-        if not row:
-            n = self._requeue_old()
-            if not n:
-                self.stats["note"] = "seed: chartlar və janrlar oxunur..."
-                pairs = await asyncio.to_thread(self._seed_sync, user_artists_fn(), stop)
-                n = self.add_artists(pairs)
-                logger.info(f"🎵 YT Music seed: {len(pairs)} ifaçı ({n} yeni)")
-            self.stats["note"] = ""
-            row = self._next_pending()
-            if not row:
-                self.stats["note"] = "yeni ifaçı yoxdur — 1 saat sonra yenidən"
-                return False
-        aid, name = row[0], row[1]
-        self.stats["artist"] = name or aid
-        try:
-            name, tracks, related = await asyncio.to_thread(self._artist_sync, aid, stop)
-        except Exception as e:
-            logger.info(f"🎵 YTM ifaçı {name or aid}: {e}")
-            self._mark(aid, 2)
-            self.stats["artist"] = None
-            return True
-        items, vids = [], set()
-        for t in tracks:
-            it = ytm_item(t, t.get("_fa"), t.get("_ft"))
-            if it and it["vid"] not in vids:
-                vids.add(it["vid"])
-                items.append(it)
-        new_artists = self.add_artists(related)
-        added, in_depo = await add_items(items)
-        self.stats["found"] += added
-        self.stats["in_depo"] += in_depo
-        self._mark(aid, 1, len(items))
-        self.stats.update(artist=None, note="")
-        logger.info(f"🎵 YTM {name}: {len(items)} mahnı (+{added} növbəyə, {in_depo} artıq depoda), "
-                    f"+{new_artists} yeni ifaçı")
-        return True
-
-
 # ───────────────────────── 📦 Doldurucu ─────────────────────────
 class Filler:
     def __init__(self, context):
@@ -708,15 +416,8 @@ class Filler:
         self.queue = deque()
         self.seen = set()
         self.tg = None                          # TgUser (userbot) — setup-da verilir
-        self.stats = {"done": 0, "cached": 0, "failed": 0, "started": None,
+        self.stats = {"done": 0, "cached": 0, "failed": 0, "started": None, "current": None,
                       "last_build": None, "queue_built": 0, "note": ""}
-        self.current = {}                       # işçi nömrəsi → hazırda yüklənən mahnı
-        self.workers_tasks = {}
-        self.build_lock = asyncio.Lock()
-        # 🎵 YouTube Music kataloqu — ayrıca növbə (əsas mənbələr həmişə öndədir)
-        self.ytm_queue = deque()
-        self.ytm_seen = set()
-        self.ytm = YtmCrawler() if HAS_YTM else None
         self._init_resolve_table()
 
     # ── ayarlar (bazada) ──
@@ -734,48 +435,9 @@ class Filler:
         return self._get("on") == "1"
 
     @property
-    def delay(self) -> int:
-        """Hər işçinin mahnılar arası fasiləsi (san.)."""
-        v = self._get("delay")
-        if v is None:                                   # köhnə 🐢/🚶/🏃 ayarından köçür
-            return OLD_SPEEDS.get(self._get("speed") or "", DEFAULT_DELAY)
-        try:
-            return max(0, min(MAX_DELAY, int(v)))
-        except (TypeError, ValueError):
-            return DEFAULT_DELAY
-
-    def set_delay(self, value: int) -> int:
-        value = max(0, min(MAX_DELAY, int(value)))
-        self._set("delay", str(value))
-        return value
-
-    def step_delay(self, direction: int) -> int:
-        cur = self.delay
-        if direction > 0:
-            nxt = next((x for x in DELAY_STEPS if x > cur), min(MAX_DELAY, cur + 60))
-        else:
-            nxt = next((x for x in reversed(DELAY_STEPS) if x < cur), 0)
-        return self.set_delay(nxt)
-
-    @property
-    def workers(self) -> int:
-        """Eyni anda neçə mahnı yüklənsin (1 = tək-tək)."""
-        try:
-            return max(1, min(MAX_WORKERS, int(self._get("workers") or DEFAULT_WORKERS)))
-        except (TypeError, ValueError):
-            return DEFAULT_WORKERS
-
-    def set_workers(self, value: int) -> int:
-        value = max(1, min(MAX_WORKERS, int(value)))
-        self._set("workers", str(value))
-        return value
-
-    @property
-    def ytm_on(self) -> bool:
-        return HAS_YTM and self._get("ytm_all") == "1"
-
-    def set_ytm(self, on: bool):
-        self._set("ytm_all", "1" if on else "0")
+    def speed(self) -> str:
+        s = self._get("speed") or "normal"
+        return s if s in SPEEDS else "normal"
 
     def sources(self) -> list:
         try:
@@ -856,7 +518,7 @@ class Filler:
             except (asyncio.CancelledError, Exception):
                 pass
         self.task = None
-        self.current.clear()
+        self.stats["current"] = None
         logger.info("📦 Depo doldurucu dayandı")
 
     # ── növbə ──
@@ -1039,168 +701,71 @@ class Filler:
         self._rc_put(key, vid.group(1) if vid else None, item.get("meta"))
         return url, False
 
-    # ── 🎵 YouTube Music növbəsi ──
-    async def ytm_add_items(self, items) -> tuple:
-        """(növbəyə əlavə, artıq depoda) — depoda olanlar növbəyə heç düşmür."""
-        fresh = [it for it in items if it["vid"] not in self.ytm_seen]
-        if len(self.ytm_seen) > YTM_SEEN_CAP:
-            self.ytm_seen.clear()
-
-        def check():
-            return [bool(audio_cache.get_cached(it["vid"])) for it in fresh]
-
-        flags = await asyncio.to_thread(check) if fresh else []
-        added = in_depo = 0
-        for it, cached in zip(fresh, flags):
-            self.ytm_seen.add(it["vid"])
-            if cached:
-                in_depo += 1
-            else:
-                self.ytm_queue.append(it)
-                added += 1
-        return added, in_depo
-
-    def _user_artists(self) -> list:
-        try:
-            rows = get_db()._conn.execute(
-                """SELECT title, COUNT(*) AS n FROM downloads WHERE ts >= ? AND title IS NOT NULL
-                   GROUP BY title ORDER BY n DESC LIMIT 300""", (int(time.time()) - 30 * 86400,)).fetchall()
-        except Exception:
-            return []
-        names = {}
-        for r in rows:
-            a = (r[0] or "").split(" - ", 1)[0].split(",")[0].strip()
-            if a and a not in ("YouTube", "Naməlum"):
-                names[a] = names.get(a, 0) + r[1]
-        return sorted(names, key=names.get, reverse=True)[:40]
-
-    async def ytm_feeder(self):
-        """YT Music kataloqunu fonda gəzir — növbə azaldıqca növbəti ifaçını açır."""
+    async def loop(self):
+        await asyncio.sleep(5)
+        fetch = getattr(self.ctx, "music_fetch_audio", None)
         while not self.stop_event.is_set():
-            if not self.ytm_on or not self.ytm:
-                await asyncio.sleep(10)
+            if not fetch:
+                self.stats["note"] = "music_plugin yüklənməyib"
+                await asyncio.sleep(60)
+                fetch = getattr(self.ctx, "music_fetch_audio", None)
                 continue
-            if len(self.ytm_queue) >= YTM_LOW_WATER:
-                await asyncio.sleep(5)
+            if not await audio_cache.depo_chat_id(self.ctx.bot):
+                self.stats["note"] = "⚠️ depo kanalı əlçatan deyil — 10 dəq. sonra yenidən"
+                await asyncio.sleep(600)
                 continue
+            if not self.queue:
+                # növbə ən çox 30 dəqiqədə bir qurulur — hamısı depodadırsa API-ləri boş yerə yükləməsin
+                since = time.time() - (self.stats["last_build"] or 0)
+                if self.stats["last_build"] and since < IDLE_SLEEP:
+                    self.stats["note"] = "növbə bitdi — yeni mahnılar üçün gözləyir"
+                    await asyncio.sleep(min(60, IDLE_SLEEP - since))     # skan yeni mahnı atarsa tez başlasın
+                    continue
+                self.seen.clear()
+                await self.build_queue()
+                if not self.queue:
+                    self.stats["note"] = "növbə boşdur — 30 dəq. sonra yenidən"
+                    self.stats["last_build"] = time.time()
+                    continue
+            self.stats["note"] = ""
+            item = self.queue.popleft()
+            self.stats["current"] = item["title"]
             try:
-                ok = await self.ytm.step(self.ytm_add_items, self._user_artists, self.stop_event)
-                if not ok:
-                    await asyncio.sleep(3600)
+                url, from_cache = await self.resolve(item)
+                vid = re.search(r"v=([\w-]{11})", url or "")
+                if not vid:
+                    self.stats["failed"] += 1
+                    if not from_cache:
+                        logger.info(f"Doldurucu: {item['title']}: tapılmadı")
+                        await asyncio.sleep(min(2, SPEEDS[self.speed]))
+                    continue
+                if await asyncio.to_thread(audio_cache.get_cached, vid.group(1)):
+                    self.stats["cached"] += 1
+                    if not from_cache:                # axtarış edildi — API-ləri yormasın
+                        await asyncio.sleep(min(2, SPEEDS[self.speed]))
+                    continue
+                res = await fetch(url, item["title"], int(item.get("raw_duration") or 0), self.stop_event,
+                                  meta=item.get("meta"), thumb_url=item.get("thumb"))
+                if res.get("path"):
+                    try:
+                        os.remove(res["path"])
+                    except OSError:
+                        pass
+                if res.get("file_id") and not res.get("cached"):
+                    self.stats["done"] += 1
+                else:
+                    self.stats["cached"] += 1
             except asyncio.CancelledError:
                 raise
             except Exception as e:
-                logger.warning(f"🎵 YT Music skaneri: {e}")
-                self.ytm.stats["note"] = f"xəta: {str(e)[:60]} — 1 dəq. sonra"
-                self.ytm.yt = None                     # sessiyanı yenilə
-                await asyncio.sleep(60)
-
-    # ── 🧵 İşçilər ──
-    async def loop(self):
-        """Nəzarətçi: istənilən sayda işçi saxlayır (➕/➖ dərhal tətbiq olunur) + YT Music skaneri."""
-        await asyncio.sleep(5)
-        feeder = asyncio.create_task(self.ytm_feeder())
-        try:
-            while not self.stop_event.is_set():
-                want = self.workers
-                for i in range(want):
-                    t = self.workers_tasks.get(i)
-                    if t is None or t.done():
-                        self.workers_tasks[i] = asyncio.create_task(self.worker(i))
-                for i in [k for k, t in self.workers_tasks.items() if t.done()]:
-                    self.workers_tasks.pop(i, None)
-                await asyncio.sleep(2)
-        finally:
-            tasks = [feeder, *self.workers_tasks.values()]
-            for t in tasks:
-                t.cancel()
-            await asyncio.gather(*tasks, return_exceptions=True)
-            self.workers_tasks.clear()
-
-    async def next_item(self, idx: int):
-        """Növbəti mahnı: əvvəl əsas növbə (mənbələr), boşdursa YT Music kataloqu. Yoxdursa None (gözləyib)."""
-        fetch = getattr(self.ctx, "music_fetch_audio", None)
-        if not fetch:
-            self.stats["note"] = "music_plugin yüklənməyib"
-            await asyncio.sleep(60)
-            return None
-        if not await audio_cache.depo_chat_id(self.ctx.bot):
-            self.stats["note"] = "⚠️ depo kanalı əlçatan deyil — 10 dəq. sonra yenidən"
-            await asyncio.sleep(600)
-            return None
-        if self.queue:
-            self.stats["note"] = ""
-            return self.queue.popleft()
-        since = time.time() - (self.stats["last_build"] or 0)
-        need_build = not self.stats["last_build"] or since >= IDLE_SLEEP
-        if need_build and not self.build_lock.locked():
-            async with self.build_lock:
-                if not self.queue:
-                    self.stats["note"] = "növbə qurulur..."
-                    self.seen.clear()
-                    await self.build_queue()
-                    self.stats["last_build"] = time.time()
-            if self.queue:
-                self.stats["note"] = ""
-                return self.queue.popleft()
-        if self.ytm_queue:
-            self.stats["note"] = ""
-            return self.ytm_queue.popleft()
-        if not self.build_lock.locked():
-            self.stats["note"] = ("növbə bitdi — YT Music kataloqu oxunur" if self.ytm_on
-                                  else "növbə bitdi — yeni mahnılar üçün gözləyir")
-        await asyncio.sleep(5 if self.ytm_on else min(60, max(5, IDLE_SLEEP - since)))
-        return None
-
-    async def worker(self, idx: int):
-        while not self.stop_event.is_set():
-            if idx >= self.workers:                     # ➖ basıldı — artıq işçi dayanır
-                return
-            item = await self.next_item(idx)
-            if item is not None:
-                await self.process(idx, item)
-
-    async def process(self, idx: int, item: dict):
-        fetch = getattr(self.ctx, "music_fetch_audio", None)
-        had_url = bool(item.get("url"))
-        self.current[idx] = item["title"]
-        try:
-            url, from_cache = await self.resolve(item)
-            searched = not had_url and not from_cache       # API-lərdə axtarış edildi
-            vid = re.search(r"v=([\w-]{11})", url or "")
-            if not vid:
+                if self.stop_event.is_set():
+                    break
                 self.stats["failed"] += 1
-                if searched:
-                    logger.info(f"Doldurucu: {item['title']}: tapılmadı")
-                    await asyncio.sleep(min(2, self.delay))
-                return
-            if await asyncio.to_thread(audio_cache.get_cached, vid.group(1)):
-                self.stats["cached"] += 1
-                if searched:
-                    await asyncio.sleep(min(2, self.delay))
-                return
-            res = await fetch(url, item["title"], int(item.get("raw_duration") or 0), self.stop_event,
-                              meta=item.get("meta"), thumb_url=item.get("thumb"))
-            if res.get("path"):
-                try:
-                    os.remove(res["path"])
-                except OSError:
-                    pass
-            if res.get("file_id") and not res.get("cached"):
-                self.stats["done"] += 1
-            else:
-                self.stats["cached"] += 1
-        except asyncio.CancelledError:
-            raise
-        except Exception as e:
-            if self.stop_event.is_set():
-                return
-            self.stats["failed"] += 1
-            logger.info(f"Doldurucu: {item['title']}: {e}")
-        finally:
-            self.current.pop(idx, None)
-        # istifadəçilər yükləyirsə onlara mane olmasın deyə fasilə
-        await asyncio.sleep(self.delay)
+                logger.info(f"Doldurucu: {item['title']}: {e}")
+            finally:
+                self.stats["current"] = None
+            # istifadəçilər yükləyirsə onlara mane olmasın deyə fasilə
+            await asyncio.sleep(SPEEDS[self.speed])
 
 
 # ───────────────────────── 📱 Userbot (Telethon) ─────────────────────────
@@ -1523,25 +1088,6 @@ def setup(context):
             line = "📱 Userbot: 🔴 bağlıdır"
         return line + (" · 🔎 skan gedir" if scan_state["running"] else "")
 
-    def workers_label(n: int) -> str:
-        return "tək-tək (1)" if n == 1 else f"paralel × {n}"
-
-    def ytm_line() -> str:
-        if not HAS_YTM:
-            return "🎵 YT Music kataloqu: <i>ytmusicapi yoxdur —</i> <code>pip install ytmusicapi</code>"
-        if not filler.ytm_on:
-            return "🎵 YT Music kataloqu: 🔴 söndürülüb"
-        c = filler.ytm.counts()
-        ys = filler.ytm.stats
-        line = (f"🎵 YT Music: 🟢 ifaçı ✅ {c['done']} · ⏳ {c['pending']}"
-                + (f" · ❌ {c['failed']}" if c["failed"] else "")
-                + f" · 🎶 tapıldı {c['songs']} · 📋 növbədə {len(filler.ytm_queue)}")
-        if ys["artist"]:
-            line += f"\n   🔎 <i>{escape(str(ys['artist'])[:40])}</i> oxunur"
-        if ys["note"]:
-            line += f"\n   ℹ️ <i>{escape(ys['note'])}</i>"
-        return line
-
     def panel():
         st = filler.stats
         depo = audio_cache.depo_status()
@@ -1562,8 +1108,7 @@ def setup(context):
         lines = [
             "📦 <b>Depo doldurucu</b>\n",
             f"📶 Vəziyyət: <b>{'🟢 işləyir' if on else '🔴 söndürülüb'}</b>{uptime}",
-            f"⏱ Fasilə: <b>{filler.delay} san.</b> (hər işçi mahnılar arası)",
-            f"🧵 Rejim: <b>{workers_label(filler.workers)}</b>",
+            f"⚡ Sürət: {SPEED_LABELS[filler.speed]} (mahnılar arası {SPEEDS[filler.speed]} san.)",
             f"📦 Depo: <b>{cs['songs']}</b> mahnı · {cs['size'] / 1048576:.0f} MB · {escape(depo['ref'])}"
             + ("" if depo["id"] or not on else " ⚠️"),
             userbot_line(),
@@ -1572,11 +1117,10 @@ def setup(context):
             f"📋 Növbədə: <b>{len(filler.queue)}</b>"
             + (f" / {st['queue_built']}" if st["queue_built"] else ""),
         ]
-        for i, title in sorted(filler.current.items()):
-            lines.append(f"⏳ {'İndi' if len(filler.current) == 1 else f'#{i + 1}'}: <i>{escape(title[:55])}</i>")
+        if st["current"]:
+            lines.append(f"⏳ İndi: <i>{escape(st['current'][:60])}</i>")
         if st["note"]:
             lines.append(f"ℹ️ {escape(st['note'])}")
-        lines.append(ytm_line())
         srcs = filler.sources()
         lines.append(f"\n📋 <b>Mənbələr</b> ({len(srcs)}) + 👥 istifadəçilərin sevdikləri + 🔀 Mix")
         for s in srcs[:8]:
@@ -1584,9 +1128,7 @@ def setup(context):
         lines.append("\n<i>Mənbə əlavə et:</i> <code>/depo add &lt;Spotify / YouTube / t.me linki&gt; [say]</code>")
         rows = [
             [btn("⏸ Söndür", "df:off") if on else btn("▶️ İşə sal", "df:on"), btn("🔄 Yenilə", "df:panel")],
-            [btn("➖", "df:d:-"), btn(f"⏱ {filler.delay} san.", "df:noop"), btn("➕", "df:d:+")],
-            [btn("➖", "df:w:-"), btn(f"🧵 {workers_label(filler.workers)}", "df:noop"), btn("➕", "df:w:+")],
-            [btn(("🎵 YT Music kataloqu: 🟢" if filler.ytm_on else "🎵 YT Music kataloqu: 🔴"), "df:ytm")],
+            [btn(("• " if filler.speed == k else "") + v, f"df:speed:{k}") for k, v in SPEED_LABELS.items()],
             [btn("🔁 Növbəni yenidən qur", "df:rebuild"), btn("📋 Mənbələr", "df:sources")],
             *([[btn(f"🩹 Artist düzəlişi ({bad})" if bad else "🩹 Artist düzəlişi", "fx:panel")]]
               if fix_count else []),
@@ -1622,37 +1164,6 @@ def setup(context):
         if low in ("off", "bağla", "stop"):
             await filler.stop()
             await message.answer("🔴 <b>Depo doldurucu söndürüldü.</b>", parse_mode="HTML")
-            return
-        if low.startswith(("delay", "fasilə", "fasile")):
-            num = re.search(r"\d+", low)
-            if not num:
-                await message.answer(f"⏱ Fasilə: <b>{filler.delay} san.</b>\n<i>Dəyiş:</i> <code>/depo delay 5</code>",
-                                     parse_mode="HTML")
-                return
-            v = filler.set_delay(int(num.group()))
-            await message.answer(f"⏱ Mahnılar arası fasilə: <b>{v} san.</b>", parse_mode="HTML")
-            return
-        if low.startswith(("workers", "paralel", "parallel")):
-            num = re.search(r"\d+", low)
-            if not num:
-                await message.answer(f"🧵 Rejim: <b>{workers_label(filler.workers)}</b>\n"
-                                     f"<i>Dəyiş:</i> <code>/depo workers 3</code> (1 = tək-tək, max {MAX_WORKERS})",
-                                     parse_mode="HTML")
-                return
-            v = filler.set_workers(int(num.group()))
-            await message.answer(f"🧵 Rejim: <b>{workers_label(v)}</b>", parse_mode="HTML")
-            return
-        if low.startswith("ytm"):
-            if not HAS_YTM:
-                await message.answer("❌ <code>pip install ytmusicapi</code> lazımdır.", parse_mode="HTML")
-                return
-            arg = low[3:].strip()
-            if arg in ("on", "off"):
-                filler.set_ytm(arg == "on")
-                if arg == "off":
-                    filler.ytm_queue.clear()
-                    filler.ytm_seen.clear()
-            await message.answer(ytm_line(), parse_mode="HTML")
             return
         if low.startswith("add"):
             wait = await message.answer("⏳ <i>Mənbə yoxlanılır...</i>", parse_mode="HTML")
@@ -1695,29 +1206,9 @@ def setup(context):
         elif action == "off":
             await filler.stop()
             await cb.answer("🔴 Söndürüldü")
-        elif action == "noop":
-            await cb.answer("➖ / ➕ ilə dəyiş")
-            return
-        elif action == "d" and len(parts) > 2:
-            v = filler.step_delay(1 if parts[2] == "+" else -1)
-            await cb.answer(f"⏱ Fasilə: {v} san.")
-        elif action == "w" and len(parts) > 2:
-            cur = filler.workers
-            v = filler.set_workers(cur + (1 if parts[2] == "+" else -1))
-            if v == cur:
-                await cb.answer("Tək-tək rejimdir (minimum)" if v == 1 else f"Maksimum {MAX_WORKERS} paralel",
-                                show_alert=False)
-            else:
-                await cb.answer(f"🧵 {workers_label(v)}")
-        elif action == "ytm":
-            if not HAS_YTM:
-                await cb.answer("ytmusicapi quraşdırılmayıb: pip install ytmusicapi", show_alert=True)
-                return
-            filler.set_ytm(not filler.ytm_on)
-            if not filler.ytm_on:
-                filler.ytm_queue.clear()
-                filler.ytm_seen.clear()
-            await cb.answer("🎵 YT Music kataloqu " + ("açıldı" if filler.ytm_on else "söndürüldü"))
+        elif action == "speed" and len(parts) > 2 and parts[2] in SPEEDS:
+            filler._set("speed", parts[2])
+            await cb.answer(SPEED_LABELS[parts[2]])
         elif action == "rebuild":
             filler.queue.clear()
             filler.seen.clear()
