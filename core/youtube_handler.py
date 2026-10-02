@@ -6,7 +6,8 @@ import shutil
 from yt_dlp import YoutubeDL
 from yt_dlp.utils import DownloadCancelled   # plugin-lər "dayandırıldı" halını tanımaq üçün import edir
 from core.utilities import format_duration, sanitize_filename
-from core.webprofile import get_random_user_agent, get_cookies_from_browser
+from core import webprofile
+from core.webprofile import get_cookies_from_browser
 
 logging.basicConfig(
     level=logging.INFO,
@@ -37,12 +38,10 @@ def _build_js_opts() -> dict:
 JS_OPTS = _build_js_opts()
 
 
-def cookie_opts(browser_cookies) -> dict:
-    """YOUTUBE_COOKIES_FILE (Netscape cookies.txt) varsa onu, yoxdursa brauzer cookies-ini istifadə edir."""
-    cookies_file = os.getenv("YOUTUBE_COOKIES_FILE")  # load_dotenv import-dan sonra işlədiyi üçün burada oxunur
-    if cookies_file and os.path.isfile(cookies_file):
-        return {'cookiefile': cookies_file}
-    return {'cookiesfrombrowser': browser_cookies}
+def cookie_opts(browser_cookies=None) -> dict:
+    """Cookies — /menu → 🖥 Sistem → 🌐 Brauzer / cookies ayarına görə (cookies.txt / brauzer / cookiesiz).
+    browser_cookies parametri köhnə çağırışlarla uyğunluq üçün qalıb, istifadə olunmur."""
+    return webprofile.cookie_opts()
 
 
 def remove_partial(base_name: str):
@@ -162,7 +161,6 @@ async def download_as_m4a(url: str, base_name: str, browser: str, cookies=None, 
     ona görə bir neçə strategiya ardıcıl sınanır.
     """
     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
-    browser_cookies = cookies if cookies is not None else (browser,)
 
     def cancelled() -> bool:
         return cancel_event is not None and cancel_event.is_set()
@@ -195,12 +193,12 @@ async def download_as_m4a(url: str, base_name: str, browser: str, cookies=None, 
             'nopart': True,
             'retries': 3,
             'quiet': True,
-            'headers': {'User-Agent': get_random_user_agent()},
+            **webprofile.ua_opts(),
             'progress_hooks': [progress_hook],
             **JS_OPTS,
         }
         if use_cookies:
-            ydl_opts.update(cookie_opts(browser_cookies))
+            ydl_opts.update(cookie_opts())
         if clients:
             ydl_opts['extractor_args'] = {'youtube': {'player_client': clients}}
 
@@ -322,18 +320,20 @@ def _get_ytmusic():
 class YoutubeManagerPlaylist:
     def __init__(self, browser: str = "firefox"):
         self.browser = browser
-        self.ydl_opts = {
+        logger.info(f"Cookies: {webprofile.describe()}")
+
+    @property
+    def ydl_opts(self) -> dict:
+        # hər çağırışda yenidən qurulur — /menu-da brauzer dəyişəndə restart lazım deyil
+        return {
             'extract_flat': True,
             'quiet': True,
             'socket_timeout': 15,
-            'cookiesfrombrowser': (self.browser,),
+            **cookie_opts(),
             #'proxy': 'socks5://127.0.0.1:9050',
-            'headers': {
-                'User-Agent': get_random_user_agent()
-            },
+            **webprofile.ua_opts(),
             **JS_OPTS,
         }
-        logger.info(f"{self.browser} brauzerindən cookies istifadə edilir.")
 
     def get_playlist_info_playlist(self, url: str) -> dict:
         try:
@@ -382,11 +382,9 @@ class YoutubeManager:
             'extract_flat': True,
             'quiet': True,
             'socket_timeout': 30,
-            'cookiesfrombrowser': get_cookies_from_browser(self.browser),
+            **cookie_opts(),
             #'proxy': 'socks5://127.0.0.1:9050',
-            'headers': {
-                'User-Agent': get_random_user_agent()
-            },
+            **webprofile.ua_opts(),
             **JS_OPTS,
         }
 

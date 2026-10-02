@@ -25,13 +25,25 @@ Tapılan rəsmi ad/ifaçı metadata kimi depoya yazılır. Nəticələr bazada y
 
 Sürət / paralellik (paneldə ➖ ➕):
   ⏱ fasilə — hər işçinin mahnılar arası gözləməsi (0 … 300 san.; /depo delay N ilə istənilən)
-  🧵 işçi sayı — 1 = tək-tək, 2…8 = eyni anda neçə mahnı yüklənsin (dərhal tətbiq olunur)
+  🧵 işçi sayı — 1 = tək-tək, 2…32 = eyni anda neçə mahnı yüklənsin (dərhal tətbiq olunur)
+
+💾 Restartdan sonra qaldığı yerdən davam edir:
+  • növbə + YT Music növbəsi + yarımçıq qalan (işçilərin əlindəki) mahnılar hər 20 san.-dən bir və
+    bot dayananda depo_state.json-a yazılır, açılanda geri yüklənir
+  • Telegram mənbələri artımlı skan olunur: skan olunmuş mesajlar yadda qalır, yarımçıq skan
+    qaldığı mesajdan davam edir, sonrakı qurulmalarda yalnız yeni audiolar oxunur
+  • 🔁 Növbəni yenidən qur — hər şeyi sıfırlayır (Telegram tarixçəsi də tam yenidən oxunur)
+
+📊 Canlı monitor (/depotop və ya paneldə 📊 düyməsi) — htop kimi, hər 1 saniyədən bir:
+  hər işçinin vəziyyəti (DL / SRCH / CHK / SLP / WAIT) və müddəti, sürət qrafiki (mahnı/dəq.),
+  növbələr, cəmi göstəricilər, botun CPU / RAM / thread sayı, son hadisələr jurnalı.
 
 Komandalar:
   /depo                              — panel (status, fasilə, paralellik, mənbələr)
   /depo on | /depo off               — işə sal / söndür
   /depo delay <san.>                 — mahnılar arası fasilə
-  /depo workers <1-8>                — paralel yükləmə sayı (1 = tək-tək)
+  /depo workers <1-32>               — paralel yükləmə sayı (1 = tək-tək)
+  /depotop                           — 📊 canlı monitor (1 san.)
   /depo ytm on | off                 — YouTube Music kataloqunu yüklə
   /depo add <link> [mesaj_sayı]      — mənbə əlavə et (Telegram üçün dərhal skan da başlayır)
   /scan_chat <link/ID> [mesaj_sayı]  — çatı birdəfəlik skan et (mənbə kimi saxlamadan)
@@ -48,6 +60,8 @@ import threading
 import time
 import unicodedata
 from collections import deque
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 from html import escape, unescape
 
 import aiohttp
@@ -105,8 +119,12 @@ MAX_DELAY = 3600
 OLD_SPEEDS = {"slow": 60, "normal": 25, "fast": 8}     # köhnə ayarı köçürmək üçün
 # 🧵 Paralel yükləmə: 1 = tək-tək, 2..MAX_WORKERS = eyni anda neçə mahnı
 DEFAULT_WORKERS = 1
-MAX_WORKERS = 8
+MAX_WORKERS = 32
+WORKER_STEPS = [1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 28, 32]   # panel ➖ / ➕ pillələri
 MAX_DURATION = 15 * 60
+STATE_FILE = os.getenv("DEPO_STATE_FILE", "depo_state.json")   # 💾 növbənin restart arası saxlanması
+STATE_SAVE_EVERY = 20                                  # san. — dəyişiklik varsa
+TG_CHECKPOINT = 500                                    # Telegram skanında hər N mesajdan bir vəziyyət yazılır
 IDLE_SLEEP = 30 * 60                                   # növbə bitəndə yenidən qurmağa qədər
 NOTFOUND_RETRY = 3 * 86400                             # tapılmayan mahnını 3 gün sonra yenidən axtar
 
@@ -699,6 +717,24 @@ class YtmCrawler:
         return True
 
 
+def ensure_thread_pool(workers: int):
+    """asyncio.to_thread hovuzunu işçi sayına görə böyüdür.
+
+    Default hovuz min(32, CPU+4) thread-dir; 16-32 işçi (hər biri yt-dlp / Spotify / baza üçün thread tutur)
+    onu doldurub istifadəçilərin öz yükləmələrini də gözlədərdi. Hovuz yalnız böyüyür, kiçilmir."""
+    need = max(32, workers * 3 + 16)
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        return
+    ex = getattr(loop, "_default_executor", None)
+    cur = getattr(ex, "_max_workers", 0) if ex else min(32, (os.cpu_count() or 1) + 4)
+    if cur >= need:
+        return
+    loop.set_default_executor(ThreadPoolExecutor(max_workers=need, thread_name_prefix="asyncio"))
+    logger.info(f"🧵 Thread hovuzu böyüdüldü: {cur} → {need} ({workers} işçi üçün)")
+
+
 # ───────────────────────── 📦 Doldurucu ─────────────────────────
 class Filler:
     def __init__(self, context):
@@ -712,12 +748,24 @@ class Filler:
                       "last_build": None, "queue_built": 0, "note": ""}
         self.current = {}                       # işçi nömrəsi → hazırda yüklənən mahnı
         self.workers_tasks = {}
+        # 📊 canlı monitor üçün
+        self.wstate = {}                        # işçi → {"phase", "title", "since"}
+        self.events = deque(maxlen=80)          # son hadisələr: (ts, işçi, növ, ad, san., bayt)
+        self.done_ts = deque(maxlen=20000)      # yüklənən hər mahnının vaxtı (sürət qrafiki)
+        self.durations = deque(maxlen=200)      # bir mahnının tam müddəti (axtarış + yükləmə + göndərmə)
+        self.bytes = 0
+        # 💾 restart arası davamlılıq
+        self.inflight = {}                      # işçi → hazırda işlənən element (restartda növbənin önünə qayıdır)
+        self._save_lock = asyncio.Lock()
+        self._saved_sig = None
+        self.restored = 0
         self.build_lock = asyncio.Lock()
         # 🎵 YouTube Music kataloqu — ayrıca növbə (əsas mənbələr həmişə öndədir)
         self.ytm_queue = deque()
         self.ytm_seen = set()
         self.ytm = YtmCrawler() if HAS_YTM else None
         self._init_resolve_table()
+        self.load_state()
 
     # ── ayarlar (bazada) ──
     def _get(self, key, default=None):
@@ -768,7 +816,32 @@ class Filler:
     def set_workers(self, value: int) -> int:
         value = max(1, min(MAX_WORKERS, int(value)))
         self._set("workers", str(value))
+        ensure_thread_pool(value)
         return value
+
+    def step_workers(self, direction: int) -> int:
+        cur = self.workers
+        if direction > 0:
+            nxt = next((x for x in WORKER_STEPS if x > cur), MAX_WORKERS)
+        else:
+            nxt = next((x for x in reversed(WORKER_STEPS) if x < cur), 1)
+        return self.set_workers(nxt)
+
+    # ── 📊 monitor köməkçiləri ──
+    def _phase(self, idx: int, phase: str, title: str = None):
+        st = self.wstate.setdefault(idx, {"phase": "", "title": "", "since": time.time()})
+        if title is not None:
+            st["title"] = title
+        if st["phase"] != phase:
+            st["phase"], st["since"] = phase, time.time()
+
+    def _event(self, idx: int, kind: str, title: str, secs: float = 0.0, size: int = 0):
+        now = time.time()
+        self.events.append((now, idx, kind, title, secs, size))
+        if kind == "done":
+            self.done_ts.append(now)
+            self.durations.append(secs)
+            self.bytes += size
 
     @property
     def ytm_on(self) -> bool:
@@ -793,6 +866,132 @@ class Filler:
     @property
     def running(self) -> bool:
         return bool(self.task and not self.task.done())
+
+    # ── 💾 növbənin saxlanması (restartdan sonra davam) ──
+    def _snapshot(self) -> dict:
+        """Event loop thread-ində çağırılır — siyahılar kopyalanır, JSON isə ayrıca thread-də yazılır."""
+        fly_main, fly_ytm = [], []
+        for _, it in sorted(self.inflight.items()):
+            (fly_ytm if it.get("src") == "ytm" else fly_main).append(dict(it))
+        st = self.stats
+        return {
+            "v": 1, "saved": time.time(),
+            "queue": fly_main + list(self.queue),
+            "ytm_queue": fly_ytm + list(self.ytm_queue),
+            "last_build": st.get("last_build"), "queue_built": st.get("queue_built", 0),
+            "build_pending": self.build_lock.locked(),
+            "counters": {k: st.get(k, 0) for k in ("done", "cached", "failed")},
+            "bytes": self.bytes,
+        }
+
+    def _sig(self):
+        q, y = self.queue, self.ytm_queue
+        return (len(q), len(y), self._key(q[0]) if q else None, y[0].get("vid") if y else None,
+                tuple(sorted(self.inflight)), self.stats["done"] + self.stats["cached"] + self.stats["failed"])
+
+    @staticmethod
+    def _write_state(data: dict):
+        tmp = STATE_FILE + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, separators=(",", ":"), default=str)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, STATE_FILE)                    # atomik — yarımçıq fayl qalmır
+
+    def save_state_now(self):
+        """Sinxron yazı (bot dayananda / plugin söndürüləndə)."""
+        try:
+            self._write_state(self._snapshot())
+            self._saved_sig = self._sig()
+        except Exception as e:
+            logger.warning(f"💾 Depo növbəsi yazılmadı: {e}")
+
+    async def save_state(self, force: bool = False):
+        sig = self._sig()
+        if not force and sig == self._saved_sig:
+            return
+        if self._save_lock.locked() and not force:
+            return
+        async with self._save_lock:             # force — gedən yazını gözləyib təzə snapshot yazır
+            data = self._snapshot()
+            try:
+                await asyncio.to_thread(self._write_state, data)
+                self._saved_sig = sig
+            except Exception as e:
+                logger.warning(f"💾 Depo növbəsi yazılmadı: {e}")
+
+    async def state_saver(self):
+        while not self.stop_event.is_set():
+            await asyncio.sleep(STATE_SAVE_EVERY)
+            await self.save_state()
+
+    def load_state(self):
+        try:
+            with open(STATE_FILE, encoding="utf-8") as f:
+                data = json.load(f)
+        except FileNotFoundError:
+            return
+        except Exception as e:
+            logger.warning(f"💾 {STATE_FILE} oxunmadı ({e}) — növbə sıfırdan qurulacaq")
+            return
+        for it in data.get("queue") or []:
+            if isinstance(it, dict) and self._key(it) and self._key(it) not in self.seen:
+                self.seen.add(self._key(it))
+                self.queue.append(it)
+        for it in data.get("ytm_queue") or []:
+            if isinstance(it, dict) and it.get("vid") and it["vid"] not in self.ytm_seen:
+                self.ytm_seen.add(it["vid"])
+                self.ytm_queue.append(it)
+        st = self.stats
+        # qurulma yarımçıq qalmışdısa — bərpa olunan növbə bitən kimi yenidən qurulsun (Telegram qaldığı yerdən)
+        st["last_build"] = None if data.get("build_pending") else data.get("last_build")
+        st["queue_built"] = data.get("queue_built") or 0
+        for k, v in (data.get("counters") or {}).items():
+            if k in st and isinstance(v, int):
+                st[k] = v
+        self.bytes = int(data.get("bytes") or 0)
+        self.restored = len(self.queue) + len(self.ytm_queue)
+        self._saved_sig = self._sig()
+        if self.restored:
+            ago = int((time.time() - (data.get("saved") or time.time())) / 60)
+            logger.info(f"💾 Depo növbəsi bərpa olundu: {len(self.queue)} əsas + {len(self.ytm_queue)} YT Music "
+                        f"({ago} dəq. əvvəl yazılıb)")
+
+    def reset_state(self):
+        """🔁 Növbəni yenidən qur: növbə + Telegram skan mövqeləri sıfırlanır."""
+        self.queue.clear()
+        self.seen.clear()
+        self.stats["queue_built"] = 0
+        self.stats["last_build"] = None
+        self._set("tgscan", "{}")
+
+    # ── Telegram artımlı skan mövqeləri ──
+    def tg_state(self, peer_id) -> dict:
+        try:
+            all_ = json.loads(self._get("tgscan") or "{}")
+        except ValueError:
+            all_ = {}
+        st = all_.get(str(peer_id))
+        return st if isinstance(st, dict) else {}
+
+    async def tg_checkpoint(self, peer_id, state: dict):
+        """Əvvəl növbə (skan olunanlar itməsin), sonra skan mövqeyi yazılır."""
+        await self.save_state(force=True)
+        try:
+            all_ = json.loads(self._get("tgscan") or "{}")
+        except ValueError:
+            all_ = {}
+        all_[str(peer_id)] = state
+        self._set("tgscan", json.dumps(all_))
+
+    async def tg_scan_source(self, ent, limit, on_item, should_stop, progress=None) -> dict:
+        peer_id = self.tg.describe(ent)[0]
+        state = dict(self.tg_state(peer_id))
+
+        async def checkpoint(stt):
+            await self.tg_checkpoint(peer_id, stt)
+
+        return await self.tg.scan(ent, limit, on_item, should_stop, progress, state=state, checkpoint=checkpoint)
 
     # ── axtarış nəticələrinin keşi (bazada): eyni ad üçün API-lər təkrar yorulmasın ──
     def _init_resolve_table(self):
@@ -842,12 +1041,18 @@ class Filler:
             return
         self.stop_event = threading.Event()
         self.stats.update(started=time.time(), note="")
+        # əvvəlki dayandırmada yarımçıq qalan mahnılar növbənin önünə
+        for _, it in sorted(self.inflight.items(), reverse=True):
+            (self.ytm_queue if it.get("src") == "ytm" else self.queue).appendleft(it)
+        self.inflight.clear()
+        ensure_thread_pool(self.workers)
         self.task = asyncio.create_task(self.loop())
         logger.info("📦 Depo doldurucu işə düşdü")
 
     async def stop(self, persist=True):
         if persist:
             self._set("on", "0")
+        self.save_state_now()                  # işçilərin əlindəki mahnılar da (ləğvdən əvvəl)
         self.stop_event.set()
         if self.task and not self.task.done():
             self.task.cancel()
@@ -857,6 +1062,7 @@ class Filler:
                 pass
         self.task = None
         self.current.clear()
+        self.wstate.clear()
         logger.info("📦 Depo doldurucu dayandı")
 
     # ── növbə ──
@@ -954,7 +1160,7 @@ class Filler:
                 elif src["kind"] == "tg_channel":
                     if self.tg and await self.tg.ok():
                         ent = await self.tg.entity({"type": "user", "name": src["id"]})
-                        await self.tg.scan(ent, None, self._add, self.stop_event.is_set)
+                        await self.tg_scan_source(ent, None, self._add, self.stop_event.is_set)
                     else:
                         data = await tg_channel_items(src["id"])
                         for it in data["items"]:
@@ -964,7 +1170,7 @@ class Filler:
                         logger.info(f"Doldurucu: {src.get('label')}: userbot aktiv deyil — ötürüldü")
                         continue
                     ent = await self.tg.entity_for_source(src)
-                    await self.tg.scan(ent, src.get("limit"), self._add, self.stop_event.is_set)
+                    await self.tg_scan_source(ent, src.get("limit"), self._add, self.stop_event.is_set)
             except Exception as e:
                 logger.warning(f"Doldurucu: mənbə {src.get('label') or src['id']}: {e}")
 
@@ -1100,6 +1306,7 @@ class Filler:
         """Nəzarətçi: istənilən sayda işçi saxlayır (➕/➖ dərhal tətbiq olunur) + YT Music skaneri."""
         await asyncio.sleep(5)
         feeder = asyncio.create_task(self.ytm_feeder())
+        saver = asyncio.create_task(self.state_saver())
         try:
             while not self.stop_event.is_set():
                 want = self.workers
@@ -1111,7 +1318,7 @@ class Filler:
                     self.workers_tasks.pop(i, None)
                 await asyncio.sleep(2)
         finally:
-            tasks = [feeder, *self.workers_tasks.values()]
+            tasks = [feeder, saver, *self.workers_tasks.values()]
             for t in tasks:
                 t.cancel()
             await asyncio.gather(*tasks, return_exceptions=True)
@@ -1139,7 +1346,9 @@ class Filler:
                     self.stats["note"] = "növbə qurulur..."
                     self.seen.clear()
                     await self.build_queue()
-                    self.stats["last_build"] = time.time()
+                    if not self.stop_event.is_set():
+                        self.stats["last_build"] = time.time()
+            await self.save_state(force=True)
             if self.queue:
                 self.stats["note"] = ""
                 return self.queue.popleft()
@@ -1153,54 +1362,230 @@ class Filler:
         return None
 
     async def worker(self, idx: int):
-        while not self.stop_event.is_set():
-            if idx >= self.workers:                     # ➖ basıldı — artıq işçi dayanır
-                return
-            item = await self.next_item(idx)
-            if item is not None:
-                await self.process(idx, item)
+        try:
+            while not self.stop_event.is_set():
+                if idx >= self.workers:                 # ➖ basıldı — artıq işçi dayanır
+                    return
+                self._phase(idx, "WAIT", "")
+                item = await self.next_item(idx)
+                if item is not None:
+                    await self.process(idx, item)
+        finally:
+            self.wstate.pop(idx, None)
 
     async def process(self, idx: int, item: dict):
         fetch = getattr(self.ctx, "music_fetch_audio", None)
         had_url = bool(item.get("url"))
+        t0 = time.time()
         self.current[idx] = item["title"]
+        self.inflight[idx] = item
+        self._phase(idx, "SRCH", item["title"])
         try:
             url, from_cache = await self.resolve(item)
             searched = not had_url and not from_cache       # API-lərdə axtarış edildi
             vid = re.search(r"v=([\w-]{11})", url or "")
             if not vid:
                 self.stats["failed"] += 1
+                self._event(idx, "notfound", item["title"], time.time() - t0)
                 if searched:
                     logger.info(f"Doldurucu: {item['title']}: tapılmadı")
+                    self._phase(idx, "SLP", item["title"])
                     await asyncio.sleep(min(2, self.delay))
                 return
+            self._phase(idx, "CHK", item["title"])
             if await asyncio.to_thread(audio_cache.get_cached, vid.group(1)):
                 self.stats["cached"] += 1
+                self._event(idx, "cached", item["title"], time.time() - t0)
                 if searched:
+                    self._phase(idx, "SLP", item["title"])
                     await asyncio.sleep(min(2, self.delay))
                 return
+            self._phase(idx, "DL", item["title"])
             res = await fetch(url, item["title"], int(item.get("raw_duration") or 0), self.stop_event,
                               meta=item.get("meta"), thumb_url=item.get("thumb"))
+            size = 0
             if res.get("path"):
                 try:
+                    size = os.path.getsize(res["path"])
                     os.remove(res["path"])
                 except OSError:
                     pass
             if res.get("file_id") and not res.get("cached"):
                 self.stats["done"] += 1
+                self._event(idx, "done", item.get("title") or "", time.time() - t0, size)
             else:
                 self.stats["cached"] += 1
+                self._event(idx, "cached", item.get("title") or "", time.time() - t0)
         except asyncio.CancelledError:
             raise
         except Exception as e:
             if self.stop_event.is_set():
                 return
             self.stats["failed"] += 1
+            self._event(idx, "failed", item["title"], time.time() - t0)
             logger.info(f"Doldurucu: {item['title']}: {e}")
         finally:
             self.current.pop(idx, None)
+            if not self.stop_event.is_set():       # dayandırılıbsa — element növbəyə qayıtmaq üçün qalır
+                self.inflight.pop(idx, None)
         # istifadəçilər yükləyirsə onlara mane olmasın deyə fasilə
-        await asyncio.sleep(self.delay)
+        if self.delay:
+            self._phase(idx, "SLP", "")
+            await asyncio.sleep(self.delay)
+
+
+
+# ───────────────────────── 📊 Canlı monitor (depo top) ─────────────────────────
+TOP_INTERVAL = 1.0           # yenilənmə (san.)
+TOP_MAX_RUNTIME = 600        # avtomatik dayanma (san.) — ▶️ Davam ilə uzanır
+TOP_SPARK_MIN = 15           # sürət qrafiki: son neçə dəqiqə
+TOP_TITLE = 27               # cədvəldə mahnı adının eni
+PHASE_ORDER = {"DL": 0, "CHK": 1, "SRCH": 2, "SLP": 3, "WAIT": 4}
+EVENT_TAGS = {"done": "OK  ", "cached": "SKIP", "failed": "ERR ", "notfound": "404 "}
+_SPARK = "▁▂▃▄▅▆▇█"
+
+
+class ProcMeter:
+    """Botun öz prosesi: CPU% (os.times fərqi, uşaq proseslər daxil), RSS, thread sayı, load."""
+
+    def __init__(self):
+        self.prev = None
+
+    @staticmethod
+    def _rss() -> int:
+        try:
+            with open("/proc/self/statm") as f:
+                return int(f.read().split()[1]) * os.sysconf("SC_PAGE_SIZE")
+        except Exception:
+            pass
+        try:
+            import psutil
+            return psutil.Process().memory_info().rss
+        except Exception:
+            return 0
+
+    def sample(self) -> dict:
+        t, now = os.times(), time.monotonic()
+        cpu_t = t.user + t.system + t.children_user + t.children_system
+        pct = 0.0
+        if self.prev:
+            pct = max(0.0, (cpu_t - self.prev[0]) / max(now - self.prev[1], 1e-6) * 100)
+        self.prev = (cpu_t, now)
+        try:
+            load = " ".join(f"{x:.2f}" for x in os.getloadavg())
+        except (AttributeError, OSError):
+            load = "-"
+        return {"cpu": pct, "rss": self._rss(), "threads": threading.active_count(), "load": load}
+
+
+def _human(n: float) -> str:
+    for unit in ("B", "K", "M", "G", "T"):
+        if abs(n) < 1024 or unit == "T":
+            return f"{n:.1f}{unit}" if unit in ("G", "T") else f"{n:.0f}{unit}"
+        n /= 1024
+    return f"{n:.1f}T"
+
+
+def _mmss(sec: float) -> str:
+    sec = max(0, int(sec))
+    h, rem = divmod(sec, 3600)
+    m, s = divmod(rem, 60)
+    return f"{h}:{m:02d}:{s:02d}" if h else f"{m}:{s:02d}"
+
+
+def _bar(frac: float, width: int = 14) -> str:
+    frac = max(0.0, min(1.0, frac))
+    n = round(frac * width)
+    return "|" * n + " " * (width - n)
+
+
+def _spark(values) -> str:
+    top = max(values) if values else 0
+    if not top:
+        return _SPARK[0] * len(values)
+    return "".join(_SPARK[min(len(_SPARK) - 1, round(v / top * (len(_SPARK) - 1)))] for v in values)
+
+
+def _short(title: str, width: int) -> str:
+    t = _EMOJI_RE.sub("", title or "").replace("\n", " ").strip()
+    return t if len(t) <= width else t[:width - 1] + "…"
+
+
+def bot_tz():
+    try:
+        from zoneinfo import ZoneInfo
+        return ZoneInfo(os.getenv("BOT_TZ", "Asia/Baku"))
+    except Exception:
+        from datetime import timedelta, timezone
+        return timezone(timedelta(hours=4))
+
+
+def render_top(filler, sess: dict, proc: dict, now_str: str) -> str:
+    now = time.time()
+    st = filler.stats
+    on = filler.running
+    want = filler.workers
+    ws = dict(filler.wstate)
+    active = sum(1 for w in ws.values() if w["phase"] in ("DL", "CHK", "SRCH"))
+    # sürət: son 15 dəqiqə, hər dəqiqə üçün yüklənən mahnı sayı
+    buckets = [0] * TOP_SPARK_MIN
+    for ts in reversed(filler.done_ts):
+        age = now - ts
+        if age >= TOP_SPARK_MIN * 60:
+            break
+        buckets[TOP_SPARK_MIN - 1 - int(age // 60)] += 1
+    last5 = sum(buckets[-5:]) / 5
+    avg = (sum(filler.durations) / len(filler.durations)) if filler.durations else 0
+    uptime = _mmss(now - st["started"]) if on and st["started"] else "-"
+
+    lines = [
+        f"Wrk [{_bar(active / max(want, 1))}] {active}/{want} aktiv  fas {filler.delay}s",
+        f"Que esas {len(filler.queue)}" + (f"/{st['queue_built']}" if st["queue_built"] else "")
+        + f"  ytm {len(filler.ytm_queue)}",
+        f"Spd {_spark(buckets)} {last5:.1f}/dq",
+        f"Avg {avg:.0f}s/mahni  cemi {_human(filler.bytes)}",
+        f"Tot up {st['done']}  skip {st['cached']}  err {st['failed']}",
+        f"Bot cpu {proc['cpu']:.0f}%  ram {_human(proc['rss'])}  thr {proc['threads']}",
+        f"Up  {uptime}  load {proc['load']}",
+        "",
+    ]
+    if sess["view"] == "log":
+        lines.append(f"{'VAXT':<8} {'#':>2} {'NOV':<4} {'SAN':>4} {'OLCU':>5} MAHNI")
+        evs = list(filler.events)[-24:][::-1]
+        for ts, idx, kind, title, secs, size in evs:
+            t = datetime.fromtimestamp(ts, bot_tz()).strftime("%H:%M:%S")
+            lines.append(f"{t:<8} {idx + 1:>2} {EVENT_TAGS.get(kind, kind[:4]):<4} {secs:>4.0f} "
+                         f"{(_human(size) if size else '-'):>5} {_short(title, 22)}")
+        if not evs:
+            lines.append("  (hələ hadisə yoxdur)")
+    else:
+        lines.append(f"{'#':>2} {'ST':<4} {'VAXT':>6} MAHNI")
+        rows = []
+        for i in range(max(want, max(ws) + 1 if ws else 0)):
+            w = ws.get(i)
+            if w is None:
+                rows.append((i, "-", 0.0, "(başlayır)" if on and i < want else "(dayanıb)"))
+                continue
+            ph = w["phase"] or "WAIT"
+            title = w["title"] or {"SLP": "(fasilə)", "WAIT": "(növbə gözləyir)"}.get(ph, "")
+            rows.append((i, ph, now - w["since"], title))
+        if sess["sort"] == "time":
+            rows.sort(key=lambda r: (PHASE_ORDER.get(r[1], 9), -r[2]))
+        for i, ph, el, title in rows:
+            lines.append(f"{i + 1:>2} {ph:<4} {_mmss(el) if ph != '-' else '':>6} {_short(title, TOP_TITLE)}")
+
+    if sess["paused"]:
+        state = "⏸ fasilə"
+    else:
+        left = int(sess["until"] - now)
+        state = f"🔄 hər {TOP_INTERVAL:g} san. · {left} san. qalıb"
+    head = (f"📦 <b>depo top</b> · {'🟢 işləyir' if on else '🔴 söndürülüb'} · "
+            f"⬆️ <b>{last5:.1f}</b>/dəq\n<i>{now_str} · {state}</i>")
+    if st["note"]:
+        head += f"\nℹ️ <i>{escape(st['note'][:120])}</i>"
+    legend = ("<i>DL yükləyir · SRCH axtarır · CHK depo yoxlanır · SLP fasilə · WAIT növbə</i>"
+              if sess["view"] != "log" else "<i>OK yükləndi · SKIP artıq depoda · ERR xəta · 404 tapılmadı</i>")
+    return f"{head}\n<pre>{escape(chr(10).join(lines))}</pre>{legend}"
 
 
 # ───────────────────────── 📱 Userbot (Telethon) ─────────────────────────
@@ -1310,13 +1695,18 @@ class TgUser:
             x for x in (getattr(ent, "first_name", None), getattr(ent, "last_name", None)) if x) or "Çat"
         return tl_utils.get_peer_id(ent), title, getattr(ent, "username", None)
 
-    async def scan(self, ent, limit, on_item, should_stop, progress=None) -> dict:
-        """Çatdakı audioları (yeni → köhnə) təmizlənmiş adla on_item-ə ötürür."""
+    async def scan(self, ent, limit, on_item, should_stop, progress=None, state=None, checkpoint=None) -> dict:
+        """Çatdakı audioları (yeni → köhnə) təmizlənmiş adla on_item-ə ötürür.
+
+        state verilərsə (artımlı skan): {"top": ən yeni oxunan id, "bottom": ən köhnə oxunan id,
+        "count": oxunan audio sayı, "complete": tarixçə bitib?}
+          1) top-dan yeni mesajlar oxunur
+          2) tarixçə bitməyibsə — bottom-dan köhnəyə doğru davam edilir (limit varsa count-a qədər)
+        Vəziyyət checkpoint(state) ilə hər TG_CHECKPOINT mesajdan bir və sonda yazılır."""
         _, title, _ = self.describe(ent)
-        st = {"messages": 0, "items": 0, "added": 0, "unreadable": 0}
-        async for msg in self.client.iter_messages(ent, limit=limit, filter=InputMessagesFilterMusic):
-            if should_stop():
-                break
+        st = {"messages": 0, "items": 0, "added": 0, "unreadable": 0, "new": 0, "resumed": False}
+
+        def handle(msg):
             st["messages"] += 1
             it = tl_message_item(msg, title)
             if not it:
@@ -1325,8 +1715,56 @@ class TgUser:
                 st["items"] += 1
                 if on_item(it):
                     st["added"] += 1
-            if progress and st["messages"] % 100 == 0:
-                await progress(st)
+
+        if state is None:
+            async for msg in self.client.iter_messages(ent, limit=limit, filter=InputMessagesFilterMusic):
+                if should_stop():
+                    break
+                handle(msg)
+                if progress and st["messages"] % 100 == 0:
+                    await progress(st)
+            return st
+
+        top = int(state.get("top") or 0)
+        newest = top
+        stopped = False
+        # 1) son skandan sonra gələn yeni audiolar
+        if top:
+            async for msg in self.client.iter_messages(ent, min_id=top, filter=InputMessagesFilterMusic):
+                if should_stop():
+                    stopped = True
+                    break
+                newest = max(newest, msg.id)
+                handle(msg)
+                st["new"] += 1
+                if progress and st["messages"] % 100 == 0:
+                    await progress(st)
+        if not stopped:
+            state["top"] = newest
+        # 2) yarımçıq tarixçə — qaldığı yerdən köhnəyə doğru
+        if not stopped and not state.get("complete"):
+            count = int(state.get("count") or 0)
+            remaining = (limit - count) if limit else None
+            st["resumed"] = bool(state.get("bottom"))
+            if remaining is None or remaining > 0:
+                async for msg in self.client.iter_messages(ent, offset_id=int(state.get("bottom") or 0),
+                                                           limit=remaining, filter=InputMessagesFilterMusic):
+                    if should_stop():
+                        stopped = True
+                        break
+                    handle(msg)
+                    if not state.get("top") or msg.id > state["top"]:
+                        state["top"] = msg.id
+                    state["bottom"] = msg.id
+                    state["count"] = int(state.get("count") or 0) + 1
+                    if checkpoint and state["count"] % TG_CHECKPOINT == 0:
+                        await checkpoint(dict(state))
+                    if progress and st["messages"] % 100 == 0:
+                        await progress(st)
+            if not stopped:
+                state["complete"] = True
+        if checkpoint:
+            await checkpoint(dict(state))
         return st
 
 
@@ -1357,7 +1795,7 @@ def setup(context):
     stop_kb = InlineKeyboardMarkup(inline_keyboard=[[btn("⏹ Skanı dayandır", "scan:stop")]])
 
     # ── 🔎 Skan (həm /depo add, həm /scan_chat) ──
-    async def run_scan(chat_id: int, ent, limit, header: str):
+    async def run_scan(chat_id: int, ent, limit, header: str, incremental: bool = False):
         _, title, _ = tg.describe(ent)
         scan_state.update(running=True, stop=False)
         limit_label = f"son {limit} audio" if limit else "bütün tarixçə"
@@ -1389,7 +1827,10 @@ def setup(context):
                 pass
 
         try:
-            st = await tg.scan(ent, limit, collect, lambda: scan_state["stop"], progress)
+            if incremental:      # daimi mənbə — mövqe yadda qalır, növbəti qurulma təkrar oxumur
+                st = await filler.tg_scan_source(ent, limit, collect, lambda: scan_state["stop"], progress)
+            else:
+                st = await tg.scan(ent, limit, collect, lambda: scan_state["stop"], progress)
             await flush()
             head = "⏹ <b>Skan dayandırıldı</b>" if scan_state["stop"] else "✅ <b>Skan tamamlandı</b>"
             tail = ("" if filler.running else
@@ -1415,11 +1856,11 @@ def setup(context):
         finally:
             scan_state.update(running=False, stop=False, task=None)
 
-    def launch_scan(chat_id, ent, limit, header) -> bool:
+    def launch_scan(chat_id, ent, limit, header, incremental=False) -> bool:
         if scan_state["running"]:
             return False
         scan_state["running"] = True
-        scan_state["task"] = asyncio.create_task(run_scan(chat_id, ent, limit, header))
+        scan_state["task"] = asyncio.create_task(run_scan(chat_id, ent, limit, header, incremental))
         return True
 
     async def add_source(link_text: str, chat_id: int = None):
@@ -1444,7 +1885,7 @@ def setup(context):
                     filler.save_sources(srcs + [src])
                     note = f"✅ Telegram mənbəyi əlavə olundu: <b>{escape(title)}</b>"
                     if chat_id:
-                        if launch_scan(chat_id, ent, limit, "Yeni mənbə skan edilir"):
+                        if launch_scan(chat_id, ent, limit, "Yeni mənbə skan edilir", incremental=True):
                             note += "\n<i>Skan başladı — nəticə ayrıca mesajda.</i>"
                         else:
                             note += "\n<i>Başqa skan gedir — bu çat növbəti qurulmada oxunacaq.</i>"
@@ -1568,14 +2009,19 @@ def setup(context):
             + ("" if depo["id"] or not on else " ⚠️"),
             userbot_line(),
             "",
-            f"⬆️ Bu sessiyada yükləndi: <b>{st['done']}</b> · ⏭ artıq depoda idi: {st['cached']} · ❌ {st['failed']}",
+            f"⬆️ Yükləndi: <b>{st['done']}</b> · ⏭ artıq depoda idi: {st['cached']} · ❌ {st['failed']}",
             f"📋 Növbədə: <b>{len(filler.queue)}</b>"
             + (f" / {st['queue_built']}" if st["queue_built"] else ""),
         ]
-        for i, title in sorted(filler.current.items()):
-            lines.append(f"⏳ {'İndi' if len(filler.current) == 1 else f'#{i + 1}'}: <i>{escape(title[:55])}</i>")
+        cur = sorted(filler.current.items())
+        for i, title in cur[:4]:
+            lines.append(f"⏳ {'İndi' if len(cur) == 1 else f'#{i + 1}'}: <i>{escape(title[:55])}</i>")
+        if len(cur) > 4:
+            lines.append(f"⏳ <i>+{len(cur) - 4} işçi daha işləyir — hamısı 📊 Canlı monitorda</i>")
         if st["note"]:
             lines.append(f"ℹ️ {escape(st['note'])}")
+        if filler.restored:
+            lines.append(f"💾 <i>Restartdan sonra {filler.restored} mahnı növbədən bərpa olundu</i>")
         lines.append(ytm_line())
         srcs = filler.sources()
         lines.append(f"\n📋 <b>Mənbələr</b> ({len(srcs)}) + 👥 istifadəçilərin sevdikləri + 🔀 Mix")
@@ -1584,6 +2030,7 @@ def setup(context):
         lines.append("\n<i>Mənbə əlavə et:</i> <code>/depo add &lt;Spotify / YouTube / t.me linki&gt; [say]</code>")
         rows = [
             [btn("⏸ Söndür", "df:off") if on else btn("▶️ İşə sal", "df:on"), btn("🔄 Yenilə", "df:panel")],
+            [btn("📊 Canlı monitor (1 san.)", "dt:start")],
             [btn("➖", "df:d:-"), btn(f"⏱ {filler.delay} san.", "df:noop"), btn("➕", "df:d:+")],
             [btn("➖", "df:w:-"), btn(f"🧵 {workers_label(filler.workers)}", "df:noop"), btn("➕", "df:w:+")],
             [btn(("🎵 YT Music kataloqu: 🟢" if filler.ytm_on else "🎵 YT Music kataloqu: 🔴"), "df:ytm")],
@@ -1636,11 +2083,13 @@ def setup(context):
             num = re.search(r"\d+", low)
             if not num:
                 await message.answer(f"🧵 Rejim: <b>{workers_label(filler.workers)}</b>\n"
-                                     f"<i>Dəyiş:</i> <code>/depo workers 3</code> (1 = tək-tək, max {MAX_WORKERS})",
+                                     f"<i>Dəyiş:</i> <code>/depo workers 16</code> (1 = tək-tək, max {MAX_WORKERS})",
                                      parse_mode="HTML")
                 return
             v = filler.set_workers(int(num.group()))
-            await message.answer(f"🧵 Rejim: <b>{workers_label(v)}</b>", parse_mode="HTML")
+            warn = ("\n⚠️ <i>Çox işçi: Telegram kanala göndərmə limiti (flood) və YouTube 429 / bot-yoxlaması "
+                    "ehtimalı artır. Fasiləni 0 etmə.</i>" if v > 8 else "")
+            await message.answer(f"🧵 Rejim: <b>{workers_label(v)}</b>{warn}", parse_mode="HTML")
             return
         if low.startswith("ytm"):
             if not HAS_YTM:
@@ -1703,7 +2152,7 @@ def setup(context):
             await cb.answer(f"⏱ Fasilə: {v} san.")
         elif action == "w" and len(parts) > 2:
             cur = filler.workers
-            v = filler.set_workers(cur + (1 if parts[2] == "+" else -1))
+            v = filler.step_workers(1 if parts[2] == "+" else -1)
             if v == cur:
                 await cb.answer("Tək-tək rejimdir (minimum)" if v == 1 else f"Maksimum {MAX_WORKERS} paralel",
                                 show_alert=False)
@@ -1719,11 +2168,9 @@ def setup(context):
                 filler.ytm_seen.clear()
             await cb.answer("🎵 YT Music kataloqu " + ("açıldı" if filler.ytm_on else "söndürüldü"))
         elif action == "rebuild":
-            filler.queue.clear()
-            filler.seen.clear()
-            filler.stats["queue_built"] = 0
-            filler.stats["last_build"] = None
-            await cb.answer("Növbə növbəti addımda yenidən qurulacaq")
+            filler.reset_state()
+            await filler.save_state(force=True)
+            await cb.answer("Növbə sıfırlandı — Telegram tarixçəsi də tam yenidən oxunacaq", show_alert=True)
         elif action == "sources":
             await cb.answer()
             await show(*sources_view())
@@ -1776,6 +2223,198 @@ def setup(context):
         item = tg_item(res[0], res[1], a.duration or 0)
         if filler.add_front([item]):
             logger.info(f"📦 Kanal postu növbəyə: {item['title']}")
+
+    # ── 📊 Canlı monitor (depo top) ──
+    top_sessions = {}          # (chat_id, msg_id) -> {"paused", "view", "sort", "stop", "until", ...}
+    context.depo_top_sessions = top_sessions
+
+    def top_kb(sess, running=True):
+        if not running:
+            return InlineKeyboardMarkup(inline_keyboard=[
+                [btn("▶️ Yenidən başlat", "dt:start")],
+                [btn("⬅️ Panel", "df:panel"), btn("❌ Bağla", "dt:close")],
+            ])
+        log = sess["view"] == "log"
+        row1 = [btn("▶️ Davam" if sess["paused"] else "⏸ Fasilə", "dt:pause"),
+                btn("🧵 İşçilər" if log else "📜 Jurnal", "dt:view")]
+        if not log:
+            row1.append(btn("↕️ #-yə görə" if sess["sort"] == "time" else "↕️ Vəziyyətə görə", "dt:sort"))
+        return InlineKeyboardMarkup(inline_keyboard=[
+            row1,
+            [btn("➖", "dt:w:-"), btn(f"🧵 {filler.workers}", "dt:noop"), btn("➕", "dt:w:+")],
+            [btn("➖", "dt:d:-"), btn(f"⏱ {filler.delay} san.", "dt:noop"), btn("➕", "dt:d:+")],
+            [btn("⏸ Doldurucunu söndür", "dt:off") if filler.running else btn("▶️ Doldurucunu işə sal", "dt:on"),
+             btn("⏹ Monitoru dayandır", "dt:stop")],
+            [btn("⬅️ Panel", "df:panel"), btn("❌ Bağla", "dt:close")],
+        ])
+
+    def kb_sig(kb) -> str:
+        return "|".join(b.text for row in kb.inline_keyboard for b in row)
+
+    async def top_run(key, sess):
+        chat_id, msg_id = key
+        meter = ProcMeter()
+        meter.sample()
+        tz = bot_tz()
+        last_text = last_kb = None
+        next_tick = time.monotonic()
+        try:
+            while not sess["stop"]:
+                if not sess["paused"] and time.time() >= sess["until"]:
+                    break
+                kb = top_kb(sess)
+                sig = kb_sig(kb)
+                text = None
+                if not sess["paused"] or sess.pop("dirty", False):
+                    proc = meter.sample() if not sess["paused"] else (sess.get("proc") or meter.sample())
+                    sess["proc"] = proc
+                    text = render_top(filler, sess, proc, datetime.now(tz).strftime("%H:%M:%S"))
+                try:
+                    if text and text != last_text:
+                        await bot.edit_message_text(chat_id=chat_id, message_id=msg_id, text=text,
+                                                    parse_mode="HTML", reply_markup=kb)
+                        last_text, last_kb = text, sig
+                    elif sig != last_kb:
+                        await bot.edit_message_reply_markup(chat_id=chat_id, message_id=msg_id, reply_markup=kb)
+                        last_kb = sig
+                except Exception as e:
+                    err = str(e).lower()
+                    wait = getattr(e, "retry_after", None)
+                    if wait:
+                        logger.info(f"depo top: flood limit, {wait} san. gözlənilir")
+                        await asyncio.sleep(wait)
+                        next_tick = time.monotonic()
+                    elif "not modified" in err:
+                        last_text, last_kb = text or last_text, sig
+                    elif "not found" in err or "can't be edited" in err:
+                        break                                   # mesaj silinib
+                    else:
+                        logger.warning(f"depo top yenilənmədi: {e}")
+                # dəqiq 1 san. addım (edit-in özü ~0.1–0.3 san. çəkir — sürüşmə olmasın)
+                next_tick += TOP_INTERVAL
+                delay = next_tick - time.monotonic()
+                if delay < 0:
+                    next_tick = time.monotonic()
+                    delay = 0
+                await asyncio.sleep(delay)
+        except asyncio.CancelledError:
+            sess["closed"] = True
+            raise
+        finally:
+            top_sessions.pop(key, None)
+            if not sess.get("closed"):
+                proc = sess.get("proc") or meter.sample()
+                text = render_top(filler, {**sess, "paused": True}, proc,
+                                  datetime.now(tz).strftime("%H:%M:%S")).replace("⏸ fasilə", "⏹ dayandı")
+                try:
+                    await bot.edit_message_text(chat_id=chat_id, message_id=msg_id, text=text,
+                                                parse_mode="HTML", reply_markup=top_kb(sess, running=False))
+                except Exception:
+                    pass
+
+    def top_start(key):
+        for k, old in list(top_sessions.items()):     # bir çatda bir monitor
+            if k[0] == key[0]:
+                old["stop"] = True
+                if k == key:
+                    old["closed"] = True
+        sess = {"paused": False, "view": "workers", "sort": "time", "stop": False,
+                "until": time.time() + TOP_MAX_RUNTIME}
+        top_sessions[key] = sess
+        sess["task"] = asyncio.create_task(top_run(key, sess))
+        return sess
+
+    @dp.message(Command("depotop"))
+    async def depotop_cmd(message: types.Message):
+        if not message.from_user or not is_creator(message.from_user.id):
+            return
+        msg = await message.answer("📊 <i>depo top başlayır...</i>", parse_mode="HTML")
+        top_start((msg.chat.id, msg.message_id))
+
+    @dp.callback_query(F.data.startswith("dt:"))
+    async def depotop_callback(cb: types.CallbackQuery):
+        if not is_creator(cb.from_user.id):
+            await cb.answer("⛔ İcazə yoxdur", show_alert=True)
+            return
+        parts = cb.data.split(":")
+        action = parts[1]
+        key = (cb.message.chat.id, cb.message.message_id)
+        sess = top_sessions.get(key)
+
+        if action == "start":
+            add_wait["until"] = 0
+            await cb.answer("📊 Canlı monitor")
+            top_start(key)
+            return
+        if action == "close":
+            if sess:
+                sess["closed"] = sess["stop"] = True
+            await cb.answer()
+            try:
+                await cb.message.delete()
+            except Exception:
+                pass
+            return
+        if action == "noop":
+            await cb.answer("➖ / ➕ ilə dəyiş")
+            return
+        # bu düymələr monitor dayansa da işləyir
+        if action == "w" and len(parts) > 2:
+            cur = filler.workers
+            v = filler.step_workers(1 if parts[2] == "+" else -1)
+            if v == cur:
+                await cb.answer("Minimum 1 işçi" if v == 1 else f"Maksimum {MAX_WORKERS} işçi")
+            else:
+                await cb.answer(f"🧵 {workers_label(v)}" + (" · ⚠️ flood riski" if v > 8 else ""))
+        elif action == "d" and len(parts) > 2:
+            v = filler.step_delay(1 if parts[2] == "+" else -1)
+            await cb.answer(f"⏱ Fasilə: {v} san.")
+        elif action == "on":
+            filler.start()
+            await cb.answer("🟢 Doldurucu işə salındı")
+        elif action == "off":
+            await filler.stop()
+            await cb.answer("🔴 Doldurucu söndürüldü")
+        elif not sess:
+            await cb.answer("Monitor dayanıb — ▶️ ilə yenidən başlat")
+            return
+        elif action == "pause":
+            sess["paused"] = not sess["paused"]
+            if not sess["paused"]:
+                sess["until"] = max(sess["until"], time.time() + 300)
+            await cb.answer("⏸ Fasilə" if sess["paused"] else "▶️ Davam")
+        elif action == "view":
+            sess["view"] = "workers" if sess["view"] == "log" else "log"
+            sess["dirty"] = True
+            await cb.answer("📜 Son hadisələr" if sess["view"] == "log" else "🧵 İşçilər")
+        elif action == "sort":
+            sess["sort"] = "idx" if sess["sort"] == "time" else "time"
+            sess["dirty"] = True
+            await cb.answer("Vəziyyətə görə" if sess["sort"] == "time" else "İşçi nömrəsinə görə")
+        elif action == "stop":
+            sess["stop"] = True
+            await cb.answer("⏹ Monitor dayandırıldı")
+            return
+        else:
+            await cb.answer()
+            return
+        if sess:
+            sess["dirty"] = True
+
+    class StopTopOnLeave:
+        """Monitor mesajında 📦 panel / menyu düyməsi basılanda canlı yenilənmə dayansın (paneli üstələməsin)."""
+        async def __call__(self, handler, event, data):
+            d = getattr(event, "data", None) or ""
+            if d.startswith(("df:", "menu:", "fx:")) and event.message:
+                ts = top_sessions.get((event.message.chat.id, event.message.message_id))
+                if ts:
+                    ts["closed"] = ts["stop"] = True
+                    t = ts.get("task")
+                    if t and not t.done():
+                        t.cancel()
+            return await handler(event, data)
+
+    dp.callback_query.outer_middleware(StopTopOnLeave())
 
     # ── 📱 Userbot komandaları ──
     @dp.message(Command("userbot"), F.from_user.id.func(is_creator))
@@ -1862,6 +2501,19 @@ def setup(context):
             if item and filler.add_front([item]):
                 logger.info(f"📥 Userbot: yeni audio növbəyə: {item['title']}")
 
+    # 💾 Bot dayananda (Ctrl+C / systemctl stop — aiogram siqnalı tutur) növbə diskə yazılır
+    if not getattr(context, "_depo_shutdown_hooked", False):
+        context._depo_shutdown_hooked = True
+
+        async def _depo_on_shutdown():
+            f = getattr(context, "depo_filler", None)     # plugin yenidən yüklənibsə — ən təzəsi
+            if f:
+                f.save_state_now()
+                logger.info(f"💾 Depo növbəsi yazıldı: {len(f.queue)} əsas + {len(f.ytm_queue)} YT Music"
+                            f" + {len(f.inflight)} yarımçıq")
+
+        dp.shutdown.register(_depo_on_shutdown)
+
     # Restartdan sonra: əvvəl açıq idisə davam et
     if filler.enabled:
         try:
@@ -1869,11 +2521,13 @@ def setup(context):
         except RuntimeError:              # event loop hələ işləmirsə
             pass
 
-    logger.info("✅ Depo doldurucu + userbot plugin-i yükləndi (/depo, /scan_chat, /userbot)")
+    logger.info("✅ Depo doldurucu + userbot plugin-i yükləndi (/depo, /depotop, /scan_chat, /userbot)")
 
 
 async def teardown(context):
     """plugin_manager söndürəndə / yenidən yükləyəndə fon işini dayandırır (vəziyyət saxlanılır)."""
+    for ts in list(getattr(context, "depo_top_sessions", {}).values()):
+        ts["stop"] = True
     scan = getattr(context, "depo_scan_state", None)
     if scan and scan.get("task") and not scan["task"].done():
         scan["stop"] = True

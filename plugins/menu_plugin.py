@@ -357,6 +357,7 @@ SYS_TEXT = (
     "🧩 <b>Plugin-lər</b> — quraşdır, yenilə, söndür\n"
     "🎧 <b>Yükləmə formatı</b> — birbaşa m4a / ffmpeg çevirmə\n"
     "🔎 <b>Axtarış mənbəyi</b> — YouTube / YouTube Music / hər ikisi\n"
+    "🌐 <b>Brauzer / cookies</b> — Chrome, Firefox, Brave, Edge... profil, User-Agent, test\n"
     "📜 <b>Loglar</b> — bot loglarını kanala göndər (interval)\n"
     "━━━━━━━━━━━━━━━━━━"
 )
@@ -372,6 +373,8 @@ def sys_kb():
          _btn("🎧 Yükləmə formatı", "dlf")],
         [InlineKeyboardButton(text="📜 Loglar", callback_data="lg:panel"),          # logs_plugin
          _btn("🔎 Axtarış mənbəyi", "srch")],
+        [_btn("🌐 Brauzer / cookies", "web"),
+         InlineKeyboardButton(text="📊 Depo monitor", callback_data="dt:start")],  # depo_filler_plugin
         nav_row("main"),
     ])
 
@@ -457,6 +460,106 @@ def search_source_view(note: str = ""):
         nav_row("sys"),
     ])
     return text, kb
+
+
+def web_profile_view(note: str = ""):
+    """🌐 Brauzer / cookies: cookie mənbəyi, brauzer, profil, keyring, User-Agent, test."""
+    try:
+        from core import webprofile as wp
+    except Exception as e:
+        return f"❌ webprofile yüklənmədi: <code>{escape(str(e))[:200]}</code>", \
+            InlineKeyboardMarkup(inline_keyboard=[nav_row("sys")])
+    cfg = wp.current()
+    found = wp.detect()
+    eff = wp.effective_source(cfg)
+    b = wp.BROWSERS[cfg["browser"]]
+    cf = wp.cookies_file()
+    if not cf:
+        cf_line = "<i>təyin olunmayıb</i> (config.env → <code>YOUTUBE_COOKIES_FILE</code>)"
+    elif os.path.isfile(cf):
+        cf_line = f"✅ <code>{escape(cf)}</code>"
+    else:
+        cf_line = f"⚠️ tapılmadı: <code>{escape(cf)}</code>"
+    src_line = wp.COOKIE_SOURCES[cfg["cookies"]]
+    if cfg["cookies"] == "auto":
+        src_line += f" → <b>{'📄 cookies.txt' if eff == 'file' else '🌐 brauzer'}</b>"
+    sel_found = found.get(cfg["browser"]) or []
+    lines = [
+        "🌐 <b>Brauzer və cookies</b>\n━━━━━━━━━━━━━━━━━━",
+        f"🍪 <b>Cookie mənbəyi:</b> {src_line}",
+        f"🌐 <b>Brauzer:</b> {b['emoji']} {b['label']}"
+        + ("" if sel_found else " · ⚠️ <i>serverdə profili tapılmadı</i>"),
+        f"👤 <b>Profil:</b> {escape(wp.profile_label(cfg))}",
+    ]
+    if b["family"] == "chromium":
+        lines.append(f"🔐 <b>Keyring:</b> {cfg['keyring'] or 'avto'}")
+    lines += [
+        f"🕵️ <b>User-Agent:</b> {wp.UA_MODES[cfg['ua']]}",
+        f"📄 <b>cookies.txt:</b> {cf_line}",
+        "━━━━━━━━━━━━━━━━━━",
+        "<b>Serverdə tapılan brauzerlər:</b>",
+    ]
+    have = [k for k, v in found.items() if v]
+    lines.append("  " + (" · ".join(f"{wp.BROWSERS[k]['emoji']} {wp.BROWSERS[k]['label']} ({len(found[k])})"
+                                    for k in have) if have else "<i>heç biri — cookies.txt istifadə et</i>"))
+    t = wp.LAST_TEST
+    if t:
+        if t.get("error") and not t.get("ok"):
+            res = f"❌ {escape(str(t['error'])[:200])}"
+        elif t["source"] == "none":
+            res = "🚫 cookiesiz rejim — yoxlanacaq cookie yoxdur"
+        else:
+            res = (f"✅ {t['total']} cookie · YouTube: <b>{t['yt']}</b> · "
+                   + ("🔓 hesaba <b>daxil olunub</b>" if t["logged_in"] else "🔒 hesaba giriş yoxdur (anonim)"))
+        lines.append(f"\n🧪 <b>Son test</b> ({escape(t['label'])}, {t.get('secs', 0):.1f} san.):\n{res}")
+    lines.append("\n<i>Dəyişiklik növbəti yükləmə / axtarışdan etibarən tətbiq olunur — restart lazım deyil.</i>")
+    if note:
+        lines.append(f"\n{note}")
+
+    src_btns = [_btn(("✅ " if k == cfg["cookies"] else "") + label, f"web:src:{k}")
+                for k, label in wp.COOKIE_SOURCES.items()]
+    br_btns = []
+    for k, info in wp.BROWSERS.items():
+        if k == "safari" and not found.get(k):
+            continue                                   # macOS deyilsə göstərmə
+        n = len(found.get(k) or [])
+        mark = "✅ " if k == cfg["browser"] else ""
+        br_btns.append(_btn(f"{mark}{info['emoji']} {info['label']}" + (f" ·{n}" if n else ""), f"web:b:{k}"))
+    rows = [src_btns[:2], src_btns[2:]]
+    rows += [br_btns[i:i + 3] for i in range(0, len(br_btns), 3)]
+    prof_row = [_btn(f"👤 Profil ({len(sel_found)})", "web:prof")]
+    if b["family"] == "chromium":
+        prof_row.append(_btn(f"🔐 Keyring: {cfg['keyring'] or 'avto'}", "web:kr"))
+    rows.append(prof_row)
+    rows.append([_btn(f"🕵️ UA: {wp.UA_MODES[cfg['ua']]}", "web:ua"), _btn("🧪 Cookie testi", "web:test")])
+    rows.append([_btn("🔄 Yenilə (yenidən axtar)", "web:scan")])
+    rows.append(nav_row("sys"))
+    return "\n".join(lines), InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+def web_profiles_view(note: str = ""):
+    """👤 Seçilmiş brauzerin profilləri."""
+    from core import webprofile as wp
+    cfg = wp.current()
+    b = wp.BROWSERS[cfg["browser"]]
+    profs = wp.detect().get(cfg["browser"]) or []
+    lines = [f"👤 <b>{b['emoji']} {b['label']} — profillər</b>\n━━━━━━━━━━━━━━━━━━"]
+    if not profs:
+        lines.append("<i>Serverdə bu brauzerin cookies faylı olan profili tapılmadı.</i>\n"
+                     "Brauzeri serverdə aç, YouTube-a daxil ol və ya 📄 cookies.txt istifadə et.")
+    for i, p in enumerate(profs[:10], 1):
+        when = datetime.fromtimestamp(p["mtime"], get_tz()[0]).strftime("%d.%m %H:%M") if p["mtime"] else "?"
+        cur = " ✅" if p["path"] == cfg["profile"] else ""
+        lines.append(f"{i}. <b>{escape(p['name'])}</b>{cur}\n   <code>{escape(p['path'])}</code>\n"
+                     f"   <i>cookies yenilənib: {when}</i>")
+    lines.append("\n<i>Avto — ən son istifadə olunan profil götürülür.</i>")
+    if note:
+        lines.append(f"\n{note}")
+    rows = [[_btn(("✅ " if not cfg["profile"] else "") + "🔄 Avto (ən son)", "web:p:auto")]]
+    for i, p in enumerate(profs[:10]):
+        rows.append([_btn(("✅ " if p["path"] == cfg["profile"] else "") + f"{i + 1}. {p['name']}"[:40], f"web:p:{i}")])
+    rows.append(nav_row("web"))
+    return "\n".join(lines), InlineKeyboardMarkup(inline_keyboard=rows)
 
 
 FETCH_INTERVAL = 3          # fastfetch yenilənməsi (san.)
@@ -2000,6 +2103,66 @@ def setup(context):
             else:
                 await cb.answer()
             text, kb = search_source_view(note)
+            await edit(cb, text, kb)
+
+        elif action == "web":
+            from core import webprofile as wp
+            sub = parts[2] if len(parts) > 2 else ""
+            arg = parts[3] if len(parts) > 3 else ""
+            note = ""
+            if sub == "src" and arg in wp.COOKIE_SOURCES:
+                await asyncio.to_thread(wp.set_source, arg)
+                note = f"✅ Cookie mənbəyi: {wp.COOKIE_SOURCES[arg]}"
+                if arg == "file" and not os.path.isfile(wp.cookies_file() or "/nonexistent"):
+                    note += "\n⚠️ YOUTUBE_COOKIES_FILE tapılmadı — fayl qoyulana qədər brauzer istifadə olunacaq"
+                await cb.answer(wp.COOKIE_SOURCES[arg])
+            elif sub == "b" and arg in wp.BROWSERS:
+                await asyncio.to_thread(wp.set_browser, arg)
+                info = wp.BROWSERS[arg]
+                note = f"✅ Brauzer: {info['emoji']} {info['label']}"
+                if not wp.detect().get(arg):
+                    note += " · ⚠️ serverdə profili tapılmadı"
+                if wp.current()["cookies"] in ("file", "none"):
+                    note += "\n<i>Cookie mənbəyi brauzer deyil — tətbiq üçün 🌐 Brauzer və ya 🔄 Avto seç.</i>"
+                await cb.answer(f"{info['emoji']} {info['label']}")
+            elif sub == "prof":
+                await cb.answer()
+                await edit(cb, *web_profiles_view())
+                return
+            elif sub == "p":
+                profs = wp.detect().get(wp.current()["browser"]) or []
+                if arg == "auto":
+                    await asyncio.to_thread(wp.set_profile, "")
+                    await cb.answer("🔄 Avto profil")
+                elif arg.isdigit() and int(arg) < len(profs):
+                    p = profs[int(arg)]
+                    await asyncio.to_thread(wp.set_profile, p["path"])
+                    await cb.answer(f"👤 {p['name']}"[:190])
+                else:
+                    await cb.answer("Profil tapılmadı — 🔄 yenilə")
+                await edit(cb, *web_profiles_view())
+                return
+            elif sub == "kr":
+                v = await asyncio.to_thread(wp.cycle_keyring)
+                await cb.answer(f"🔐 Keyring: {v or 'avto'}")
+            elif sub == "ua":
+                v = await asyncio.to_thread(wp.cycle_ua_mode)
+                await cb.answer(f"🕵️ {wp.UA_MODES[v]}")
+            elif sub == "scan":
+                await asyncio.to_thread(wp.detect, True)
+                await cb.answer("🔄 Brauzerlər yenidən axtarıldı")
+            elif sub == "test":
+                await cb.answer("🧪 Yoxlanılır...")
+                await edit(cb, "🌐 <b>Brauzer və cookies</b>\n\n🧪 <i>Cookies oxunur... (keyring varsa 30 san.-yə qədər)</i>")
+                try:
+                    r = await asyncio.wait_for(asyncio.to_thread(wp.test_cookies), 45)
+                    note = "✅ Test bitdi" if r["ok"] else "⚠️ Test problem tapdı — aşağıya bax"
+                except asyncio.TimeoutError:
+                    note = ("❌ Test 45 san.-də bitmədi — çox güman keyring (gnome-keyring / kwallet) parol gözləyir. "
+                            "🔐 Keyring: BASICTEXT sına və ya cookies.txt istifadə et.")
+            else:
+                await cb.answer()
+            text, kb = await asyncio.to_thread(web_profile_view, note)
             await edit(cb, text, kb)
 
         elif action in ("fetch", "fetch_pause", "fetch_stop"):

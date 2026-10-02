@@ -53,7 +53,7 @@ class AppContext:
             )
             logger.info("✅ Spotify service initialized")
 
-            browser = os.getenv("YOUTUBE_BROWSER", "firefox")
+            browser = os.getenv("YOUTUBE_BROWSER", "chrome")
             self.youtube = YoutubeManager(browser=browser)
             self.youtube_manager = self.youtube
             self.youtube_playlist = YoutubeManagerPlaylist(browser=browser)
