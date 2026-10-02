@@ -1,4 +1,4 @@
-"""🧹 .purge — reply ilə və ya say göstərərək mesajları sil.
+"""🧹 .purge — reply ilə və ya say göstərərək mesajları sil (inline deyil — komanda mesajının özü redaktə olunur).
 
   .purge           — reply edilən mesajdan axırıncı mesaja qədər hamısını silir
   .purge [say]     — son [say] qədər mesajı silir (məs: .purge 100)
@@ -8,11 +8,11 @@
 import asyncio
 from html import escape
 
-from core.userbot_api import Chat, FloodWaitError, User, logger, safe_edit
+from core.userbot_api import Bar, Chat, FloodWaitError, User, ff, logger
 
 MAX_MESSAGES = 5000        # bir dəfəyə maksimum icazə verilən mesaj aralığı/sayı
 BATCH = 100                # Telegram bir sorğuda maksimum 100 mesaj silir
-DONE_VISIBLE = 4           # nəticə mesajı neçə saniyə görünsün
+DONE_VISIBLE = 4           # nəticə kartı neçə saniyə görünsün
 
 
 async def can_delete_others(client, chat) -> bool:
@@ -46,15 +46,14 @@ def register(ub):
 
         # Nə say verilməyibsə, nə də reply edilməyibsə xəbərdarlıq ver
         if count is None and (not event.is_reply or not event.reply_to_msg_id):
-            await safe_edit(
-                event,
-                "ℹ️ Mesaj sayını qeyd et (məs: <code>.purge 100</code>) və ya "
-                "silməyə başlayacağın mesaja <b>reply</b> edib <code>.purge</code> yaz."
-            )
+            await ub.out(event, ff(ub.title("purge"), [
+                ("Say", ".purge 100"), ("Mənimki", ".purge me 50"),
+                ("Reply", "mesaja reply → .purge"), ("Limit", f"{MAX_MESSAGES} mesaj")],
+                footer="say yaz və ya mesaja reply et"), inline=False)
             return
 
         if count is not None and count > MAX_MESSAGES:
-            await safe_edit(event, f"⛔ Bir dəfəyə maksimum <b>{MAX_MESSAGES}</b> mesaj silə bilərsiniz.")
+            await ub.out(event, ff(ub.title("purge"), [("Status", "✗ limit aşıldı"), ("Maks.", f"{MAX_MESSAGES} mesaj")]), inline=False)
             return
 
         chat = await event.get_chat()
@@ -68,12 +67,25 @@ def register(ub):
         own_only = mine_only or not others_ok
         warn = bool(not mine_only and not others_ok)
 
+        mode = "yalnız mənim" if own_only else "hamısı"
+        src = f"son {count}" if count is not None else "reply-dan bura"
+
+        def card(state, done=0, total=0, fail=0, note=None):
+            body = [("Rejim", mode), ("Aralıq", src), ("Status", state)]
+            if total:
+                body.append(Bar("Silindi", 100 * done / total, f"{done}/{total}"))
+            if fail:
+                body.append(("Alınmadı", fail))
+            if note:
+                body.append(("Qeyd", note))
+            return ff(ub.title("purge"), body)
+
+        out = await ub.out(event, card("● mesajlar toplanır"), inline=False)
+
         async def runner():
             ids, total_seen = [], 0
             deleted = failed = 0
             try:
-                await safe_edit(event, "🔎 <i>Mesajlar toplanır...</i>")
-                
                 if count is not None:
                     # Say parametri verilibsə: son mesajlardan geriyə doğru topla
                     async for m in client.iter_messages(chat_id, max_id=cmd_id, limit=None if own_only else count):
@@ -85,31 +97,26 @@ def register(ub):
                         if total_seen >= MAX_MESSAGES:
                             break
                 else:
-                    # Reply verilibsə: reply olunan mesajdan indiyə qədər topla
-                    async for m in client.iter_messages(chat_id, min_id=start_id - 1, max_id=cmd_id + 1):
+                    # Reply verilibsə: reply olunan mesajdan komandaya qədər topla (kartın özü daxil deyil)
+                    async for m in client.iter_messages(chat_id, min_id=start_id - 1, max_id=cmd_id):
                         total_seen += 1
-                        if m.id == cmd_id or not own_only or getattr(m, "out", False):
+                        if not own_only or getattr(m, "out", False):
                             ids.append(m.id)
                         if total_seen > MAX_MESSAGES:
-                            await safe_edit(event, f"⛔ Aralıq çox böyükdür (>{MAX_MESSAGES} mesaj) — heç nə silinmədi.\n"
-                                                   "<i>Daha yaxın mesaja reply et.</i>")
+                            await out.update(card("○ dayandı", note=f"aralıq > {MAX_MESSAGES} mesaj, "
+                                                                     "daha yaxın mesaja reply et"))
+                            await out.close(DONE_VISIBLE + 2)
                             return
 
-                if cmd_id not in ids:
-                    ids.append(cmd_id)
                 to_delete = [i for i in ids if i != cmd_id]
-                
                 if not to_delete:
-                    await safe_edit(event, "ℹ️ Silinəcək mesaj tapılmadı.")
-                    await asyncio.sleep(2)
-                    try:
-                        await event.delete()
-                    except Exception:
-                        pass
+                    await out.update(card("○ silinəcək mesaj yoxdur"))
+                    await out.close(DONE_VISIBLE)
                     return
 
-                await safe_edit(event, f"🧹 <b>{len(to_delete)}</b> mesaj silinir...")
-                for i in range(0, len(to_delete), BATCH):
+                total = len(to_delete)
+                await out.update(card("● silinir", 0, total))
+                for i in range(0, total, BATCH):
                     chunk = to_delete[i:i + BATCH]
                     while True:
                         try:
@@ -117,42 +124,26 @@ def register(ub):
                             deleted += len(chunk)
                             break
                         except FloodWaitError as e:
+                            await out.update(card(f"● limit, {e.seconds} san. gözlənilir", deleted, total, failed))
                             await asyncio.sleep(e.seconds + 1)
                         except Exception as e:
                             failed += len(chunk)
                             logger.info(f".purge silmə xətası: {e}")
                             break
+                    if total > BATCH:
+                        await out.update(card("● silinir", deleted + failed, total, failed))
                     await asyncio.sleep(0.3)
             except asyncio.CancelledError:
-                try:
-                    await client.delete_messages(chat_id, [cmd_id], revoke=True)
-                except Exception:
-                    pass
-                await _notice(client, chat_id, f"⏹ <b>.purge</b> dayandırıldı — {deleted} mesaj silindi.")
+                await out.update(card("⏹ dayandırıldı", fail=failed, note=f"{deleted} mesaj silindi"))
+                asyncio.create_task(out.close(DONE_VISIBLE))
                 raise
             except Exception as e:
                 logger.info(f".purge xətası: {e}")
-                await safe_edit(event, f"❌ <b>.purge:</b> <code>{escape(str(e))[:200]}</code>")
+                await out.update(card("✗ xəta", fail=failed, note=f"{deleted} silindi · {str(e)[:100]}"))
                 return
 
-            try:
-                await client.delete_messages(chat_id, [cmd_id], revoke=True)     # komandanın özü
-            except Exception:
-                pass
+            note = "silmə icazən yoxdur — yalnız öz mesajların" if warn else None
+            await out.update(card("✓ bitdi", deleted, deleted or 1, failed, note=note))
+            await out.close(DONE_VISIBLE)
 
-            text = f"🧹 <b>{deleted}</b> mesaj silindi" + (f" · ❌ {failed} silinmədi" if failed else "")
-            if warn:
-                text += "\n<i>Silmə icazən yoxdur — yalnız öz mesajların silindi.</i>"
-            await _notice(client, chat_id, text)
-
-        ub.track(chat_id, "purge", asyncio.create_task(runner()))
-
-
-async def _notice(client, chat_id, text):
-    """Nəticə mesajı: göndər, bir neçə saniyə sonra sil."""
-    try:
-        msg = await client.send_message(chat_id, text, parse_mode="html")
-        await asyncio.sleep(DONE_VISIBLE)
-        await client.delete_messages(chat_id, [msg.id], revoke=True)
-    except Exception as e:
-        logger.debug(f".purge bildirişi: {e}")
+        out.track("purge", runner())

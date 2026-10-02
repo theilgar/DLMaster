@@ -22,7 +22,7 @@ from html import escape
 from aiogram import F, types as ag_types
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle, InputTextMessageContent
 
-from core.userbot_api import UB, telethon_version, utils
+from core.userbot_api import UB, ff, telethon_version, utils
 
 logger = logging.getLogger(__name__)
 
@@ -113,20 +113,20 @@ def setup(context):
                 "düzəldir.\n\n<b>İstifadə (botda):</b> <code>/fix</code>", "bot")
 
     # ───────────── 🛠 .menu — admin paneli (bot inline rejimi ilə) ─────────────
-    async def bot_username():
-        if not ub.state.get("bot_username"):
-            ub.state["bot_username"] = (await context.bot.get_me()).username
-        return ub.state["bot_username"]
+    def plain(title: str) -> str:
+        """'💬 Hesab komandaları' → 'Hesab komandaları' (<pre> içində emoji hizanı pozur)."""
+        head, _, rest = title.partition(" ")
+        return rest if rest and not head[:1].isalnum() else title
 
     def text_menu() -> str:
-        L = ["🛠 <b>Userbot paneli</b> <i>(mətn rejimi — bu çatda düymə göndərilə bilmədi)</i>"]
+        body = []
         for key, cat in ub.ordered_cats():
             keys = ub.help_keys(key)
             if not keys:
                 continue
-            L += ["", f"<b>{cat['title']}</b>"]
-            L += [f"• <code>{escape(ub.help[k][0])}</code> — {escape(ub.help[k][1])}" for k in keys]
-        return "\n".join(L)
+            body.append(f"# {plain(cat['title'])}")
+            body += [(ub.help[k][0], ub.help[k][1]) for k in keys]
+        return ff(ub.title("menu"), body, footer="mətn rejimi — bu çatda inline düymə göndərmək olmur")
 
     async def on_menu(event):
         client = event.client
@@ -142,7 +142,7 @@ def setup(context):
         if len(ub.menus) > 200:
             ub.menus.pop(next(iter(ub.menus)))
         try:
-            results = await client.inline_query(await bot_username(), f"ub:menu:{tok}",
+            results = await client.inline_query(await ub.bot_username(), f"ub:menu:{tok}",
                                                 entity=await event.get_input_chat())
             if not results:
                 raise RuntimeError("inline nəticə gəlmədi")
@@ -171,55 +171,58 @@ def setup(context):
     def main_view(tok):
         client = ub.client
         on = client is not None and client.is_connected()
-        L = ["🛠 <b>Userbot admin paneli</b>", "", f"📶 Userbot: {'🟢 qoşulub' if on else '🔴 qoşulmayıb'}"]
+        body = [("Userbot", "● qoşulub" if on else "○ qoşulmayıb")]
         filler = getattr(context, "depo_filler", None)
         if filler is not None:
             try:
-                L.append(f"📦 Depo: {'🟢' if filler.running else '🔴'} · növbə {len(filler.queue)}")
+                body.append(("Depo", f"{'● işləyir' if filler.running else '○ dayanıb'} · növbə {len(filler.queue)}"))
             except Exception:
                 pass
-        active = ub.active_tasks()
-        if active:
-            L.append(f"⚙️ Aktiv iş: {active}")
+        body.append(("İşlər", f"{ub.active_tasks()} aktiv"))
+        body.append(("Komanda", f"{len(ub.commands)} · bölmə {len(ub.sections)}"))
+        if ub.cards:
+            body.append(("Kart", f"{len(ub.cards)} açıq"))
         m = ub.menus.get(tok) or {}
         if m.get("reply_uid"):
-            L.append("👤 <i>Reply edilən şəxs var — bölmələrdə əlavə düymələr</i>")
-        L += ["", "<i>Bölmə seç:</i>"]
+            body.append(("Reply", "● şəxs seçilib"))
+        text = ff(ub.title("menu"), body, footer="bölmə seç ↓")
         sec_btns = [Bt(tok, v["label"], key) for key, v in ub.ordered_sections()]
         rows = [sec_btns[i:i + 2] for i in range(0, len(sec_btns), 2)]
         rows.append([Bt(tok, "❓ Help", "help"), Bt(tok, "❌ Bağla", "close")])
-        return "\n".join(L), InlineKeyboardMarkup(inline_keyboard=rows)
+        return text, InlineKeyboardMarkup(inline_keyboard=rows)
 
     # ── help bölməsi (reyestrdən) ──
     def help_view(tok):
-        L = ["❓ <b>Help</b>", "", "Bölmə seç, sonra komandanın düyməsinə bas:"]
-        rows = []
+        body, rows = [], []
         for key, cat in ub.ordered_cats():
-            if not ub.help_keys(key):
+            keys = ub.help_keys(key)
+            if not keys:
                 continue
-            L.append(f"• <b>{cat['title']}</b> — <i>{escape(cat['sub'])}</i>")
+            body.append((plain(cat["title"]).split(" ")[0], f"{len(keys)} · {cat['sub']}"))
             rows.append([Bt(tok, cat["title"], f"help:c:{key}")])
         rows.append([Bt(tok, "⬅️ Menyu", "main")])
-        return "\n".join(L), InlineKeyboardMarkup(inline_keyboard=rows)
+        return ff(ub.title("help"), body, footer="bölmə seç, sonra komandaya bas"), \
+            InlineKeyboardMarkup(inline_keyboard=rows)
 
     def help_cat_view(tok, cat_key):
         cat = ub.help_cats.get(cat_key)
         if not cat:
             return help_view(tok)
         keys = ub.help_keys(cat_key)
-        L = [f"<b>{cat['title']}</b>", f"<i>{escape(cat['sub'])}</i>", ""]
-        L += [f"• <code>{escape(ub.help[k][0])}</code> — {escape(ub.help[k][1])}" for k in keys]
+        body = [f"# {plain(cat['title'])}"] + [(ub.help[k][0], ub.help[k][1]) for k in keys]
         btns = [Bt(tok, ub.help[k][0], f"help:x:{k}") for k in keys]
         rows = [btns[i:i + 3] for i in range(0, len(btns), 3)]
         rows.append([Bt(tok, "⬅️ Help", "help"), Bt(tok, "🏠 Menyu", "main")])
-        return "\n".join(L), InlineKeyboardMarkup(inline_keyboard=rows)
+        return ff(ub.title("help"), body, footer=cat["sub"]), InlineKeyboardMarkup(inline_keyboard=rows)
 
     def help_cmd_view(tok, k):
         if k not in ub.help:
             return help_view(tok)
         button, short, long, category = ub.help[k]
+        cat = ub.help_cats.get(category, {})
+        head = ff(ub.title("help"), [("Komanda", button), ("Nədir", short), ("Bölmə", plain(cat.get("title", "—")))])
         rows = [[Bt(tok, "⬅️ Bölmə", f"help:c:{category}"), Bt(tok, "🏠 Menyu", "main")]]
-        return f"<b>{escape(button)}</b> — {escape(short)}\n\n{long}", InlineKeyboardMarkup(inline_keyboard=rows)
+        return f"{head}\n\n{long}", InlineKeyboardMarkup(inline_keyboard=rows)
 
     def cancel_ptask(tok):
         t = ub.ptasks.pop(tok, None)
@@ -233,13 +236,85 @@ def setup(context):
             await q.answer([], cache_time=0, is_personal=True)
             return
         parts = q.query.split(":")
+        kind = parts[1] if len(parts) > 1 else ""
         tok = parts[2] if len(parts) > 2 and parts[2].isalnum() else "0"
+
+        if kind == "card":                                   # komanda kartı (.speedtest, .ff, .purge ...)
+            out = ub.cards.get(tok)
+            if out is None:
+                await q.answer([], cache_time=0, is_personal=True)
+                return
+            await q.answer([InlineQueryResultArticle(
+                id=f"ubcard_{tok}", title="🧩 Userbot", description="komanda nəticəsi",
+                input_message_content=InputTextMessageContent(message_text=out.text, parse_mode="HTML",
+                                                              disable_web_page_preview=True),
+                reply_markup=out.kb(),
+            )], cache_time=0, is_personal=True)
+            return
+
         text, kb = main_view(tok)
         await q.answer([InlineQueryResultArticle(
-            id=f"ubmenu{tok}", title="🛠 Userbot admin paneli", description="Status, sistem, çat, depo, help",
+            id=f"ubmenu_{tok}", title="🛠 Userbot admin paneli", description="Status, sistem, çat, depo, help",
             input_message_content=InputTextMessageContent(message_text=text, parse_mode="HTML"),
             reply_markup=kb,
         )], cache_time=0, is_personal=True)
+
+    # inline_message_id — BotFather-də /setinlinefeedback aktivdirsə buradan gəlir (yoxdursa Out özü alır)
+    @dp.chosen_inline_result(F.result_id.startswith(("ubcard_", "ubmenu_")))
+    async def ub_chosen(r: ag_types.ChosenInlineResult):
+        if not ub.is_creator(r.from_user.id) or not r.inline_message_id:
+            return
+        if r.result_id.startswith("ubcard_"):
+            out = ub.cards.get(r.result_id[len("ubcard_"):])
+            if out is not None:
+                out.set_iid(r.inline_message_id)
+        else:
+            m = ub.menus.get(r.result_id[len("ubmenu_"):])
+            if m is not None:
+                m["iid"] = r.inline_message_id
+
+    # ── kart düymələri: ubc:<tok>:<action> ──
+    @dp.callback_query(F.data.startswith("ubc:"))
+    async def ub_card_cb(cb: ag_types.CallbackQuery):
+        if not ub.is_creator(cb.from_user.id):
+            await cb.answer("⛔ Bu kart yalnız sahibi üçündür", show_alert=True)
+            return
+        _, tok, action = (cb.data.split(":", 2) + ["", ""])[:3]
+        out = ub.cards.get(tok)
+        if out is None:
+            await cb.answer("Bu kart köhnədir — komandanı yenidən yaz", show_alert=True)
+            return
+        out.set_iid(cb.inline_message_id)
+        if out._acquiring:                                  # userbot-un özü-klik (id almaq üçün)
+            await cb.answer()
+            return
+        try:
+            if action == "x":
+                await cb.answer("Bağlandı")
+                await out.close()
+            elif action == "s":
+                if out.running():
+                    out.task.cancel()
+                    await cb.answer("⏹ Dayandırılır...")
+                else:
+                    await cb.answer("İşləyən iş yoxdur")
+            elif action == "r":
+                await cb.answer("🔄")
+                if out.refresh:
+                    await out.refresh(out)
+                else:
+                    await out.update()
+            elif action in out.actions:
+                await cb.answer()
+                await out.actions[action](out, cb)
+            else:
+                await cb.answer()
+        except Exception as e:
+            logger.warning(f"kart ({action}) xətası: {e}", exc_info=True)
+            try:
+                await cb.answer(f"Xəta: {str(e)[:150]}", show_alert=True)
+            except Exception:
+                pass
 
     @dp.callback_query(F.data.startswith("ubm:"))
     async def ub_panel_cb(cb: ag_types.CallbackQuery):
@@ -321,6 +396,7 @@ def setup(context):
             logger.warning("⚠️ userbot host: telethon_client tapılmadı (depo_filler_plugin yüklənməyib?)")
             return
         ub.client = client
+        ub.state.setdefault("attach_time", time.time())
         ub.attach_pending()
         cmds = " ".join("." + c["name"] for c in ub.commands)
         logger.info(f"✅ Userbot komandaları qoşuldu: {cmds}")
@@ -330,7 +406,7 @@ def setup(context):
     except RuntimeError:
         logger.error("userbot host: event loop işləmir")
 
-    logger.info("✅ Userbot host yükləndi (/.menu paneli)")
+    logger.info("✅ Userbot host yükləndi (.menu paneli + inline kartlar)")
 
 
 async def teardown(context):
@@ -347,6 +423,9 @@ async def teardown(context):
     for task in ub.ptasks.values():
         if task and not task.done():
             task.cancel()
+    for out in list(ub.cards.values()):
+        if out.running():
+            out.task.cancel()
     if ub.client:
         for fn, _ in ub._handlers:
             try:

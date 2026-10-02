@@ -1,89 +1,52 @@
-"""🖥 .fastfetch — sistem məlumatı (3 saniyədən bir yenilənir) + panelə 🖥 Sistem bölməsi."""
+"""🖥 .fastfetch [san] / .ff [san] — canlı sistem məlumatı, inline kart (⏹ / 🔁 düymələri ilə).
+
+  .ff          — 60 san. canlı (hər 3 san. yenilənir)
+  .ff 300      — 300 san. canlı (maks. 3600)
+  .ff 0        — bir dəfəlik snapshot
+"""
 import asyncio
 import time
 
-from core.userbot_api import (FF_DEFAULT, FF_INTERVAL, FF_MAX, InlineKeyboardMarkup,
-                              LiveStats, logger, render_fastfetch, safe_edit, static_info)
+from core.userbot_api import FF_DEFAULT, FF_INTERVAL, FF_MAX, LiveStats, Out, render_fastfetch, static_info
 
 
 def register(ub):
-    @ub.command("fastfetch", pattern=r"^\.fastfetch(?:\s+(\d+))?$",
+    @ub.command("fastfetch", pattern=r"^\.(?:fastfetch|ff)(?:\s+(\d+))?$",
                 help=("sistem məlumatı (canlı)",
-                      "OS, host, kernel, uptime, paketlər, CPU, GPU, temperatur, load, CPU / RAM / Swap / Disk "
-                      "zolaqları, şəbəkə sürəti, botun RAM-ı. <b>3 saniyədən bir</b> yenilənir.\n\n"
-                      "<b>İstifadə:</b>\n• <code>.fastfetch</code> — 60 san.\n• <code>.fastfetch 300</code> — 5 dəq.\n"
-                      "• <code>.fastfetch 0</code> — <code>.stop</code>-a qədər (maks. 1 saat)\n\n"
-                      "<i>Paneldə:</i> 🖥 Sistem → ▶️ Canlı"))
-    async def on_fastfetch(event):
-        arg = (event.pattern_match.group(1) or "").strip()
-        duration = int(arg) if arg.isdigit() else FF_DEFAULT
-        duration = FF_MAX if duration == 0 else min(duration, FF_MAX)
+                      "Server haqqında fastfetch görünüşündə məlumat: OS, CPU, RAM, disk, şəbəkə, bot.\n\n"
+                      "<b>İstifadə:</b>\n• <code>.ff</code> — 60 san. canlı\n"
+                      f"• <code>.ff 300</code> — 300 san. (maks. {FF_MAX})\n• <code>.ff 0</code> — snapshot\n"
+                      "• kartda ⏹ və ya <code>.stop</code> — dayandır"))
+    async def on_ff(event):
+        arg = event.pattern_match.group(1)
+        secs = min(FF_MAX, int(arg)) if arg is not None else FF_DEFAULT
+        st = await static_info()
+        live = LiveStats()
+        await asyncio.sleep(0.5)                      # ilk CPU/şəbəkə ölçüsü boş olmasın
+        out = Out(ub, event)
+        again = [[out.btn("🔁 Canlı", "again")]]
 
-        async def loop():
-            st = await static_info()
-            live = LiveStats()
-            await asyncio.sleep(0.5)
-            end = time.monotonic() + duration
+        async def loop(dur):
+            end = time.monotonic() + dur
             try:
-                while True:
-                    remaining = end - time.monotonic()
-                    left = f"{int(remaining)} san. qalıb" if remaining > 0 else "dayandı"
-                    await safe_edit(event, render_fastfetch(st, live.sample(), left))
-                    if remaining <= 0:
-                        break
-                    await asyncio.sleep(min(FF_INTERVAL, max(0.5, remaining)))
+                while (left := end - time.monotonic()) > 0:
+                    await asyncio.sleep(FF_INTERVAL)
+                    await out.update(render_fastfetch(st, live.sample(), f"{int(left)} san. qalıb"), rows=[])
             except asyncio.CancelledError:
-                try:
-                    await safe_edit(event, render_fastfetch(st, live.sample(), "dayandırıldı"))
-                except Exception:
-                    pass
+                await out.update(render_fastfetch(st, live.sample(), "dayandırıldı"), rows=again)
                 raise
-            except Exception as e:
-                logger.info(f".fastfetch xətası: {e}")
+            await out.update(render_fastfetch(st, live.sample(), "bitdi"), rows=again)
 
-        ub.track(event.chat_id, "ff", asyncio.create_task(loop()))
+        @out.on("again")
+        async def _(o, cb):
+            if not o.running():
+                o.track("ff", loop(secs or FF_DEFAULT))
 
-    ub.add_help("p_sys", "🖥 Sistem", "server məlumatı",
-                "Fastfetch-in panel versiyası: 🔄 ilə yenilə, ▶️ Canlı — 60 san. ərzində 3 saniyədən bir.", "panel")
+        async def refresh(o):
+            await o.update(render_fastfetch(st, live.sample(), "snapshot"))
+        out.refresh = refresh
 
-    def sys_kb(sctx, live=False):
-        first = [sctx.btn("⏹ Dayandır", "stop")] if live else \
-            [sctx.btn("🔄 Yenilə", "refresh"), sctx.btn("▶️ Canlı (60 san.)", "live")]
-        return InlineKeyboardMarkup(inline_keyboard=[first, sctx.nav()])
-
-    @ub.section("sys", "🖥 Sistem", order=20)
-    async def render_sys(sctx):
-        st = await static_info()
-        live = LiveStats()
-        await asyncio.sleep(0.5)
-        return render_fastfetch(st, live.sample(), "bir dəfəlik"), sys_kb(sctx)
-
-    async def sys_live(ub_, tok, iid):
-        st = await static_info()
-        live = LiveStats()
-        await asyncio.sleep(0.5)
-        end = time.monotonic() + FF_DEFAULT
-        from core.userbot_api import SectionCtx
-        sctx = SectionCtx(ub_, "sys", tok, None, "", [])
-        while ub_.views.get(tok) == "sys:live":
-            remaining = end - time.monotonic()
-            if remaining <= 0:
-                await ub_.edit_panel(iid, render_fastfetch(st, live.sample(), "bitdi"), sys_kb(sctx))
-                break
-            await ub_.edit_panel(iid, render_fastfetch(st, live.sample(), f"{int(remaining)} san. qalıb"),
-                                 sys_kb(sctx, live=True))
-            await asyncio.sleep(FF_INTERVAL)
-
-    @ub.on_section("sys")
-    async def handle_sys(sctx):
-        if sctx.action == "live":
-            await sctx.answer("▶️ Canlı rejim")
-            old = ub.ptasks.pop(sctx.tok, None)
-            if old and not old.done():
-                old.cancel()
-            ub.views[sctx.tok] = "sys:live"
-            ub.ptasks[sctx.tok] = asyncio.create_task(sys_live(ub, sctx.tok, sctx.iid))
-        else:
-            await sctx.answer("⏹" if sctx.action == "stop" else "🔄")
-            text, kb = await render_sys(sctx)
-            await sctx.show(text, kb)
+        await out.open(render_fastfetch(st, live.sample(), "başlayır" if secs else "snapshot"),
+                       [] if secs else again)
+        if secs:
+            out.track("ff", loop(secs))

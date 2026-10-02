@@ -28,6 +28,21 @@ API (ub):
   ub.on_section(key)(handle)                 — həmin bölmənin düymələrini idarə edir
   ub.track(chat_id, kind, task) / ub.stop_tasks(chat_id) / ub.active_tasks()
   ub.bot / ub.dp / ub.creator_id
+  await ub.out(event, text, rows=None, inline=True) -> Out
+                        — komanda cavabını bot vasitəsilə inline kart kimi göndərir (düymələrlə);
+                          inline mümkün deyilsə avtomatik sadə mesaja (komandanın özünü redaktə) keçir.
+  ub.title("status")    — fastfetch başlığı: "status@<bot_username>"
+
+Kart (Out):
+  await out.update(text, rows=KEEP)   — kartı yenilə (inline: bot edit, mətn: mesaj edit)
+  out.btn(text, action) + @out.on(action) async def h(out, cb)  — karta xüsusi düymə
+  out.track(kind, coro)               — fon işi (kartda ⏹ Dayandır çıxır, .stop da işləyir)
+  out.refresh = async fn(out)         — 🔄 düyməsi
+  await out.close(delay=0)
+
+fastfetch görünüşü:
+  ff(title, body, footer=None, logo=False)
+     body: ("Açar", dəyər) | Bar("Açar", faiz, "etiket") | "# Bölmə" | "sətir"
 
 Panel bölməsi (sctx — SectionCtx):
   sctx.ub, sctx.tok, sctx.menu (chat_id, reply_uid, msg_id), sctx.action, sctx.args, sctx.cb, sctx.iid
@@ -51,6 +66,7 @@ import time
 from datetime import datetime
 from html import escape
 
+from aiogram.exceptions import TelegramBadRequest, TelegramRetryAfter
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from telethon import events, utils
 from telethon import __version__ as telethon_version
@@ -334,6 +350,133 @@ class LiveStats:
         return res
 
 
+# ───────────────────────── 🎨 fastfetch üslubu ─────────────────────────
+def _env_on(name, default="1") -> bool:
+    return (os.getenv(name, default) or "").strip().lower() not in ("0", "false", "no", "off", "")
+
+
+FF_LOGO = _env_on("UB_FF_LOGO")                       # UB_FF_LOGO=0 → loqosuz
+FF_WIDTH = int(os.getenv("UB_FF_WIDTH", "44") or 44)  # <pre> blokunun maks. eni (telefon üçün ~44)
+FF_PALETTE = _env_on("UB_FF_PALETTE")                 # fastfetch-in rəng blokları
+PALETTE = "🟥🟧🟨🟩🟦🟪⬛⬜"
+
+# fastfetch-in "_small" loqoları (eni 9-13 simvol)
+LOGOS = {
+    "arch": ["      /\\", "     /  \\", "    /\\   \\", "   /      \\",
+             "  /   ,,   \\", " /   |  |  -\\", "/_-''    ''-_\\"],
+    "debian": ["  _____", " /  __ \\", "|  /    |", "|  \\___-", "-_", "  --_"],
+    "ubuntu": ["         _", "     ---(_)", " _/  ---  \\", "(_) |   |", "  \\  --- _/", "     ---(_)"],
+    "fedora": ["   _____", "  /   __)\\", "  |  /  \\ \\", "__|  |__/ /", "\\ \\     / /", " \\_\\___/ /", "   \\____/"],
+    "alpine": ["   /\\ /\\", "  /    \\ \\", " /     /\\ \\", "/     /  \\ \\", "      \\   \\"],
+    "linux": ["    ___", "   (.. |", "   (<> |", "  / __  \\", " ( /  \\ /|", "_/\\ __)/_)", "\\/-____\\/"],
+}
+_LOGO_ALIAS = {"arch": "arch", "manjaro": "arch", "endeavouros": "arch", "cachyos": "arch", "garuda": "arch",
+               "artix": "arch", "debian": "debian", "raspbian": "debian", "ubuntu": "ubuntu", "pop": "ubuntu",
+               "linuxmint": "ubuntu", "elementary": "ubuntu", "fedora": "fedora", "rhel": "fedora",
+               "centos": "fedora", "rocky": "fedora", "almalinux": "fedora", "alpine": "alpine"}
+_logo_cache = []
+
+
+def os_logo() -> list:
+    """os-release ID / ID_LIKE-a görə fastfetch loqosu."""
+    if _logo_cache:
+        return _logo_cache[0]
+    data = {}
+    for line in _read("/etc/os-release").splitlines():
+        if "=" in line:
+            k, v = line.split("=", 1)
+            data[k] = v.strip('"').lower()
+    key = "linux"
+    for cand in [data.get("ID", "")] + data.get("ID_LIKE", "").split():
+        if cand in _LOGO_ALIAS:
+            key = _LOGO_ALIAS[cand]
+            break
+    _logo_cache.append(LOGOS[key])
+    return LOGOS[key]
+
+
+class Bar:
+    """ff() üçün zolaq sətri:  CPU  ████░░░░ 41.2%"""
+    __slots__ = ("key", "pct", "label")
+
+    def __init__(self, key, pct, label=""):
+        self.key, self.pct, self.label = str(key), float(pct or 0), str(label)
+
+
+def _wrap(text: str, n: int) -> list:
+    """Sözlərə görə n enə bölür (söz n-dən uzundursa kəsilir)."""
+    n = max(6, n)
+    lines, cur = [], ""
+    for w in text.split(" "):
+        if not cur:
+            cur = w
+        elif len(cur) + 1 + len(w) <= n:
+            cur += " " + w
+        else:
+            lines.append(cur)
+            cur = w
+    lines.append(cur)
+    return lines or [""]
+
+
+def _cut(s: str, n: int) -> str:
+    return s if len(s) <= n else s[:max(1, n - 1)] + "…"
+
+
+def ff(title, body=(), *, footer=None, logo=False, palette=None, width=None) -> str:
+    """fastfetch görünüşlü HTML blok.
+
+    body elementləri:
+      ("Açar", dəyər)         → hizalanmış açar / dəyər sətri
+      Bar("RAM", 41, "3/8GB") → zolaq (eni sətrə avtomatik sığdırılır)
+      "# Bölmə"               → ── Bölmə ──────── ayırıcı
+      "istənilən mətn" / ""   → olduğu kimi / boş sətir
+    Hər şey <pre> içində escape olunur — dəyərlərə HTML yazma.
+    """
+    width = width or FF_WIDTH
+    logo_lines = os_logo() if (logo and FF_LOGO) else []
+    lw = max((len(x) for x in logo_lines), default=0)
+    gap = 2 if logo_lines else 0
+    room = max(18, width - lw - gap)
+    keys = [str(i[0]) for i in body if isinstance(i, tuple)] + [i.key for i in body if isinstance(i, Bar)]
+    kw = min(max((len(k) for k in keys), default=0), 10)
+
+    title = str(title)
+    out = [_cut(title, room), "-" * min(len(title), room)]
+    for it in body:
+        if isinstance(it, Bar):
+            head = f"{it.key.ljust(kw)}  "
+            bw = max(4, min(10, room - len(head) - 1 - len(it.label)))
+            line = f"{head}{bar(it.pct, bw)} {it.label}".rstrip()
+        elif isinstance(it, tuple):
+            pad = " " * (kw + 2)
+            vlines = _wrap(str(it[1]), room - len(pad))
+            out.append(_cut(f"{str(it[0]).ljust(kw)}  {vlines[0]}", room))
+            out += [_cut(pad + v, room) for v in vlines[1:3]]     # maks. 3 sətir
+            continue
+        elif isinstance(it, str) and it.startswith("# "):
+            head = f"── {it[2:]} "
+            line = head + "─" * max(2, room - len(head))
+        else:
+            line = str(it or "")
+        out.append(_cut(line, room))
+
+    if logo_lines:
+        merged = []
+        for i in range(max(len(out), len(logo_lines))):
+            left = logo_lines[i] if i < len(logo_lines) else ""
+            right = out[i] if i < len(out) else ""
+            merged.append((left.ljust(lw) + " " * gap + right).rstrip())
+        out = merged
+
+    html = f"<pre>{escape(chr(10).join(out))}</pre>"
+    if (FF_PALETTE and logo) if palette is None else palette:
+        html += "\n" + PALETTE
+    if footer:
+        html += f"\n<i>{escape(str(footer))}</i>"
+    return html
+
+
 def render_fastfetch(st: dict, live: dict, left: str) -> str:
     mem = _meminfo()
     total, avail = mem.get("MemTotal", 0), mem.get("MemAvailable", 0)
@@ -347,28 +490,25 @@ def render_fastfetch(st: dict, live: dict, left: str) -> str:
     def pct(a, b):
         return 100.0 * a / b if b else 0.0
 
-    rows = [
+    body = [
         ("OS", st["os"]), ("Host", st["model"]), ("Kernel", st["kernel"]),
-        ("Uptime", fmt_span(uptime)), ("Paket", st["pkgs"]), ("Shell", st["shell"]),
+        ("Uptime", fmt_span(uptime)), ("Pkgs", st["pkgs"]), ("Shell", st["shell"]),
         ("CPU", st["cpu"]), *([("GPU", st["gpu"])] if st["gpu"] else []),
-        ("Tezlik", freq or "—"), *([("Temp", temp)] if temp else []), ("Load", load),
+        ("Freq", freq or "—"), *([("Temp", temp)] if temp else []), ("Load", load),
+        "# Resurs",
+        Bar("CPU", live["cpu"], f"{live['cpu']:.1f}%"),
+        Bar("RAM", pct(used, total), f"{fmt_bytes(used)}/{fmt_bytes(total)}"),
+        *([Bar("Swap", pct(s_total - s_free, s_total), f"{fmt_bytes(s_total - s_free)}/{fmt_bytes(s_total)}")]
+          if s_total else []),
+        Bar("Disk", pct(disk.used, disk.total), f"{fmt_bytes(disk.used, 0)}/{fmt_bytes(disk.total, 0)}"),
+        ("Net", f"↓{fmt_bytes(live['rx'])}/s ↑{fmt_bytes(live['tx'])}/s"),
+        "# Bot",
+        ("RAM", fmt_bytes(_proc_rss())),
+        ("Uptime", fmt_span(time.time() - st["bot_start"])),
+        ("Python", f"{st['py']} · Telethon {telethon_version}"),
     ]
-    w = max(len(k) for k, _ in rows)
-    lines = [f"{k.ljust(w)}  {v}" for k, v in rows]
-    lines += [
-        "",
-        f"CPU   {bar(live['cpu'])} {live['cpu']:5.1f}%",
-        f"RAM   {bar(pct(used, total))} {fmt_bytes(used)}/{fmt_bytes(total)}",
-        f"Swap  {bar(pct(s_total - s_free, s_total))} {fmt_bytes(s_total - s_free)}/{fmt_bytes(s_total)}",
-        f"Disk  {bar(pct(disk.used, disk.total))} {fmt_bytes(disk.used, 0)}/{fmt_bytes(disk.total, 0)}",
-        f"Şəbəkə ↓ {fmt_bytes(live['rx'])}/s  ↑ {fmt_bytes(live['tx'])}/s",
-        "",
-        f"Bot   RAM {fmt_bytes(_proc_rss())} · {fmt_span(time.time() - st['bot_start'])}",
-        f"Py {st['py']} · Telethon {telethon_version}",
-    ]
-    return (f"🖥 <b>{escape(st['user'])}@{escape(st['host'])}</b>\n"
-            f"<pre>{escape(chr(10).join(lines))}</pre>\n"
-            f"<i>🔄 {FF_INTERVAL} san.-dən bir · {escape(left)} · {datetime.now():%H:%M:%S}</i>")
+    return ff(f"{st['user']}@{st['host']}", body, logo=True,
+              footer=f"🔄 {FF_INTERVAL} san.-dən bir · {left} · {datetime.now():%H:%M:%S}")
 
 
 # ───────────────────────── 👤 .info ─────────────────────────
@@ -656,6 +796,217 @@ def plain_name(ent) -> str:
 
 
 # ───────────────────────── 🧩 reyestr ─────────────────────────
+# ───────────────────────── 🃏 inline kart (komanda cavabı) ─────────────────────────
+KEEP = object()          # update(rows=KEEP) → düymələr dəyişmir
+CARD_MIN_GAP = 1.1       # iki redaktə arası minimum (FloodWait-dən qorunma)
+CARD_LIMIT = 200
+
+
+class Out:
+    """Komandanın cavabı. Mümkünsə bot vasitəsilə inline kart (düymələrlə), yoxsa sadə mesaj.
+
+    Inline axın: userbot  →  @bot inline sorğu "ub:card:<tok>"  →  nəticəni çata göndərir  →  komanda silinir.
+    Sonrakı redaktələr bot tərəfindən inline_message_id ilə edilir. inline_message_id iki yolla gəlir:
+      1) chosen_inline_result (BotFather → /setinlinefeedback aktivdirsə)
+      2) olmasa — userbot kartdakı 🔄 düyməsini özü "basır", bot callback-dən id-ni götürür.
+    Heç biri alınmasa kart silinir və sadə mesaj rejiminə keçilir.
+    """
+
+    def __init__(self, ub, event, inline=True):
+        self.ub = ub
+        self.event = event
+        self.client = event.client
+        self.chat_id = event.chat_id
+        self.tok = os.urandom(4).hex()
+        self.want_inline = inline
+        self.mode = "text"              # "inline" | "text"
+        self.msg = event                # mətn rejimində redaktə olunan mesaj
+        self.sent = None                # inline rejimdə göndərilən kart (userbot tərəfi)
+        self.iid = None                 # inline_message_id (bot tərəfi)
+        self.iid_ready = asyncio.Event()
+        self._acquiring = False
+        self.text = ""
+        self.rows = []
+        self.task = None
+        self.actions = {}
+        self.refresh = None
+        self.closed = False
+        self._last = 0.0
+        self._lock = asyncio.Lock()
+
+    # ── düymələr ──
+    def btn(self, text, action):
+        return InlineKeyboardButton(text=text, callback_data=f"ubc:{self.tok}:{action}"[:64])
+
+    def on(self, action):
+        def deco(fn):
+            self.actions[action] = fn
+            return fn
+        return deco
+
+    def running(self) -> bool:
+        return bool(self.task and not self.task.done())
+
+    def kb(self) -> InlineKeyboardMarkup:
+        rows = [list(r) for r in (self.rows or [])]
+        sysrow = [self.btn("🔄", "r")]
+        if self.running():
+            sysrow.append(self.btn("⏹ Dayandır", "s"))
+        sysrow.append(self.btn("❌ Bağla", "x"))
+        rows.append(sysrow)
+        return InlineKeyboardMarkup(inline_keyboard=rows)
+
+    def track(self, kind, coro_or_task):
+        task = coro_or_task if isinstance(coro_or_task, asyncio.Task) else asyncio.create_task(coro_or_task)
+        self.task = task
+        self.ub.track(self.chat_id, kind, task)
+        return task
+
+    def _text_body(self) -> str:
+        t = self.text
+        if self.running():
+            t += "\n<i>⏹ dayandırmaq: </i><code>.stop</code>"
+        return t
+
+    # ── açmaq ──
+    async def open(self, text, rows=None):
+        self.text, self.rows = text, rows or []
+        self.ub.cards[self.tok] = self
+        while len(self.ub.cards) > CARD_LIMIT:
+            self.ub.cards.pop(next(iter(self.ub.cards)))
+        if self.want_inline and await self._open_inline():
+            self._last = time.monotonic()
+            return self
+        self.mode = "text"
+        await safe_edit(self.msg, self._text_body())
+        self._last = time.monotonic()
+        return self
+
+    async def _open_inline(self) -> bool:
+        try:
+            username = await self.ub.bot_username()
+            results = await self.client.inline_query(username, f"ub:card:{self.tok}",
+                                                     entity=await self.event.get_input_chat())
+            if not results:
+                raise RuntimeError("inline nəticə gəlmədi")
+            self.sent = await results[0].click(self.chat_id, reply_to=self.event.reply_to_msg_id, hide_via=True)
+        except Exception as e:
+            logger.info(f"kart inline alınmadı ({self.chat_id}) → mətn: {e}")
+            return False
+        self.mode = "inline"
+        try:
+            await self.event.delete()
+        except Exception:
+            pass
+        return True
+
+    # ── yeniləmək ──
+    async def update(self, text=None, rows=KEEP):
+        if self.closed:
+            return
+        if text is not None:
+            self.text = text
+        if rows is not KEEP:
+            self.rows = rows or []
+        async with self._lock:
+            if self.closed:
+                return
+            wait = CARD_MIN_GAP - (time.monotonic() - self._last)
+            if wait > 0:
+                await asyncio.sleep(wait)
+            if self.mode == "inline" and not self.iid and not await self._ensure_iid():
+                await self._degrade()
+            elif self.mode == "inline":
+                await self._bot_edit()
+            else:
+                await safe_edit(self.msg, self._text_body())
+            self._last = time.monotonic()
+
+    def set_iid(self, iid):
+        if iid and not self.iid:
+            self.iid = iid
+            self.iid_ready.set()
+
+    async def _ensure_iid(self) -> bool:
+        if self.iid:
+            return True
+        with _suppress():
+            await asyncio.wait_for(self.iid_ready.wait(), 1.5)       # chosen_inline_result
+        if self.iid or self.sent is None:
+            return bool(self.iid)
+        self._acquiring = True                                      # 🔄 düyməsini özümüz basırıq
+        try:
+            await self.sent.click(data=f"ubc:{self.tok}:r".encode())
+        except Exception as e:
+            logger.debug(f"kart özü-klik: {e}")
+        finally:
+            self._acquiring = False
+        with _suppress():
+            await asyncio.wait_for(self.iid_ready.wait(), 3)
+        return bool(self.iid)
+
+    async def _degrade(self):
+        logger.warning("kart: inline_message_id alınmadı → sadə mesaj rejiminə keçildi")
+        try:
+            await self.client.delete_messages(self.chat_id, [self.sent.id])
+        except Exception:
+            pass
+        self.mode = "text"
+        try:
+            self.msg = await self.client.send_message(self.chat_id, self._text_body(), parse_mode="html",
+                                                      link_preview=False)
+        except Exception as e:
+            logger.info(f"kart mətn rejimi göndərilmədi: {e}")
+            self.closed = True
+
+    async def _bot_edit(self):
+        for _ in range(3):
+            try:
+                await self.ub.bot.edit_message_text(inline_message_id=self.iid, text=self.text, parse_mode="HTML",
+                                                    reply_markup=self.kb(), disable_web_page_preview=True)
+                return
+            except TelegramRetryAfter as e:
+                await asyncio.sleep(e.retry_after + 1)
+            except TelegramBadRequest as e:
+                if "not modified" not in str(e):
+                    logger.debug(f"kart redaktə: {e}")
+                return
+            except Exception as e:
+                logger.debug(f"kart redaktə: {e}")
+                return
+
+    # ── bağlamaq ──
+    async def close(self, delay=0, cancel=True):
+        if delay:
+            await asyncio.sleep(delay)
+        if self.closed:
+            return
+        self.closed = True
+        if cancel and self.running() and self.task is not asyncio.current_task():
+            self.task.cancel()
+        self.ub.cards.pop(self.tok, None)
+        try:
+            if self.mode == "inline" and self.sent is not None:
+                await self.client.delete_messages(self.chat_id, [self.sent.id])
+            else:
+                await self.msg.delete()
+        except Exception:
+            if self.iid:
+                with _suppress():
+                    await self.ub.bot.edit_message_text(inline_message_id=self.iid, text="✖️ <i>bağlandı</i>",
+                                                        parse_mode="HTML")
+
+
+class _suppress:
+    """contextlib.suppress(Exception) + asyncio.TimeoutError, async-dostu qısa forma."""
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return exc[0] is not None and issubclass(exc[0], Exception)
+
+
 class SectionCtx:
     def __init__(self, ub, section_key, tok, cb, action, args):
         self.ub = ub
@@ -722,10 +1073,24 @@ class UB:
         self._loading = None            # hazırda yüklənən plugin faylının adı (owner)
         self.help_owner = {}            # help key -> owner
         self.plugin_files = {}          # ad -> fayl yolu (install/uninstall üçün)
+        self.cards = {}                 # tok -> Out (inline komanda kartları)
 
     # ── identik ──
     def is_creator(self, uid) -> bool:
         return bool(self.creator_id) and uid == self.creator_id
+
+    async def bot_username(self) -> str:
+        if not self.state.get("bot_username"):
+            self.state["bot_username"] = (await self.bot.get_me()).username
+        return self.state["bot_username"]
+
+    def title(self, name: str) -> str:
+        """fastfetch başlığı: menu@dllmasterbot"""
+        return f"{name}@{self.state.get('bot_username') or 'userbot'}"
+
+    # ── komanda cavabı: inline kart / sadə mesaj ──
+    async def out(self, event, text, rows=None, inline=True) -> "Out":
+        return await Out(self, event, inline=inline).open(text, rows)
 
     # ── komanda qeydiyyatı ──
     def command(self, name, pattern=None, outgoing=True, help=None, category="acc"):

@@ -6,7 +6,7 @@ Qrup və gizli kanallardakı audiolara çıxış əldə edir və onları birbaş
 depo doldurucu (depo_filler_plugin) növbəsinə əlavə edir.
 
 Əmrlər:
-  .alive                                — istənilən çatda reaksiya verir, 2 saniyə sonra mesajı silir
+  .alive                                — userbot_plugins/alive.py (bot nə qədərdir işləyir)
   /userbot                              — userbot-un statusunu yoxla
   /scan_chat <link/ID> [mesaj_sayı]     — kanalı skan et (⏹ Dayandır düyməsi ilə)
   /stop_scan                            — cari skan prosesini dayandır
@@ -67,29 +67,7 @@ def setup(context):
 
     context.telethon_task = asyncio.create_task(start_telethon())
 
-    # ── 1) .alive komandası ──
-    @client.on(events.NewMessage(outgoing=True, pattern=r"^\.alive$"))
-    async def on_alive_command(event):
-        try:
-            peer = await event.get_input_chat()
-            for emo in ("\u2705", "👍", "🔥"):
-                try:
-                    await client(SendReactionRequest(
-                        peer=peer,
-                        msg_id=event.id,
-                        reaction=[ReactionEmoji(emoticon=emo)]
-                    ))
-                    break
-                except Exception:
-                    continue
-        except Exception:
-            pass
-
-        await asyncio.sleep(2)
-        try:
-            await event.delete()
-        except Exception as e:
-            logger.error(f".alive silinmə xətası: {e}")
+    # ── 1) .alive → userbot_plugins/alive.py (uptime kartı) ──
 
     # ── 2) Yeni audiolara qulaq asmaq ──
     @client.on(events.NewMessage(func=lambda e: bool(e.audio)))
@@ -125,19 +103,23 @@ def setup(context):
     # ── 3) Userbot statusu ──
     @dp.message(Command("userbot"), F.from_user.id.func(is_creator))
     async def userbot_status(message: types.Message):
+        from core.userbot_api import ff
+        title = f"userbot@{(await bot.get_me()).username}"
         if not client.is_connected() or not await client.is_user_authorized():
-            await message.answer("🔴 <b>Userbot aktiv deyil!</b>\n<i>Əvvəlcə serverdə login.py ilə sessiya yaradın.</i>", parse_mode="HTML")
+            await message.answer(ff(title, [("Userbot", "○ aktiv deyil"), ("Həll", "serverdə login.py ilə sessiya yarat")]),
+                                 parse_mode="HTML")
             return
 
         me = await client.get_me()
-        await message.answer(
-            f"🟢 <b>Userbot Aktivdir!</b>\n"
-            f"👤 <b>Hesab:</b> {escape(me.first_name)} (@{escape(me.username or 'yoxdur')})\n"
-            f"🆔 <b>ID:</b> <code>{me.id}</code>\n"
-            f"📦 <i>Qrup və gizli kanallardan mahnıları skan edib /depo üçün istifadə edə bilərsiniz.</i>\n"
-            f"⚡ <i>İstənilən çatda <code>.alive</code> yazaraq hesabı yoxlaya bilərsiniz.</i>",
-            parse_mode="HTML",
-        )
+        name = " ".join(x for x in (me.first_name, me.last_name) if x) or "—"
+        filler = getattr(context, "depo_filler", None)
+        body = [("Userbot", "● aktiv"), ("Hesab", name), ("Username", f"@{me.username or '—'}"), ("ID", me.id),
+                "# Depo",
+                ("Doldurucu", "● var" if filler else "○ yoxdur"),
+                ("Skan", "● gedir" if scan_state["running"] else "○ yoxdur"),
+                "# İpucu",
+                ("Panel", "istənilən çatda .menu"), ("Yoxla", ".alive")]
+        await message.answer(ff(title, body, logo=True), parse_mode="HTML")
 
     # ── 4) Kanalı skan etmək ──
     @dp.message(Command("scan_chat"), F.from_user.id.func(is_creator))

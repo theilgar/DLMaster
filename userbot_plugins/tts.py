@@ -17,7 +17,7 @@ import re
 import shutil
 import tempfile
 
-from core.userbot_api import get_db, logger, safe_edit
+from core.userbot_api import Out, ff, get_db, logger, safe_edit
 
 MAX_LEN = 1500
 VOICE_KEY = "userbot:tts_voice"
@@ -171,26 +171,44 @@ def register(ub):
                       "edge-tts bütün səslər: <code>edge-tts --list-voices</code> (serverdə)."))
     async def on_ttsvoice(event):
         name = (event.pattern_match.group(1) or "").strip()
-        if not name:
-            cur = default_voice()
-            engine = "edge-tts" if HAS_EDGE else ("gTTS" if HAS_GTTS else "yoxdur ❌")
-            langs = " · ".join(f"<code>{k}:</code>" for k in LANGS)
-            await safe_edit(event,
-                            f"🗣 <b>TTS</b>\nMühərrik: <b>{engine}</b>\nCari səs: <code>{cur}</code>\n\n"
-                            f"Dil prefiksləri: {langs}\n"
-                            f"<i>Səsi dəyiş:</i> <code>.ttsvoice az-AZ-BanuNeural</code>")
+
+        def save(voice):
+            get_db().set_setting(VOICE_KEY, voice)
+
+        def card(note=None):
+            engine = "edge-tts" if HAS_EDGE else ("gTTS" if HAS_GTTS else "yoxdur ✗")
+            body = [("Engine", engine), ("Səs", default_voice()),
+                    ("ffmpeg", "● var (voice note)" if shutil.which("ffmpeg") else "○ yoxdur (adi audio)"),
+                    "# Dillər", ("Prefiks", " ".join(f"{k}:" for k in LANGS))]
+            if note:
+                body.append(("Qeyd", note))
+            return ff(ub.title("tts"), body, footer="standart səsi düymə ilə seç")
+
+        if name:
+            if not re.fullmatch(r"[A-Za-z]{2,3}-[A-Za-z]{2,4}-\w+Neural", name):
+                await ub.out(event, card("✗ ad belə olmalıdır: az-AZ-BanuNeural"))
+                return
+            try:
+                save(name)
+            except Exception as e:
+                await ub.out(event, card(f"✗ saxlanmadı: {str(e)[:80]}"))
+                return
+            await ub.out(event, card("✓ yadda saxlandı" + ("" if HAS_EDGE else " (edge-tts yoxdur!)")))
             return
-        if not re.fullmatch(r"[A-Za-z]{2,3}-[A-Za-z]{2,4}-\w+Neural", name):
-            await safe_edit(event, "❌ edge-tts səs adı belə olmalıdır: <code>az-AZ-BanuNeural</code>")
-            return
-        try:
-            get_db().set_setting(VOICE_KEY, name)
-        except Exception as e:
-            await safe_edit(event, f"❌ Saxlanmadı: <code>{str(e)[:120]}</code>")
-            return
-        await safe_edit(event, f"✅ Standart səs: <code>{name}</code>"
-                               + ("" if HAS_EDGE else "\n⚠️ <i>edge-tts quraşdırılmayıb — səs adı yalnız edge-tts "
-                                  "ilə işləyir; hazırda gTTS dil kodu istifadə olunacaq.</i>"))
+
+        btns = []
+        out = Out(ub, event)                      # düymələr açılışdan əvvəl qurulur
+        for code, (voice, _g) in LANGS.items():
+            btns.append(out.btn(code, f"v_{code}"))
+
+            async def pick(o, cb, voice=voice):
+                try:
+                    save(voice)
+                    await o.update(card(f"✓ {voice}"))
+                except Exception as e:
+                    await o.update(card(f"✗ {str(e)[:80]}"))
+            out.on(f"v_{code}")(pick)
+        await out.open(card(), [btns[i:i + 5] for i in range(0, len(btns), 5)])
 
 
 def _attrs(as_voice, dur, text):

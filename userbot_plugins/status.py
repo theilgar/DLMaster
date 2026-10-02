@@ -1,21 +1,18 @@
-"""📊 Status — userbot vəziyyəti (panel bölməsi)."""
+"""📊 Status — userbot vəziyyəti (panel bölməsi + .status kartı), fastfetch görünüşündə."""
 import time
 from datetime import datetime
-from html import escape
 
-from core.userbot_api import InlineKeyboardButton, InlineKeyboardMarkup, fmt_span, mention, static_info, telethon_version
+from core.userbot_api import InlineKeyboardMarkup, ff, fmt_span, plain_name, static_info, telethon_version
 
 
 def register(ub):
     ub.add_help("p_status", "📊 Status", "userbot vəziyyəti",
                 "Hesab, ping, botun işləmə müddəti, aktiv işlər, Telegram mənbələri.", "panel")
 
-    @ub.section("status", "📊 Status", order=10)
-    async def render(sctx):
+    async def build() -> str:
         client = ub.client
-        rows = [[sctx.btn("🔄 Yenilə", "r")], sctx.nav()]
         if not client or not client.is_connected():
-            return "📊 <b>Status</b>\n\n🔴 Userbot qoşulmayıb.", InlineKeyboardMarkup(inline_keyboard=rows)
+            return ff(ub.title("status"), [("Userbot", "○ qoşulmayıb")], logo=True)
         t0 = time.monotonic()
         me = await client.get_me()
         ping = (time.monotonic() - t0) * 1000
@@ -26,19 +23,41 @@ def register(ub):
         except Exception:
             n_src = 0
         scan = getattr(ub.context, "depo_scan_state", {}) or {}
-        text = ("📊 <b>Status</b>\n\n"
-                f"👤 Hesab: {mention(me)} (@{escape(me.username or '—')})\n"
-                f"🆔 <code>{me.id}</code>\n"
-                f"📶 Ping: {ping:.0f} ms\n"
-                f"⏱ Bot işləyir: {fmt_span(time.time() - st['bot_start'])}\n"
-                f"⚙️ Aktiv .fastfetch / .clear: {ub.active_tasks()}\n"
-                f"✈️ Telegram mənbələri: {n_src}" + (" · 🔎 skan gedir" if scan.get("running") else "") + "\n"
-                f"🧩 Telethon {telethon_version} · Py {st['py']}\n"
-                f"<i>{datetime.now():%H:%M:%S}</i>")
-        return text, InlineKeyboardMarkup(inline_keyboard=rows)
+        body = [
+            ("Hesab", plain_name(me)),
+            ("ID", me.id),
+            ("Ping", f"{ping:.0f} ms"),
+            ("Uptime", fmt_span(time.time() - st["bot_start"])),
+            "# İşlər",
+            ("Aktiv", f"{ub.active_tasks()} fon işi"),
+            ("Kart", f"{len(ub.cards)} açıq"),
+            ("Mənbə", f"{n_src} Telegram" + (" · skan gedir" if scan.get("running") else "")),
+            ("Plugin", f"{len(ub.plugin_files)} fayl · {len(ub.commands)} komanda"),
+            "# Versiya",
+            ("Telethon", telethon_version),
+            ("Python", st["py"]),
+        ]
+        return ff(ub.title("status"), body, logo=True, footer=f"{datetime.now():%H:%M:%S}")
+
+    # ── panel bölməsi ──
+    @ub.section("status", "📊 Status", order=10)
+    async def render(sctx):
+        rows = [[sctx.btn("🔄 Yenilə", "r")], sctx.nav()]
+        return await build(), InlineKeyboardMarkup(inline_keyboard=rows)
 
     @ub.on_section("status")
     async def handle(sctx):
         await sctx.answer("🔄")
         text, kb = await render(sctx)
         await sctx.show(text, kb)
+
+    # ── .status — istənilən çatda kart ──
+    @ub.command("status", help=("userbot statusu (kart)",
+                                "Statusu inline kart kimi göstərir (🔄 ilə yenilənir).\n\n"
+                                "<b>İstifadə:</b> <code>.status</code>"))
+    async def on_status(event):
+        out = await ub.out(event, await build())
+
+        async def refresh(o):
+            await o.update(await build())
+        out.refresh = refresh
