@@ -1,18 +1,16 @@
-"""🧹 .purge — reply etdiyin mesajdan axırıncı mesaja qədər hamısını sil.
+"""🧹 .purge — reply ilə və ya say göstərərək mesajları sil.
 
-  .purge       — reply edilən mesaj da daxil, ondan sonrakı bütün mesajlar (və .purge-in özü) silinir
-  .purge me    — yalnız sənin öz mesajların silinir (başqalarına toxunmur)
-
-Qrupda başqalarının mesajını silmək üçün "mesaj silmə" admin icazən olmalıdır; icazə yoxdursa yalnız öz
-mesajların silinir (xəbərdarlıqla). Şəxsi çatda hər iki tərəfdən silinir. Gedən silməni .stop dayandırır.
-Təsadüfən çox mesaj silinməsin deyə bir dəfəyə maksimum MAX_MESSAGES mesaj.
+  .purge           — reply edilən mesajdan axırıncı mesaja qədər hamısını silir
+  .purge [say]     — son [say] qədər mesajı silir (məs: .purge 100)
+  .purge me        — reply edilən yerdən yalnız öz mesajlarını silir
+  .purge me [say]  — son [say] qədər yalnız öz mesajlarını silir (məs: .purge me 50)
 """
 import asyncio
 from html import escape
 
 from core.userbot_api import Chat, FloodWaitError, User, logger, safe_edit
 
-MAX_MESSAGES = 5000        # bundan çox mesaj aralığı — silinmir
+MAX_MESSAGES = 5000        # bir dəfəyə maksimum icazə verilən mesaj aralığı/sayı
 BATCH = 100                # Telegram bir sorğuda maksimum 100 mesaj silir
 DONE_VISIBLE = 4           # nəticə mesajı neçə saniyə görünsün
 
@@ -26,21 +24,39 @@ async def can_delete_others(client, chat) -> bool:
 
 
 def register(ub):
-    @ub.command("purge", pattern=r"^\.purge(?:\s+(me))?$",
-                help=("reply edilənə qədər mesajları sil",
-                      "Reply etdiyin mesajdan <b>axırıncı mesaja qədər</b> hamısını silir (reply edilən mesaj da "
-                      "daxil, <code>.purge</code>-in özü də).\n\n"
-                      "<b>İstifadə:</b>\n• mesaja reply → <code>.purge</code> — aralıqdakı hamısı\n"
-                      "• mesaja reply → <code>.purge me</code> — yalnız öz mesajların\n\n"
-                      "Qrupda başqalarının mesajını silmək üçün <b>mesaj silmə</b> admin icazən olmalıdır; "
-                      "yoxdursa yalnız öz mesajların silinir. Gedən silməni <code>.stop</code> dayandırır.\n"
-                      f"⚠️ Geri qaytarmaq olmur. Bir dəfəyə maksimum {MAX_MESSAGES} mesaj."))
+    @ub.command("purge", pattern=r"^\.purge(?:\s+(.+))?$",
+                help=("mesajları sayla və ya reply ilə sil",
+                      "<b>İstifadə:</b>\n"
+                      "• <code>.purge 100</code> — son 100 mesajı silir\n"
+                      "• <code>.purge me 50</code> — yalnız sənin son 50 mesajını silir\n"
+                      "• mesaja reply → <code>.purge</code> — həmin mesajdan bura qədər silir\n"
+                      "• mesaja reply → <code>.purge me</code> — aralıqdakı yalnız öz mesajlarını silir\n\n"
+                      f"⚠️️ Maksimum limit: {MAX_MESSAGES} mesaj. Dayandırmaq üçün: <code>.stop</code>"))
     async def on_purge(event):
         client = event.client
-        mine_only = bool(event.pattern_match.group(1))
-        if not event.is_reply or not event.reply_to_msg_id:
-            await safe_edit(event, "ℹ️ Silməyə başlayacağın mesaja <b>reply</b> edib <code>.purge</code> yaz.")
+        raw_args = (event.pattern_match.group(1) or "").strip().split()
+        
+        # 'me' və say arqumentlərini müəyyən edirik
+        mine_only = any(arg.lower() == "me" for arg in raw_args)
+        count = None
+        for arg in raw_args:
+            if arg.isdigit():
+                count = int(arg)
+                break
+
+        # Nə say verilməyibsə, nə də reply edilməyibsə xəbərdarlıq ver
+        if count is None and (not event.is_reply or not event.reply_to_msg_id):
+            await safe_edit(
+                event,
+                "ℹ️ Mesaj sayını qeyd et (məs: <code>.purge 100</code>) və ya "
+                "silməyə başlayacağın mesaja <b>reply</b> edib <code>.purge</code> yaz."
+            )
             return
+
+        if count is not None and count > MAX_MESSAGES:
+            await safe_edit(event, f"⛔ Bir dəfəyə maksimum <b>{MAX_MESSAGES}</b> mesaj silə bilərsiniz.")
+            return
+
         chat = await event.get_chat()
         start_id, cmd_id, chat_id = event.reply_to_msg_id, event.id, event.chat_id
 
@@ -57,17 +73,32 @@ def register(ub):
             deleted = failed = 0
             try:
                 await safe_edit(event, "🔎 <i>Mesajlar toplanır...</i>")
-                async for m in client.iter_messages(chat_id, min_id=start_id - 1, max_id=cmd_id + 1):
-                    total_seen += 1
-                    if m.id == cmd_id or not own_only or getattr(m, "out", False):
-                        ids.append(m.id)
-                    if total_seen > MAX_MESSAGES:
-                        await safe_edit(event, f"⛔ Aralıq çox böyükdür (>{MAX_MESSAGES} mesaj) — heç nə silinmədi.\n"
-                                               "<i>Daha yaxın mesaja reply et.</i>")
-                        return
+                
+                if count is not None:
+                    # Say parametri verilibsə: son mesajlardan geriyə doğru topla
+                    async for m in client.iter_messages(chat_id, max_id=cmd_id, limit=None if own_only else count):
+                        total_seen += 1
+                        if not own_only or getattr(m, "out", False):
+                            ids.append(m.id)
+                            if len(ids) >= count:
+                                break
+                        if total_seen >= MAX_MESSAGES:
+                            break
+                else:
+                    # Reply verilibsə: reply olunan mesajdan indiyə qədər topla
+                    async for m in client.iter_messages(chat_id, min_id=start_id - 1, max_id=cmd_id + 1):
+                        total_seen += 1
+                        if m.id == cmd_id or not own_only or getattr(m, "out", False):
+                            ids.append(m.id)
+                        if total_seen > MAX_MESSAGES:
+                            await safe_edit(event, f"⛔ Aralıq çox böyükdür (>{MAX_MESSAGES} mesaj) — heç nə silinmədi.\n"
+                                                   "<i>Daha yaxın mesaja reply et.</i>")
+                            return
+
                 if cmd_id not in ids:
                     ids.append(cmd_id)
                 to_delete = [i for i in ids if i != cmd_id]
+                
                 if not to_delete:
                     await safe_edit(event, "ℹ️ Silinəcək mesaj tapılmadı.")
                     await asyncio.sleep(2)
@@ -76,6 +107,7 @@ def register(ub):
                     except Exception:
                         pass
                     return
+
                 await safe_edit(event, f"🧹 <b>{len(to_delete)}</b> mesaj silinir...")
                 for i in range(0, len(to_delete), BATCH):
                     chunk = to_delete[i:i + BATCH]
@@ -102,10 +134,12 @@ def register(ub):
                 logger.info(f".purge xətası: {e}")
                 await safe_edit(event, f"❌ <b>.purge:</b> <code>{escape(str(e))[:200]}</code>")
                 return
+
             try:
                 await client.delete_messages(chat_id, [cmd_id], revoke=True)     # komandanın özü
             except Exception:
                 pass
+
             text = f"🧹 <b>{deleted}</b> mesaj silindi" + (f" · ❌ {failed} silinmədi" if failed else "")
             if warn:
                 text += "\n<i>Silmə icazən yoxdur — yalnız öz mesajların silindi.</i>"

@@ -18,9 +18,6 @@ müqayisə olunur. Dəyişiklik varsa creator-a:
   4) 📦 Hamısını göndər (full update) — repodakı BÜTÜN commit edilməmiş dəyişikliklər
      (.gitignore və həssas fayllar istisna) bir commit-də göndərilir. Hesabatdan və ya
      /menu → 🌿 GitHub panelindən.
-  5) ☑️ Seçərək göndər — hansı faylların gedəcəyini özün seçirsən (səhifələnmiş siyahı, ✅/⬜).
-     Həssas fayllar (config.env, *.db, cookies ...) default olaraq seçilməyib, amma istəsən
-     xəbərdarlıqla tək-tək seçə bilərsən. .gitignore-dakı fayllar ümumiyyətlə siyahıya düşmür.
 
 GitHub ayarları (config.env, hamısı könüllü):
   GITHUB_REMOTE=origin          push ediləcək remote (default: origin)
@@ -550,7 +547,7 @@ def is_sensitive(path: str) -> bool:
 
 
 def working_changes(root: Path):
-    """Commit edilməmiş bütün dəyişikliklər → ([(növ, yol)], [(növ, yol) — həssas olduğu üçün ayrılanlar])."""
+    """Commit edilməmiş bütün dəyişikliklər → ([(növ, yol)], [həssas olduğu üçün çıxarılan yollar])."""
     rc, out, _ = git(root, "status", "--porcelain=v1", "-z", "-uall", raw=True)
     if rc != 0:
         return [], []
@@ -569,7 +566,7 @@ def working_changes(root: Path):
             # köhnə ad da commit-ə düşməlidir ki, repoda silinsin
             if old and "R" in xy:
                 if is_sensitive(old):
-                    excluded.append(("deleted", old))
+                    excluded.append(old)
                 else:
                     changes.append(("deleted", old))
         elif xy == "??":
@@ -579,7 +576,7 @@ def working_changes(root: Path):
         else:
             kind = "modified"
         if is_sensitive(path):
-            excluded.append((kind, path))
+            excluded.append(path)
         else:
             changes.append((kind, path))
     return changes, excluded
@@ -612,11 +609,11 @@ def repo_status(root: Path, fetch: bool = False) -> dict:
     return info
 
 
-def full_commit_message(changes, started: float, label: str = "Tam yeniləmə") -> str:
+def full_commit_message(changes, started: float) -> str:
     groups = {}
     for kind, path in changes:
         groups.setdefault(kind, []).append(Path(path).name)
-    title = f"{label} ({datetime.fromtimestamp(started, get_tz()).strftime('%d.%m.%Y %H:%M')})"
+    title = f"Tam yeniləmə ({datetime.fromtimestamp(started, get_tz()).strftime('%d.%m.%Y %H:%M')})"
     labels = [("modified", "Dəyişən"), ("new", "Yeni"), ("deleted", "Silinən"), ("renamed", "Adı dəyişən")]
     body = []
     for key, label in labels:
@@ -627,30 +624,13 @@ def full_commit_message(changes, started: float, label: str = "Tam yeniləmə") 
     return title + ("\n\n" + "\n".join(body) if body else "")
 
 
-def push_all(root: Path, message, selected=None) -> dict:
-    """
-    Dəyişiklikləri commit edib push edir.
-      selected=None → bütün həssas olmayan dəyişikliklər (köhnə davranış)
-      selected=set  → yalnız seçilən yollar (həssas fayllar da ola bilər — istifadəçi özü seçib)
-    message=None → seçilən fayllardan avtomatik commit mesajı.
-    """
+def push_all(root: Path, message: str) -> dict:
+    """Bütün (həssas olmayan) dəyişiklikləri commit edib push edir."""
     changes, excluded = working_changes(root)
-    if selected is None:
-        chosen, skipped = changes, excluded
-    else:
-        everything = changes + excluded
-        chosen = [(k, p) for k, p in everything if p in selected]
-        skipped = [(k, p) for k, p in everything if p not in selected]
-    paths = sorted({p for _, p in chosen})
-    label = "Tam yeniləmə" if selected is None else "Seçilmiş yeniləmə"
-    res = push_update(root, paths, message or full_commit_message(chosen, time.time(), label))
-    res["changes"] = chosen
-    res["skipped"] = len({p for _, p in skipped})
-    res["excluded"] = [p for _, p in skipped if is_sensitive(p)]
-    res["sensitive_sent"] = [p for p in paths if is_sensitive(p)]
-    if res.get("ok"):
-        left, left_ex = working_changes(root)
-        res["remaining"] = sorted({p for _, p in left + left_ex})
+    paths = sorted({p for _, p in changes})
+    res = push_update(root, paths, message)
+    res["excluded"] = excluded
+    res["changes"] = changes
     return res
 
 
@@ -660,7 +640,6 @@ def gh_kb(pid: str) -> InlineKeyboardMarkup:
          InlineKeyboardButton(text="❌ İmtina", callback_data=f"gh:skip:{pid}")],
         [InlineKeyboardButton(text="✏️ Commit mesajı", callback_data=f"gh:msg:{pid}"),
          InlineKeyboardButton(text="📦 Hamısını göndər", callback_data="ghf:prep:new")],
-        [InlineKeyboardButton(text="☑️ Seçərək göndər", callback_data="ghf:pick:new")],
     ])
 
 
@@ -678,9 +657,7 @@ def setup(context):
     root = Path(BASE_DIR)
     push_lock = asyncio.Lock()
     gh_state = {"await_msg": None}      # commit mesajı gözlənilirsə: pending id
-    # 📦 full update. selected: None = default (həssas olmayan hamısı), set = istifadəçinin seçimi
-    gh_full = {"message": None, "await": False, "chat_id": None, "panel_id": None,
-               "selected": None, "items": [], "page": 0}
+    gh_full = {"message": None, "await": False, "chat_id": None, "panel_id": None}   # 📦 full update
 
     # menu_plugin-dəki "creator mətn yazır" yoxlamasına əlavə et (music_plugin axtarış etməsin)
     prev_waiting = getattr(context, "menu_waiting_text", None)
@@ -861,76 +838,20 @@ def setup(context):
             if "not modified" not in str(e):
                 logger.warning(f"GitHub paneli yenilənmədi: {e}")
 
-    def changes_block(changes, excluded, limit=25, skipped=0, title="Dəyişikliklər") -> str:
+    def changes_block(changes, excluded, limit=25) -> str:
         counts = {}
         for kind, _ in changes:
             counts[kind] = counts.get(kind, 0) + 1
         summary = " · ".join(f"{STATUS_ICONS[k]} {v}" for k, v in counts.items()) or "—"
-        lines = [f"📁 <b>{title}:</b> {len(changes)} ({summary})"]
+        lines = [f"📁 <b>Dəyişikliklər:</b> {len(changes)} ({summary})"]
         for kind, path in changes[:limit]:
-            lock = " 🔒" if is_sensitive(path) else ""
-            lines.append(f"   {STATUS_ICONS[kind]}{lock} <code>{escape(path)}</code>")
+            lines.append(f"   {STATUS_ICONS[kind]} <code>{escape(path)}</code>")
         if len(changes) > limit:
             lines.append(f"   <i>… və daha {len(changes) - limit} fayl</i>")
         if excluded:
             lines.append(f"\n🔒 <b>Göndərilməyəcək (həssas):</b> {len(excluded)}")
-            lines += [f"   🔒 <code>{escape(p)}</code>" for _, p in excluded[:10]]
-        if skipped:
-            lines.append(f"⏭ <i>Seçilmədiyi üçün göndərilməyəcək: {skipped} fayl</i>")
+            lines += [f"   🔒 <code>{escape(p)}</code>" for p in excluded[:10]]
         return "\n".join(lines)
-
-    # ── ☑️ fayl seçimi ──
-    PAGE = 8
-
-    def effective_selection(info) -> set:
-        """Hazırkı seçim, repodakı real dəyişikliklərlə kəsişdirilmiş."""
-        if gh_full["selected"] is None:
-            return {p for _, p in info["changes"]}
-        every = {p for _, p in info["changes"]} | {p for _, p in info["excluded"]}
-        return gh_full["selected"] & every
-
-    def short_path(path: str, n=30) -> str:
-        return path if len(path) <= n else "…" + path[-(n - 1):]
-
-    async def pick_view():
-        info = await asyncio.to_thread(repo_status, root, False)
-        if info.get("error"):
-            return f"❌ {escape(info['error'])}", InlineKeyboardMarkup(inline_keyboard=[nav("ghf:open")])
-        items = [(k, p, False) for k, p in info["changes"]] + [(k, p, True) for k, p in info["excluded"]]
-        gh_full["items"] = items                     # düymə indeksləri bu siyahıya baxır
-        sel = effective_selection(info)
-        gh_full["selected"] = set(sel)               # artıq açıq seçim rejimi
-        pages = max(1, -(-len(items) // PAGE))
-        page = min(max(gh_full["page"], 0), pages - 1)
-        gh_full["page"] = page
-
-        n_sens = sum(1 for _, p, s in items if s and p in sel)
-        lines = ["☑️ <b>Göndəriləcək faylları seçin</b>\n",
-                 f"Seçilib: <b>{len(sel)}</b> / {len(items)}"
-                 + (f" · 🚨 həssas: <b>{n_sens}</b>" if n_sens else "")]
-        if not items:
-            lines.append("\n✅ <i>Commit edilməmiş dəyişiklik yoxdur.</i>")
-        kb = []
-        chunk = items[page * PAGE:(page + 1) * PAGE]
-        if chunk:
-            lines.append("")
-        for i, (kind, path, sens) in enumerate(chunk, start=page * PAGE):
-            mark = "✅" if path in sel else "⬜"
-            icon = "🔒" if sens else STATUS_ICONS[kind]
-            lines.append(f"{mark} {icon} <code>{escape(path)}</code>")
-            kb.append([btn(f"{mark} {icon} {short_path(path)}", f"ghf:t:{i}")])
-        if any(s for _, _, s in items):
-            lines.append("\n<i>🔒 = həssas fayl (token, baza, cookies...). Default göndərilmir — "
-                         "seçsəniz, repoya düşəcək.</i>")
-        if pages > 1:
-            kb.append([btn("◀️", f"ghf:pg:{(page - 1) % pages}"),
-                       btn(f"{page + 1}/{pages}", "ghf:noop"),
-                       btn("▶️", f"ghf:pg:{(page + 1) % pages}")])
-        if items:
-            kb.append([btn("✅ Hamısı (həssassız)", "ghf:all"), btn("⬜ Heç biri", "ghf:none")])
-        kb.append([btn(f"➡️ Davam et ({len(sel)})", "ghf:back")])
-        kb.append(nav("ghf:open"))
-        return "\n".join(lines)[:4000], InlineKeyboardMarkup(inline_keyboard=kb)
 
     async def status_view(fetch: bool = False):
         info = await asyncio.to_thread(repo_status, root, fetch)
@@ -964,8 +885,6 @@ def setup(context):
         kb = []
         if info["changes"] or info.get("ahead"):
             kb.append([btn("📦 Hamısını göndər", "ghf:prep")])
-        if info["changes"] or info["excluded"]:
-            kb.append([btn("☑️ Seçərək göndər", "ghf:pick")])
         kb.append([btn("🔄 Yenilə", "ghf:open"), btn("📡 GitHub-la yoxla", "ghf:fetch")])
         kb.append(nav("menu:sys"))
         return "\n".join(lines), InlineKeyboardMarkup(inline_keyboard=kb)
@@ -974,34 +893,21 @@ def setup(context):
         info = await asyncio.to_thread(repo_status, root, False)
         if info.get("error"):
             return f"❌ {escape(info['error'])}", InlineKeyboardMarkup(inline_keyboard=[nav("ghf:open")])
-        sel = effective_selection(info)
-        everything = info["changes"] + info["excluded"]
-        changes = [(k, p) for k, p in everything if p in sel]
-        excluded = [(k, p) for k, p in info["excluded"] if p not in sel]
-        skipped = len({p for _, p in info["changes"] if p not in sel})
-        sens_sent = [p for _, p in changes if is_sensitive(p)]
-        custom = gh_full["selected"] is not None
-        message = gh_full["message"] or full_commit_message(
-            changes, time.time(), "Seçilmiş yeniləmə" if custom else "Tam yeniləmə")
-        lines = [("☑️ <b>Seçilən fayllar — GitHub-a göndərilsin?</b>\n" if custom
-                  else "📦 <b>Tam yeniləmə — GitHub-a göndərilsin?</b>\n"),
+        changes = info["changes"]
+        if not gh_full["message"]:
+            gh_full["message"] = full_commit_message(changes, time.time())
+        lines = ["📦 <b>Tam yeniləmə — GitHub-a göndərilsin?</b>\n",
                  f"🌿 <code>{escape(info['branch'])}</code> → <code>{escape(info['remote'])}</code>"]
         if info.get("ahead"):
             lines.append(f"⬆️ Əvvəldən göndərilməmiş {info['ahead']} commit də push olunacaq")
         if info.get("behind"):
             lines.append(f"⚠️ GitHub-da sizdə olmayan {info['behind']} commit var — push rədd oluna bilər")
         lines.append("")
-        lines.append(changes_block(changes, excluded, skipped=skipped, title="Göndəriləcək"))
-        if sens_sent:
-            lines.append(f"\n🚨 <b>Diqqət: {len(sens_sent)} həssas fayl da göndəriləcək!</b> "
-                         "İçində token/parol varsa, GitHub-da hamı görə bilər (repo public-dirsə).")
-        lines.append(f"\n📝 <b>Commit mesajı:</b>\n<pre>{escape(message[:600])}</pre>")
+        lines.append(changes_block(changes, info["excluded"]))
+        lines.append(f"\n📝 <b>Commit mesajı:</b>\n<pre>{escape(gh_full['message'][:600])}</pre>")
         kb = []
         if changes or info.get("ahead"):
             kb.append([btn("✅ Təsdiqlə və göndər", "ghf:go")])
-        if everything:
-            kb.append([btn(f"☑️ Faylları seç ({len(changes)}/{len({p for _, p in everything})})", "ghf:pick")])
-        if changes or info.get("ahead"):
             kb.append([btn("✏️ Commit mesajı", "ghf:msg")])
         kb.append(nav("ghf:open"))
         return "\n".join(lines)[:4000], InlineKeyboardMarkup(inline_keyboard=kb)
@@ -1026,7 +932,6 @@ def setup(context):
         if action == "prep":
             await cb.answer()
             gh_full["message"] = None
-            gh_full["selected"] = None          # 📦 = default: həssas olmayan hamısı
             gh_full["await"] = False
             if new_msg:
                 # hesabatın altından: hesabat qalsın, yeni mesaj göndərilsin
@@ -1039,73 +944,13 @@ def setup(context):
             await edit_full_panel(text, kb)
             return
 
-        if action == "noop":
-            await cb.answer()
-            return
-
-        if action == "pick":
-            await cb.answer()
-            gh_full["await"] = False
-            gh_full["page"] = 0
-            if new_msg:
-                # hesabatdan: hesabatdakı fayllar əvvəlcədən seçilmiş olsun
-                sent = await bot.send_message(creator, "⏳ <i>Hazırlanır...</i>", parse_mode="HTML")
-                gh_full.update(chat_id=sent.chat.id if getattr(sent, "chat", None) else creator,
-                               panel_id=sent.message_id)
-                gh_full["message"] = None
-                p = await asyncio.to_thread(load_pending)
-                gh_full["selected"] = (
-                    {x for k in ("changed", "added", "removed") for x in p["files"].get(k, [])} if p else None
-                )
-            else:
-                gh_full.update(chat_id=cb.message.chat.id, panel_id=cb.message.message_id)
-            text, kb = await pick_view()
-            await edit_full_panel(text, kb)
-            return
-
-        if action in ("t", "pg", "all", "none"):
-            gh_full.update(chat_id=cb.message.chat.id, panel_id=cb.message.message_id)
-            items = gh_full["items"]
-            sel = gh_full["selected"] if gh_full["selected"] is not None else set()
-            alert = None
-            if action == "t":
-                try:
-                    kind, path, sens = items[int(parts[2])]
-                except (IndexError, ValueError):
-                    await cb.answer("Siyahı köhnəlib, yeniləndi")
-                    text, kb = await pick_view()
-                    await edit_full_panel(text, kb)
-                    return
-                if path in sel:
-                    sel.discard(path)
-                else:
-                    sel.add(path)
-                    if sens:
-                        alert = (f"⚠️ {path} həssas fayldır!\n\nİçində token, parol və ya şəxsi məlumat "
-                                 "ola bilər. Göndərsəniz, GitHub tarixçəsində qalacaq (sonradan silmək çətindir).")
-            elif action == "pg":
-                try:
-                    gh_full["page"] = int(parts[2])
-                except (IndexError, ValueError):
-                    pass
-            elif action == "all":
-                sel |= {p for _, p, s in items if not s}
-            elif action == "none":
-                sel.clear()
-            gh_full["selected"] = sel
-            await cb.answer(alert, show_alert=bool(alert))
-            text, kb = await pick_view()
-            await edit_full_panel(text, kb)
-            return
-
         if action == "msg":
             await cb.answer()
             gh_full["await"] = True
             gh_full.update(chat_id=cb.message.chat.id, panel_id=cb.message.message_id)
             await edit_full_panel(
                 "✏️ <b>Commit mesajını yazın</b>\n\n"
-                + (f"Hazırkı:\n<pre>{escape(gh_full['message'][:600])}</pre>" if gh_full["message"]
-                 else "<i>Hazırda avtomatik mesaj istifadə olunur (seçilən fayllardan yaradılır).</i>"),
+                f"Hazırkı:\n<pre>{escape((gh_full['message'] or '')[:600])}</pre>",
                 InlineKeyboardMarkup(inline_keyboard=[nav("ghf:back")]),
             )
             return
@@ -1124,40 +969,30 @@ def setup(context):
             await cb.answer("Göndərilir...")
             gh_full["await"] = False
             gh_full.update(chat_id=cb.message.chat.id, panel_id=cb.message.message_id)
-            message = gh_full["message"]          # None → push_all seçilən fayllardan yaradır
-            selected = set(gh_full["selected"]) if gh_full["selected"] is not None else None
+            message = gh_full["message"] or full_commit_message([], time.time())
             async with push_lock:
                 await edit_full_panel("⏳ <i>GitHub-a göndərilir...</i>", None)
                 try:
-                    res = await asyncio.to_thread(push_all, root, message, selected)
+                    res = await asyncio.to_thread(push_all, root, message)
                 except Exception as e:
                     logger.error(f"Full push xətası: {e}", exc_info=True)
                     res = {"ok": False, "committed": False, "error": redact(str(e)), "hint": "", "excluded": []}
 
             if res["ok"]:
                 gh_full["message"] = None
-                gh_full["selected"] = None
-                # gözləyən hesabatın faylları artıq commit-dədirsə (heç biri lokalda qalmayıbsa) — bağla
+                # gözləyən hesabat da bu commit-ə daxil oldu
                 p = await asyncio.to_thread(load_pending)
                 if p:
-                    pend = {x for k in ("changed", "added", "removed") for x in p["files"].get(k, [])}
-                    if not pend & set(res.get("remaining", [])):
-                        await asyncio.to_thread(save_pending, None)
-                        await set_report_kb(p, status_kb(f"✅ GitHub-da: {res['hash']}", res.get("url")))
+                    await asyncio.to_thread(save_pending, None)
+                    await set_report_kb(p, status_kb(f"✅ GitHub-da: {res['hash']}", res.get("url")))
                 lines = [
-                    ("✅ <b>Seçilən fayllar GitHub-a göndərildi</b>\n" if selected is not None
-                     else "✅ <b>Tam yeniləmə GitHub-a göndərildi</b>\n"),
+                    "✅ <b>Tam yeniləmə GitHub-a göndərildi</b>\n",
                     f"🌿 <code>{escape(res['branch'])}</code> · commit <code>{escape(res['hash'])}</code>",
                     f"📁 {len(res.get('files', []))} fayl"
                     + ("" if res["committed"] else " <i>(yeni commit lazım olmadı, yalnız push edildi)</i>"),
                 ]
-                if res.get("sensitive_sent"):
-                    lines.append(f"🚨 {len(res['sensitive_sent'])} həssas fayl da göndərildi")
                 if res.get("excluded"):
                     lines.append(f"🔒 {len(res['excluded'])} həssas fayl göndərilmədi")
-                other = res.get("skipped", 0) - len(res.get("excluded", []))
-                if other > 0:
-                    lines.append(f"⏭ {other} fayl seçilmədiyi üçün lokalda qaldı")
                 kb = []
                 if res.get("url"):
                     kb.append([btn("🔗 Commit-ə bax", url=res["url"])])
@@ -1170,7 +1005,7 @@ def setup(context):
                 hint = f"\n\n💡 {res['hint']}" if res.get("hint") else ""
                 await edit_full_panel(
                     f"❌ <b>Göndərilmədi</b>\n\n<code>{escape(res['error'])}</code>{hint}{note}",
-                    InlineKeyboardMarkup(inline_keyboard=[[btn("🔁 Yenidən cəhd et", "ghf:back")], nav("ghf:open")]),
+                    InlineKeyboardMarkup(inline_keyboard=[[btn("🔁 Yenidən cəhd et", "ghf:prep")], nav("ghf:open")]),
                 )
             return
 
