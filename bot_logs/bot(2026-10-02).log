@@ -5956,3 +5956,332 @@ can_send_welcome_messages
 2026.10.02 10:38:21 core.audio_cache     INFO     📦 Depo kanalı: DLLMaster Depo (-1003987878159)
 2026.10.02 10:38:21 spotipy.util         WARNING  Your application has reached a rate/request limit. Retry will occur after: 38281 s
 2026.10.02 10:38:27 aiogram.event        INFO     Update id=875904202 is handled. Duration 170 ms by bot id=8976652462
+2026.10.02 10:38:37 plugins.update_notifier_plugin INFO     📦 Full push: a26dae6 (44 fayl)
+2026.10.02 10:38:37 aiogram.event        INFO     Update id=875904203 is handled. Duration 2944 ms by bot id=8976652462
+2026.10.02 10:38:53 aiogram.event        INFO     Update id=875904204 is handled. Duration 24 ms by bot id=8976652462
+2026.10.02 10:38:53 aiogram.event        INFO     Update id=875904205 is not handled. Duration 0 ms by bot id=8976652462
+2026.10.02 10:38:59 aiogram.event        INFO     Update id=875904206 is handled. Duration 78 ms by bot id=8976652462
+2026.10.02 10:39:01 aiogram.event        INFO     Update id=875904207 is handled. Duration 45 ms by bot id=8976652462
+2026.10.02 10:39:03 aiogram.event        INFO     Update id=875904208 is handled. Duration 67 ms by bot id=8976652462
+2026.10.02 10:39:04 aiogram.event        INFO     Update id=875904209 is handled. Duration 76 ms by bot id=8976652462
+2026.10.02 10:39:10 telethon.client.updates INFO     Got difference for channel 1930654409 updates
+2026.10.02 10:39:22 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.02 10:39:32 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.02 10:39:56 telethon.client.updates INFO     Got difference for channel 3581682499 updates
+2026.10.02 10:39:57 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.02 10:40:03 aiogram.dispatcher   WARNING  Received SIGINT signal
+2026.10.02 10:40:03 aiogram.dispatcher   INFO     Polling stopped for bot @dllmasterbot id=8976652462 - 'DLLMaster - YouTube Music'
+2026.10.02 10:40:03 aiogram.dispatcher   INFO     Polling stopped
+2026.10.02 10:40:03 __main__             INFO     🛑 Polling stopped
+2026.10.02 10:40:03 __main__             INFO     🔴 Bot stopped
+2026.10.02 10:41:56 __main__             INFO     🤖 Starting bot...
+2026.10.02 10:41:56 __main__             INFO     🚀 Starting bot initialization...
+2026.10.02 10:41:56 core.spotify_handler INFO     Spotify API connection established.
+2026.10.02 10:41:56 __main__             INFO     ✅ Spotify service initialized
+2026.10.02 10:41:56 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1
+2026.10.02 10:41:56 core.youtube_handler INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.02 10:41:56 __main__             INFO     ✅ YouTube services initialized (firefox)
+2026.10.02 10:41:56 __main__             INFO     🔌 Loading plugins...
+2026.10.02 10:41:56 core.utilities       INFO     🔍 Scanning plugins in: /home/admin/dlmaster/plugins
+2026.10.02 10:41:56 core.utilities       INFO     🔄 Loading: plugins.audio_editor_plugin
+2026.10.02 10:41:56 core.utilities       INFO     🔄 Loading: plugins.depo_filler_plugin
+2026.10.02 10:41:56 telethon.crypto.aes  INFO     libssl detected, it will be used for encryption
+2026.10.02 10:41:56 core.utilities       INFO     🔄 Loading: plugins.fix_artist_plugin
+2026.10.02 10:41:56 core.utilities       INFO     🔄 Loading: plugins.htop_plugin
+2026.10.02 10:41:56 core.utilities       INFO     🔄 Loading: plugins.links_plugin
+2026.10.02 10:41:56 core.utilities       INFO     🔄 Loading: plugins.logs_plugin
+2026.10.02 10:41:56 core.utilities       INFO     🔄 Loading: plugins.menu_plugin
+2026.10.02 10:41:56 core.utilities       INFO     🔄 Loading: plugins.music_plugin_1
+2026.10.02 10:41:56 core.utilities       INFO     🔄 Loading: plugins.payments_plugin
+2026.10.02 10:41:56 core.utilities       INFO     🔄 Loading: plugins.plugin_manager_plugin
+2026.10.02 10:41:56 core.utilities       INFO     🔄 Loading: plugins.start_plugin
+2026.10.02 10:41:56 core.utilities       INFO     🔄 Loading: plugins.telethon_plugin
+2026.10.02 10:41:56 core.utilities       INFO     🔄 Loading: plugins.update_notifier_plugin
+2026.10.02 10:41:56 core.utilities       INFO     🔄 Loading: plugins.userbot_tools_plugin
+2026.10.02 10:41:56 plugins.links_plugin INFO     ✅ Links plugin yükləndi (YouTube + Spotify)
+2026.10.02 10:41:56 core.utilities       INFO     ✅ Loaded: plugins.links_plugin
+2026.10.02 10:41:56 core.utilities       INFO     ✅ Loaded: plugins.audio_editor_plugin
+2026.10.02 10:41:56 plugins.fix_artist_plugin INFO     ✅ Depo təmizliyi plugin-i yükləndi (/fix)
+2026.10.02 10:41:56 core.utilities       INFO     ✅ Loaded: plugins.fix_artist_plugin
+2026.10.02 10:41:56 plugins.htop_plugin  INFO     ✅ htop plugin-i yükləndi (/htop)
+2026.10.02 10:41:56 core.utilities       INFO     ✅ Loaded: plugins.htop_plugin
+2026.10.02 10:41:56 plugins.menu_plugin  INFO     ✅ Menu plugin yükləndi
+2026.10.02 10:41:56 core.utilities       INFO     ✅ Loaded: plugins.menu_plugin
+2026.10.02 10:41:56 core.utilities       INFO     ✅ Loaded: plugins.music_plugin_1
+2026.10.02 10:41:56 plugins.payments_plugin INFO     ✅ Payments plugin yükləndi
+2026.10.02 10:41:56 core.utilities       INFO     ✅ Loaded: plugins.payments_plugin
+2026.10.02 10:41:56 plugins.plugin_manager_plugin INFO     ✅ Plugin meneceri yükləndi
+2026.10.02 10:41:56 core.utilities       INFO     ✅ Loaded: plugins.plugin_manager_plugin
+2026.10.02 10:41:56 plugins.start_plugin WARNING  Default admin yetkiləri təyin edilmədi: 4 validation errors for ChatAdministratorRights
+can_post_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_edit_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_delete_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_send_welcome_messages
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026.10.02 10:41:56 plugins.start_plugin INFO     ✅ Start plugin yükləndi
+2026.10.02 10:41:56 core.utilities       INFO     ✅ Loaded: plugins.start_plugin
+2026.10.02 10:41:56 core.utilities       INFO     ✅ Loaded: plugins.telethon_plugin
+2026.10.02 10:41:56 plugins.userbot_tools_plugin INFO     🧩 Userbot pluginləri yükləndi (8): alive, clear, depo, fastfetch, info, mute, status, stop
+2026.10.02 10:41:56 plugins.userbot_tools_plugin INFO     ✅ Userbot host yükləndi (/.menu paneli)
+2026.10.02 10:41:56 core.utilities       INFO     ✅ Loaded: plugins.userbot_tools_plugin
+2026.10.02 10:41:56 plugins.depo_filler_plugin INFO     📦 Depo doldurucu işə düşdü
+2026.10.02 10:41:56 plugins.depo_filler_plugin INFO     ✅ Depo doldurucu + userbot plugin-i yükləndi (/depo, /scan_chat, /userbot)
+2026.10.02 10:41:56 core.utilities       INFO     ✅ Loaded: plugins.depo_filler_plugin
+2026.10.02 10:41:56 plugins.logs_plugin  INFO     ✅ Logs plugin yükləndi (/logs)
+2026.10.02 10:41:56 core.utilities       INFO     ✅ Loaded: plugins.logs_plugin
+2026.10.02 10:41:56 core.utilities       INFO     ✅ Loaded: plugins.update_notifier_plugin
+2026.10.02 10:41:56 __main__             INFO     🚀 Starting polling...
+2026.10.02 10:41:56 aiogram.dispatcher   INFO     Start polling
+2026.10.02 10:41:56 plugins.telethon_plugin INFO     📱 Telethon userbot qoşulur...
+2026.10.02 10:41:56 telethon.network.mtprotosender INFO     Connecting to 149.154.167.51:443/TcpFull...
+2026.10.02 10:41:56 plugins.userbot_tools_plugin INFO     ✅ Userbot komandaları qoşuldu: .alive .clear .fastfetch .info .mute .unmute .mutelist .stop .menu
+2026.10.02 10:41:56 telethon.network.mtprotosender INFO     Connection to 149.154.167.51:443/TcpFull complete!
+2026.10.02 10:41:56 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster - YouTube Music'
+2026.10.02 10:41:57 plugins.telethon_plugin INFO     ✅ Telethon userbot qoşuldu: ilgar (@jabrailzade_i)
+2026.10.02 10:42:00 plugins.update_notifier_plugin INFO     ✅ Yeniləmə bildirişi göndərildi
+2026.10.02 10:42:01 core.audio_cache     INFO     📦 Depo kanalı: DLLMaster Depo (-1003987878159)
+2026.10.02 10:42:02 spotipy.util         WARNING  Your application has reached a rate/request limit. Retry will occur after: 38060 s
+2026.10.02 10:42:04 aiogram.event        INFO     Update id=875904210 is handled. Duration 24 ms by bot id=8976652462
+2026.10.02 10:42:05 aiogram.event        INFO     Update id=875904211 is not handled. Duration 1 ms by bot id=8976652462
+2026.10.02 10:42:08 aiogram.event        INFO     Update id=875904212 is handled. Duration 117 ms by bot id=8976652462
+2026.10.02 10:42:10 aiogram.event        INFO     Update id=875904213 is handled. Duration 159 ms by bot id=8976652462
+2026.10.02 10:42:11 aiogram.event        INFO     Update id=875904214 is handled. Duration 615 ms by bot id=8976652462
+2026.10.02 10:42:13 aiogram.event        INFO     Update id=875904215 is handled. Duration 270 ms by bot id=8976652462
+2026.10.02 10:42:14 aiogram.event        INFO     Update id=875904216 is handled. Duration 49 ms by bot id=8976652462
+2026.10.02 10:42:17 aiogram.event        INFO     Update id=875904217 is handled. Duration 71 ms by bot id=8976652462
+2026.10.02 10:42:22 aiogram.event        INFO     Update id=875904218 is handled. Duration 48 ms by bot id=8976652462
+2026.10.02 10:42:24 aiogram.event        INFO     Update id=875904219 is handled. Duration 39 ms by bot id=8976652462
+2026.10.02 10:43:10 telethon.client.updates INFO     Got difference for channel 2233220502 updates
+2026.10.02 10:43:25 telethon.client.updates INFO     Got difference for channel 2331702245 updates
+2026.10.02 10:43:25 plugins.telethon_plugin INFO     📥 Yeni audio birbaşa depo növbəsinə əlavə edildi: camalmusic - 🔥 Bağda Ərik Var İdi 2023 - Super Original Remix 🔥
+2026.10.02 10:44:07 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.02 10:44:23 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.02 10:44:42 aiogram.event        INFO     Update id=875904220 is handled. Duration 0 ms by bot id=8976652462
+2026.10.02 10:44:46 aiogram.event        INFO     Update id=875904221 is handled. Duration 801 ms by bot id=8976652462
+2026.10.02 10:44:46 core.webprofile      INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.02 10:44:46 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+2026.10.02 10:44:49 aiogram.event        INFO     Update id=875904222 is handled. Duration 3940 ms by bot id=8976652462
+2026.10.02 10:44:52 plugins.telethon_plugin INFO     📥 Yeni audio birbaşa depo növbəsinə əlavə edildi: 13 - BOUGA - BELSUNCE BREAKDOWN (
+2026.10.02 10:44:52 aiogram.event        INFO     Update id=875904223 is handled. Duration 3 ms by bot id=8976652462
+2026.10.02 10:44:55 telethon.client.updates INFO     Got difference for channel 3775621496 updates
+2026.10.02 10:45:16 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.02 10:45:54 telethon.client.updates INFO     Got difference for channel 2233220502 updates
+2026.10.02 10:45:54 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.02 10:45:57 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.02 10:46:09 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.02 10:46:12 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.02 10:46:23 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.02 10:47:22 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.02 10:47:46 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.02 10:47:50 telethon.client.updates INFO     Got difference for channel 2233220502 updates
+2026.10.02 10:48:00 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.02 10:48:13 aiogram.dispatcher   WARNING  Received SIGINT signal
+2026.10.02 10:48:13 aiogram.dispatcher   INFO     Polling stopped for bot @dllmasterbot id=8976652462 - 'DLLMaster - YouTube Music'
+2026.10.02 10:48:13 aiogram.dispatcher   INFO     Polling stopped
+2026.10.02 10:48:13 __main__             INFO     🛑 Polling stopped
+2026.10.02 10:48:13 __main__             INFO     🔴 Bot stopped
+2026.10.02 10:48:41 __main__             INFO     🤖 Starting bot...
+2026.10.02 10:48:41 __main__             INFO     🚀 Starting bot initialization...
+2026.10.02 10:48:41 core.spotify_handler INFO     Spotify API connection established.
+2026.10.02 10:48:41 __main__             INFO     ✅ Spotify service initialized
+2026.10.02 10:48:41 core.webprofile      INFO     Seçilmiş User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+2026.10.02 10:48:41 core.youtube_handler INFO     firefox brauzerindən cookies istifadə edilir.
+2026.10.02 10:48:41 __main__             INFO     ✅ YouTube services initialized (firefox)
+2026.10.02 10:48:41 __main__             INFO     🔌 Loading plugins...
+2026.10.02 10:48:41 core.utilities       INFO     🔍 Scanning plugins in: /home/admin/dlmaster/plugins
+2026.10.02 10:48:41 core.utilities       INFO     🔄 Loading: plugins.audio_editor_plugin
+2026.10.02 10:48:41 core.utilities       INFO     🔄 Loading: plugins.depo_filler_plugin
+2026.10.02 10:48:41 telethon.crypto.aes  INFO     libssl detected, it will be used for encryption
+2026.10.02 10:48:41 core.utilities       INFO     🔄 Loading: plugins.fix_artist_plugin
+2026.10.02 10:48:41 core.utilities       INFO     🔄 Loading: plugins.htop_plugin
+2026.10.02 10:48:41 core.utilities       INFO     🔄 Loading: plugins.links_plugin
+2026.10.02 10:48:41 core.utilities       INFO     🔄 Loading: plugins.logs_plugin
+2026.10.02 10:48:41 core.utilities       INFO     🔄 Loading: plugins.menu_plugin
+2026.10.02 10:48:41 core.utilities       INFO     🔄 Loading: plugins.music_plugin_1
+2026.10.02 10:48:41 core.utilities       INFO     🔄 Loading: plugins.payments_plugin
+2026.10.02 10:48:41 core.utilities       INFO     🔄 Loading: plugins.plugin_manager_plugin
+2026.10.02 10:48:41 core.utilities       INFO     🔄 Loading: plugins.start_plugin
+2026.10.02 10:48:41 core.utilities       INFO     🔄 Loading: plugins.telethon_plugin
+2026.10.02 10:48:41 core.utilities       INFO     🔄 Loading: plugins.update_notifier_plugin
+2026.10.02 10:48:41 core.utilities       INFO     🔄 Loading: plugins.userbot_tools_plugin
+2026.10.02 10:48:41 plugins.links_plugin INFO     ✅ Links plugin yükləndi (YouTube + Spotify)
+2026.10.02 10:48:41 core.utilities       INFO     ✅ Loaded: plugins.links_plugin
+2026.10.02 10:48:41 core.utilities       INFO     ✅ Loaded: plugins.audio_editor_plugin
+2026.10.02 10:48:41 plugins.fix_artist_plugin INFO     ✅ Depo təmizliyi plugin-i yükləndi (/fix)
+2026.10.02 10:48:41 core.utilities       INFO     ✅ Loaded: plugins.fix_artist_plugin
+2026.10.02 10:48:41 plugins.htop_plugin  INFO     ✅ htop plugin-i yükləndi (/htop)
+2026.10.02 10:48:41 core.utilities       INFO     ✅ Loaded: plugins.htop_plugin
+2026.10.02 10:48:41 plugins.menu_plugin  INFO     ✅ Menu plugin yükləndi
+2026.10.02 10:48:41 core.utilities       INFO     ✅ Loaded: plugins.menu_plugin
+2026.10.02 10:48:41 core.utilities       INFO     ✅ Loaded: plugins.music_plugin_1
+2026.10.02 10:48:41 plugins.payments_plugin INFO     ✅ Payments plugin yükləndi
+2026.10.02 10:48:41 core.utilities       INFO     ✅ Loaded: plugins.payments_plugin
+2026.10.02 10:48:41 plugins.plugin_manager_plugin INFO     ✅ Plugin meneceri yükləndi
+2026.10.02 10:48:41 core.utilities       INFO     ✅ Loaded: plugins.plugin_manager_plugin
+2026.10.02 10:48:41 plugins.start_plugin WARNING  Default admin yetkiləri təyin edilmədi: 4 validation errors for ChatAdministratorRights
+can_post_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_edit_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_delete_stories
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+can_send_welcome_messages
+  Field required [type=missing, input_value={'is_anonymous': False, '...can_pin_messages': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026.10.02 10:48:41 plugins.start_plugin INFO     ✅ Start plugin yükləndi
+2026.10.02 10:48:41 core.utilities       INFO     ✅ Loaded: plugins.start_plugin
+2026.10.02 10:48:41 core.utilities       INFO     ✅ Loaded: plugins.telethon_plugin
+2026.10.02 10:48:41 plugins.userbot_tools_plugin INFO     🧩 Userbot pluginləri yükləndi (9): alive, clear, depo, fastfetch, info, install, mute, status, stop
+2026.10.02 10:48:41 plugins.userbot_tools_plugin INFO     ✅ Userbot host yükləndi (/.menu paneli)
+2026.10.02 10:48:41 core.utilities       INFO     ✅ Loaded: plugins.userbot_tools_plugin
+2026.10.02 10:48:41 plugins.depo_filler_plugin INFO     📦 Depo doldurucu işə düşdü
+2026.10.02 10:48:41 plugins.depo_filler_plugin INFO     ✅ Depo doldurucu + userbot plugin-i yükləndi (/depo, /scan_chat, /userbot)
+2026.10.02 10:48:41 core.utilities       INFO     ✅ Loaded: plugins.depo_filler_plugin
+2026.10.02 10:48:41 plugins.logs_plugin  INFO     ✅ Logs plugin yükləndi (/logs)
+2026.10.02 10:48:41 core.utilities       INFO     ✅ Loaded: plugins.logs_plugin
+2026.10.02 10:48:41 core.utilities       INFO     ✅ Loaded: plugins.update_notifier_plugin
+2026.10.02 10:48:41 __main__             INFO     🚀 Starting polling...
+2026.10.02 10:48:41 aiogram.dispatcher   INFO     Start polling
+2026.10.02 10:48:41 plugins.telethon_plugin INFO     📱 Telethon userbot qoşulur...
+2026.10.02 10:48:41 telethon.network.mtprotosender INFO     Connecting to 149.154.167.51:443/TcpFull...
+2026.10.02 10:48:41 plugins.userbot_tools_plugin INFO     ✅ Userbot komandaları qoşuldu: .alive .clear .fastfetch .info .install .plugins .reload .uninstall .mute .unmute .mutelist .stop .menu
+2026.10.02 10:48:41 telethon.network.mtprotosender INFO     Connection to 149.154.167.51:443/TcpFull complete!
+2026.10.02 10:48:41 aiogram.dispatcher   INFO     Run polling for bot @dllmasterbot id=8976652462 - 'DLLMaster - YouTube Music'
+2026.10.02 10:48:41 plugins.telethon_plugin INFO     ✅ Telethon userbot qoşuldu: ilgar (@jabrailzade_i)
+2026.10.02 10:48:44 plugins.update_notifier_plugin INFO     ✅ Yeniləmə bildirişi göndərildi
+2026.10.02 10:48:46 core.audio_cache     INFO     📦 Depo kanalı: DLLMaster Depo (-1003987878159)
+2026.10.02 10:48:46 spotipy.util         WARNING  Your application has reached a rate/request limit. Retry will occur after: 37656 s
+2026.10.02 10:48:54 telethon.client.updates INFO     Got difference for channel 1930654409 updates
+2026.10.02 10:48:55 telethon.client.updates INFO     Got difference for account updates
+2026.10.02 10:48:58 aiogram.event        INFO     Update id=875904224 is handled. Duration 23 ms by bot id=8976652462
+2026.10.02 10:48:59 aiogram.event        INFO     Update id=875904225 is not handled. Duration 0 ms by bot id=8976652462
+2026.10.02 10:48:59 telethon.client.updates INFO     Got difference for account updates
+2026.10.02 10:48:59 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.02 10:49:00 telethon.client.updates INFO     Got difference for channel 1930654409 updates
+2026.10.02 10:49:01 aiogram.event        INFO     Update id=875904226 is handled. Duration 740 ms by bot id=8976652462
+2026.10.02 10:49:03 aiogram.event        INFO     Update id=875904227 is handled. Duration 104 ms by bot id=8976652462
+2026.10.02 10:49:05 aiogram.event        INFO     Update id=875904228 is handled. Duration 173 ms by bot id=8976652462
+2026.10.02 10:49:06 aiogram.event        INFO     Update id=875904229 is handled. Duration 102 ms by bot id=8976652462
+2026.10.02 10:49:07 aiogram.event        INFO     Update id=875904230 is handled. Duration 114 ms by bot id=8976652462
+2026.10.02 10:49:10 aiogram.event        INFO     Update id=875904231 is handled. Duration 158 ms by bot id=8976652462
+2026.10.02 10:49:13 aiogram.event        INFO     Update id=875904232 is handled. Duration 98 ms by bot id=8976652462
+2026.10.02 10:49:13 telethon.client.updates INFO     Got difference for channel 2233220502 updates
+2026.10.02 10:49:17 aiogram.event        INFO     Update id=875904233 is handled. Duration 96 ms by bot id=8976652462
+2026.10.02 10:49:18 telethon.client.updates INFO     Got difference for channel 2233220502 updates
+2026.10.02 10:49:19 aiogram.event        INFO     Update id=875904234 is handled. Duration 75 ms by bot id=8976652462
+2026.10.02 10:49:19 telethon.client.updates INFO     Got difference for account updates
+2026.10.02 10:49:19 telethon.client.updates INFO     Got difference for channel 1930654409 updates
+2026.10.02 10:49:54 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.02 10:50:08 telethon.client.updates INFO     Got difference for channel 2233220502 updates
+2026.10.02 10:50:18 telethon.client.updates INFO     Got difference for channel 2233220502 updates
+2026.10.02 10:50:26 telethon.client.updates INFO     Got difference for channel 2233220502 updates
+2026.10.02 10:50:43 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.02 10:50:55 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.02 10:51:56 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.02 10:52:39 telethon.client.updates INFO     Got difference for channel 2233220502 updates
+2026.10.02 10:53:32 telethon.client.updates INFO     Got difference for channel 2233220502 updates
+2026.10.02 10:53:44 telethon.client.updates INFO     Got difference for account updates
+2026.10.02 10:53:52 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.02 10:54:01 telethon.client.downloads INFO     Starting direct file download in chunks of 131072 at 0, stride 131072
+2026.10.02 10:54:04 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.02 10:54:08 telethon.client.uploads INFO     Uploading file of 9755 bytes in 1 chunks of 131072
+2026.10.02 10:54:09 telethon.client.updates INFO     Got difference for account updates
+2026.10.02 10:54:09 telethon.client.updates INFO     Got difference for channel 1930654409 updates
+2026.10.02 10:54:22 telethon.client.uploads INFO     Uploading file of 11396 bytes in 1 chunks of 131072
+2026.10.02 10:54:22 telethon.client.updates INFO     Got difference for account updates
+2026.10.02 10:54:22 telethon.client.updates INFO     Got difference for channel 1930654409 updates
+2026.10.02 10:54:35 telethon.client.uploads INFO     Uploading file of 17268 bytes in 1 chunks of 131072
+2026.10.02 10:54:35 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.02 10:54:35 telethon.client.updates INFO     Got difference for account updates
+2026.10.02 10:54:35 telethon.client.updates INFO     Got difference for channel 1930654409 updates
+2026.10.02 10:54:56 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.02 10:54:58 telethon.client.updates INFO     Got difference for account updates
+2026.10.02 10:54:59 telethon.client.uploads INFO     Uploading file of 16393 bytes in 1 chunks of 131072
+2026.10.02 10:55:00 telethon.client.updates INFO     Got difference for account updates
+2026.10.02 10:55:00 telethon.client.updates INFO     Got difference for channel 1930654409 updates
+2026.10.02 10:55:12 telethon.client.uploads INFO     Uploading file of 10134 bytes in 1 chunks of 131072
+2026.10.02 10:55:13 telethon.client.updates INFO     Got difference for account updates
+2026.10.02 10:55:13 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.02 10:55:13 telethon.client.updates INFO     Got difference for channel 1930654409 updates
+2026.10.02 10:55:15 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.02 10:55:24 telethon.client.uploads INFO     Uploading file of 10874 bytes in 1 chunks of 131072
+2026.10.02 10:55:26 telethon.client.updates INFO     Got difference for account updates
+2026.10.02 10:55:26 telethon.client.updates INFO     Got difference for channel 1930654409 updates
+2026.10.02 10:56:03 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.02 10:56:07 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.02 10:56:42 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.02 10:56:44 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.02 10:56:52 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.02 10:57:18 telethon.client.uploads INFO     Uploading file of 11418 bytes in 1 chunks of 131072
+2026.10.02 10:57:19 telethon.client.updates INFO     Got difference for account updates
+2026.10.02 10:57:19 telethon.client.updates INFO     Got difference for channel 1930654409 updates
+2026.10.02 10:57:29 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.02 10:57:33 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.02 10:57:33 telethon.client.uploads INFO     Uploading file of 9770 bytes in 1 chunks of 131072
+2026.10.02 10:57:33 core.userbot_api     INFO     .tts göndərmə xətası: You cannot send voices results in this chat (caused by SendMediaRequest)
+2026.10.02 10:57:33 telethon.client.updates ERROR    Unhandled exception on on_tts
+Traceback (most recent call last):
+  File [35m"/home/admin/dlmaster/userbot_plugins/tts.py"[0m, line [35m152[0m, in [35mon_tts[0m
+    await event.client.send_file(
+        event.chat_id, send_path, voice_note=as_voice,
+        reply_to=reply_to, attributes=_attrs(as_voice, dur, text))
+  File [35m"/home/admin/.local/lib/python3.13/site-packages/telethon/client/uploads.py"[0m, line [35m484[0m, in [35msend_file[0m
+    return self._get_response_message(request, [1;31mawait self(request)[0m, entity)
+                                               [1;31m^^^^^^^^^^^^^^^^^^^[0m
+  File [35m"/home/admin/.local/lib/python3.13/site-packages/telethon/client/users.py"[0m, line [35m30[0m, in [35m__call__[0m
+    return [1;31mawait self._call(self._sender, request, ordered=ordered)[0m
+           [1;31m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  File [35m"/home/admin/.local/lib/python3.13/site-packages/telethon/client/users.py"[0m, line [35m92[0m, in [35m_call[0m
+    result = [1;31mawait future[0m
+             [1;31m^^^^^^^^^^^^[0m
+[1;35mtelethon.errors.rpcerrorlist.ChatSendVoicesForbiddenError[0m: [35mYou cannot send voices results in this chat (caused by SendMediaRequest)[0m
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File [35m"/home/admin/.local/lib/python3.13/site-packages/telethon/client/updates.py"[0m, line [35m605[0m, in [35m_dispatch_update[0m
+    await callback(event)
+  File [35m"/home/admin/dlmaster/userbot_plugins/tts.py"[0m, line [35m157[0m, in [35mon_tts[0m
+    await safe_edit(event, f"❌ Göndərilmədi: <code>{str(e)[:150]}</code>")
+  File [35m"/home/admin/dlmaster/core/userbot_api.py"[0m, line [35m157[0m, in [35msafe_edit[0m
+    return [1;31mawait event_or_msg.edit(text, parse_mode="html", link_preview=False)[0m
+           [1;31m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  File [35m"/home/admin/.local/lib/python3.13/site-packages/telethon/tl/custom/message.py"[0m, line [35m898[0m, in [35medit[0m
+    return [1;31mawait self._client.edit_message([0m
+           [1;31m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    ...<2 lines>...
+    [1;31m)[0m
+    [1;31m^[0m
+  File [35m"/home/admin/.local/lib/python3.13/site-packages/telethon/client/messages.py"[0m, line [35m1260[0m, in [35medit_message[0m
+    msg = self._get_response_message(request, [1;31mawait self(request)[0m, entity)
+                                              [1;31m^^^^^^^^^^^^^^^^^^^[0m
+  File [35m"/home/admin/.local/lib/python3.13/site-packages/telethon/client/users.py"[0m, line [35m30[0m, in [35m__call__[0m
+    return [1;31mawait self._call(self._sender, request, ordered=ordered)[0m
+           [1;31m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  File [35m"/home/admin/.local/lib/python3.13/site-packages/telethon/client/users.py"[0m, line [35m92[0m, in [35m_call[0m
+    result = [1;31mawait future[0m
+             [1;31m^^^^^^^^^^^^[0m
+[1;35mtelethon.errors.rpcerrorlist.MessageIdInvalidError[0m: [35mThe specified message ID is invalid or you can't do that operation on such message (caused by EditMessageRequest)[0m
+2026.10.02 10:58:06 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.02 10:58:08 telethon.client.downloads INFO     Starting direct file download in chunks of 131072 at 0, stride 131072
+2026.10.02 10:58:24 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.02 10:58:26 telethon.client.updates INFO     Got difference for account updates
+2026.10.02 10:58:26 telethon.client.updates INFO     Got difference for channel 1930654409 updates
+2026.10.02 10:58:31 telethon.client.updates INFO     Got difference for account updates
+2026.10.02 10:58:31 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.02 10:58:31 telethon.client.updates INFO     Got difference for channel 1930654409 updates
+2026.10.02 10:58:36 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.02 10:58:36 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.02 10:59:38 telethon.client.updates INFO     Got difference for channel 2233220502 updates
+2026.10.02 10:59:53 aiogram.event        INFO     Update id=875904235 is handled. Duration 211 ms by bot id=8976652462
+2026.10.02 10:59:54 telethon.client.updates INFO     Got difference for channel 3966541757 updates

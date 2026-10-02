@@ -718,6 +718,10 @@ class UB:
         self.views = {}                 # tok -> cari bölmə (canlı rejim idarəsi üçün)
         self.ptasks = {}                # tok -> panel arxa-plan task-ı (canlı sistem)
         self._handlers = []             # (fn, event) — client-ə qoşulanlar
+        self._attached_raw = set()      # id(fn) — artıq qoşulmuş xam handler-lər
+        self._loading = None            # hazırda yüklənən plugin faylının adı (owner)
+        self.help_owner = {}            # help key -> owner
+        self.plugin_files = {}          # ad -> fayl yolu (install/uninstall üçün)
 
     # ── identik ──
     def is_creator(self, uid) -> bool:
@@ -727,7 +731,8 @@ class UB:
     def command(self, name, pattern=None, outgoing=True, help=None, category="acc"):
         def deco(fn):
             pat = pattern if pattern is not None else rf"^\.{name}$"
-            self.commands.append({"name": name, "pattern": pat, "outgoing": outgoing, "fn": fn})
+            self.commands.append({"name": name, "pattern": pat, "outgoing": outgoing, "fn": fn,
+                                  "owner": self._loading, "_attached": False})
             if help:
                 short, long = help
                 self.add_help(name, f".{name}", short, long, category)
@@ -736,7 +741,7 @@ class UB:
 
     def raw(self, event_builder):
         def deco(fn):
-            self.raw_handlers.append((fn, event_builder))
+            self.raw_handlers.append({"fn": fn, "ev": event_builder, "owner": self._loading})
             return fn
         return deco
 
@@ -746,6 +751,7 @@ class UB:
 
     def add_help(self, key, button, short, long, category="acc"):
         self.help[key] = (button, short, long, category)
+        self.help_owner[key] = self._loading
 
     def help_keys(self, category):
         return [k for k, v in sorted(self.help.items(), key=lambda kv: kv[0]) if v[3] == category]
@@ -759,6 +765,7 @@ class UB:
             self.sections.setdefault(key, {})["label"] = label
             self.sections[key]["order"] = order
             self.sections[key]["render"] = render
+            self.sections[key]["owner"] = self._loading
             self.sections[key].setdefault("handle", None)
             return render
         return deco
@@ -793,6 +800,61 @@ class UB:
 
     def active_tasks(self) -> int:
         return sum(1 for kinds in self.tasks.values() for t in kinds.values() if t and not t.done())
+
+    # ── client-ə qoşulma (canlı install üçün də istifadə olunur) ──
+    def attach_pending(self) -> int:
+        """Hələ qoşulmamış komanda və xam handler-ləri client-ə bağlayır. Client yoxdursa 0."""
+        if not self.client:
+            return 0
+        n = 0
+        for c in self.commands:
+            if c.get("_attached"):
+                continue
+            ev = events.NewMessage(outgoing=True, pattern=c["pattern"]) if c["outgoing"] \
+                else events.NewMessage(pattern=c["pattern"])
+            self.client.add_event_handler(c["fn"], ev)
+            self._handlers.append((c["fn"], ev))
+            c["_attached"] = True
+            n += 1
+        for h in self.raw_handlers:
+            if id(h["fn"]) in self._attached_raw:
+                continue
+            self.client.add_event_handler(h["fn"], h["ev"])
+            self._handlers.append((h["fn"], h["ev"]))
+            self._attached_raw.add(id(h["fn"]))
+            n += 1
+        return n
+
+    def plugin_summary(self, owner):
+        cmds = [c["name"] for c in self.commands if c.get("owner") == owner]
+        secs = [v["label"] for k, v in self.sections.items() if v.get("owner") == owner]
+        raws = sum(1 for h in self.raw_handlers if h.get("owner") == owner)
+        return {"commands": cmds, "sections": secs, "raw": raws}
+
+    def remove_plugin(self, owner) -> dict:
+        """Bir plugin faylının bütün qeydlərini (komanda, xam handler, bölmə, help) geri alır."""
+        info = self.plugin_summary(owner)
+        for c in [c for c in self.commands if c.get("owner") == owner]:
+            if c.get("_attached") and self.client:
+                try:
+                    self.client.remove_event_handler(c["fn"])
+                except Exception:
+                    pass
+            self.commands.remove(c)
+        for h in [h for h in self.raw_handlers if h.get("owner") == owner]:
+            if id(h["fn"]) in self._attached_raw and self.client:
+                try:
+                    self.client.remove_event_handler(h["fn"])
+                except Exception:
+                    pass
+            self._attached_raw.discard(id(h["fn"]))
+            self.raw_handlers.remove(h)
+        for k in [k for k, v in self.sections.items() if v.get("owner") == owner]:
+            self.sections.pop(k, None)
+        for k in [k for k, o in self.help_owner.items() if o == owner]:
+            self.help.pop(k, None)
+            self.help_owner.pop(k, None)
+        return info
 
     # ── panel redaktə (host təyin edir) ──
     async def edit_panel(self, cb_or_iid, text, kb):

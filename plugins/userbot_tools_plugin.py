@@ -30,6 +30,37 @@ logger = logging.getLogger(__name__)
 PLUGINS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "userbot_plugins")
 
 
+def load_plugin_file(ub, path, attach=True):
+    """Bir .py faylını yükləyib register(ub) çağırır; owner = fayl adı. (name, info) qaytarır.
+
+    Köhnə eyniadlı plugin varsa əvvəlcə onun qeydləri geri alınır (reload).
+    """
+    name = os.path.splitext(os.path.basename(path))[0]
+    mod_name = f"userbot_plugins.{name}"
+    if name in ub.plugin_files:
+        ub.remove_plugin(name)                       # reload — köhnəni təmizlə
+    prev = ub._loading
+    ub._loading = name
+    try:
+        spec = importlib.util.spec_from_file_location(mod_name, path)
+        mod = importlib.util.module_from_spec(spec)
+        sys.modules[mod_name] = mod
+        spec.loader.exec_module(mod)
+        if not hasattr(mod, "register"):
+            raise RuntimeError("register(ub) funksiyası yoxdur")
+        mod.register(ub)
+    except Exception:
+        ub.remove_plugin(name)                       # yarımçıq qeydləri geri al
+        sys.modules.pop(mod_name, None)
+        ub._loading = prev
+        raise
+    ub._loading = prev
+    ub.plugin_files[name] = path
+    if attach:
+        ub.attach_pending()
+    return name, ub.plugin_summary(name)
+
+
 def load_command_plugins(ub) -> list:
     names = []
     if not os.path.isdir(PLUGINS_DIR):
@@ -38,18 +69,9 @@ def load_command_plugins(ub) -> list:
     for fn in sorted(os.listdir(PLUGINS_DIR)):
         if not fn.endswith(".py") or fn.startswith("_"):
             continue
-        path = os.path.join(PLUGINS_DIR, fn)
-        mod_name = f"userbot_plugins.{fn[:-3]}"
         try:
-            spec = importlib.util.spec_from_file_location(mod_name, path)
-            mod = importlib.util.module_from_spec(spec)
-            sys.modules[mod_name] = mod
-            spec.loader.exec_module(mod)
-            if not hasattr(mod, "register"):
-                logger.warning(f"⚠️ {fn}: register(ub) funksiyası yoxdur — ötürüldü")
-                continue
-            mod.register(ub)
-            names.append(fn[:-3])
+            name, _ = load_plugin_file(ub, os.path.join(PLUGINS_DIR, fn), attach=False)
+            names.append(name)
         except Exception as e:
             logger.error(f"❌ Userbot plugini yüklənmədi ({fn}): {e}", exc_info=True)
     return names
@@ -285,6 +307,8 @@ def setup(context):
     # host-un özünün köməkçiləri pluginlərə lazım ola bilər
     ub.state["main_view"] = main_view
     ub.state["Bt"] = Bt
+    ub.state["plugins_dir"] = PLUGINS_DIR
+    ub.state["load_plugin_file"] = lambda path, attach=True: load_plugin_file(ub, path, attach)
 
     # ───────────── userbot-a qoşulma ─────────────
     async def attach():
@@ -297,15 +321,7 @@ def setup(context):
             logger.warning("⚠️ userbot host: telethon_client tapılmadı (depo_filler_plugin yüklənməyib?)")
             return
         ub.client = client
-        from core.userbot_api import events as _events
-        for c in ub.commands:
-            ev = _events.NewMessage(outgoing=c["outgoing"], pattern=c["pattern"]) if c["outgoing"] \
-                else _events.NewMessage(pattern=c["pattern"])
-            client.add_event_handler(c["fn"], ev)
-            ub._handlers.append((c["fn"], ev))
-        for fn, ev in ub.raw_handlers:
-            client.add_event_handler(fn, ev)
-            ub._handlers.append((fn, ev))
+        ub.attach_pending()
         cmds = " ".join("." + c["name"] for c in ub.commands)
         logger.info(f"✅ Userbot komandaları qoşuldu: {cmds}")
 
