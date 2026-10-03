@@ -92,6 +92,13 @@ async def main():
 
         context.dp.message.middleware(CommandLoggerMiddleware())
 
+        # ⚙️ Performans: thread hovuzu + 🫀 donma monitoru plugin-lərdən ƏVVƏL (menu_plugin yüklənməsə də işləsin)
+        try:
+            from core import cpu_pool
+            cpu_pool.init(context)
+        except Exception as e:
+            logger.warning(f"⚙️ cpu_pool başladılmadı: {e}")
+
         logger.info("🔌 Loading plugins...")
         await load_plugins(context)
 
@@ -104,6 +111,12 @@ async def main():
         logger.critical(f"💥 Fatal error: {e}", exc_info=True)
     finally:
         logger.info("🔴 Bot stopped")
+        # 🧠 yt-dlp işçi prosesləri (shutdown hook işləməyibsə — məs. start_polling xəta ilə düşüb)
+        try:
+            from core import cpu_pool
+            await cpu_pool.shutdown_pools()
+        except Exception:
+            pass
         if context:
             try:
                 await context.bot.session.close()

@@ -32,6 +32,9 @@ API (ub):
                         — komanda cavabını bot vasitəsilə inline kart kimi göndərir (düymələrlə);
                           inline mümkün deyilsə avtomatik sadə mesaja (komandanın özünü redaktə) keçir.
   ub.title("status")    — fastfetch başlığı: "status@<bot_username>"
+  ub.db                 — 🗄 userbot-un ayrıca bazası (data/userbot.db), core/userbot_db.py:
+                          kv_get/kv_set/kv_del/kv_all(ns) · rec_put/rec_get/rec_del/rec_list/rec_replace(ns, chat_id, key)
+                          · log_add/log_list/log_clear(ns) — botun əsas bazasından tam ayrıdır
 
 Kart (Out):
   await out.update(text, rows=KEEP)   — kartı yenilə (inline: bot edit, mətn: mesaj edit)
@@ -82,7 +85,13 @@ from telethon.tl.types import (
     UserStatusLastMonth, UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently,
 )
 
-from core.database import get_db
+from core.userbot_db import get_compat_db, get_udb
+
+
+def get_db():
+    """Userbot pluginləri üçün: "userbot:*" açarları 🗄 userbot bazasına (data/userbot.db),
+    qalanı botun əsas bazasına gedir. Yeni kod üçün strukturlu API: ub.db (core/userbot_db.py)."""
+    return get_compat_db()
 
 logger = logging.getLogger(__name__)
 
@@ -1074,6 +1083,7 @@ class UB:
         self.help_owner = {}            # help key -> owner
         self.plugin_files = {}          # ad -> fayl yolu (install/uninstall üçün)
         self.cards = {}                 # tok -> Out (inline komanda kartları)
+        self.db = get_udb()             # 🗄 userbot bazası (data/userbot.db)
 
     # ── identik ──
     def is_creator(self, uid) -> bool:

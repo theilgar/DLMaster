@@ -6,6 +6,7 @@
   🔎 Axtarış mənbəyi  — YouTube / YouTube Music / hər ikisi
   📊 Statistika       — ümumi / qrafik / top, 👥 istifadəçilər (+ CSV) və 💬 qruplar / kanallar
   📢 Broadcast        — şəxsi / qruplar / kanallar / hamısı üçün mətn göndərmə
+  📦 Depo / 🤖 Köməkçi botlar — doldurucu paneli və depoya yükləyən köməkçi botları əlavə et / sil
   💎 Premium          — ID və ya @username ilə premium vermə / alma, siyahı
                         ⭐ Ulduz satışı: plan qiymətləri, ödənişlər, geri qaytarma
   🎨 Mesaj və media   — /start, qrup salamı, bələdçilər və premium mesajının mətni + şəkli / GIF-i / videosu
@@ -310,6 +311,14 @@ class UserTrackerMiddleware(BaseMiddleware):
 
 
 # ───────────────────────── Menyu ─────────────────────────
+_CTX = None                 # setup()-da təyin olunur — depo / log vəziyyətini etiketlərdə göstərmək üçün
+_BOT_STARTED = time.time()
+
+
+def _short_num(n: int) -> str:
+    return f"{n / 1000:.1f}k".replace(".0k", "k") if n >= 1000 else str(n)
+
+
 def _btn(text, data):
     return InlineKeyboardButton(text=text, callback_data=f"menu:{data}")
 
@@ -320,9 +329,42 @@ def main_kb():
         [_btn("📢 Broadcast", "bc"), _btn("💎 Premium", "prm:0")],
         [_btn(f"💬 Caption (mənim): {'✅ Açıq' if creator_caption_enabled() else '❌ Bağlı'}", "cap")],
         [_btn("🎨 Mesaj və media", "ms")],
-        [InlineKeyboardButton(text="📦 Depo doldurucu", callback_data="df:panel")],   # depo_filler_plugin
+        depo_row(),                                                                   # depo_filler_plugin
         [_btn("✖️ Bağla", "close")],
     ])
+
+
+def depo_row() -> list:
+    """📦 Depo — hibrid: etiket canlı vəziyyəti göstərir (🟢/🔴, işçi, növbə, köməkçi botlar),
+    yanındakı kiçik düymə doldurucunu menyudan çıxmadan söndürüb-yandırır.
+    Panelin içində: canlı monitor, köməkçi botlar, mənbələr, sinxron, alınmayanlar."""
+    filler = getattr(_CTX, "depo_filler", None)
+    if filler is None:
+        return [InlineKeyboardButton(text="📦 Depo", callback_data="df:panel")]
+    try:
+        on = filler.running
+        parts = ["🟢" if on else "🔴"]
+        if on:
+            parts.append(f"🧵{filler.workers}")
+        parts.append(f"📋{_short_num(len(filler.queue))}")
+        hp = getattr(filler, "helpers", None)
+        if hp and hp.helpers:
+            parts.append(f"🤖{len(hp.active())}/{len(hp.helpers)}")
+        try:
+            from core.youtube_handler import cooldown_left
+            if cooldown_left():
+                parts.append("⏸403")
+        except Exception:
+            pass
+        stall = filler.stall_reason() if hasattr(filler, "stall_reason") else ""
+        if stall:
+            parts.append("⚠️")
+        label = "📦 Depo · " + " ".join(parts)
+    except Exception:
+        on, stall, label = False, "", "📦 Depo"
+    # ▶️ söndürülüb → işə sal · ⚡ ilişib → məcburi davam · ⏸ işləyir → söndür
+    quick = "▶️" if not on else ("⚡" if stall else "⏸")
+    return [InlineKeyboardButton(text=label, callback_data="df:panel"), _btn(quick, "dq")]
 
 
 def nav_row(back: str = "main") -> list:
@@ -343,22 +385,19 @@ def sub_kb(refresh=None):
     rows = []
     if refresh:
         rows.append([_btn("🔄 Yenilə", refresh)])
-    rows.append(nav_row("sys"))
+    rows.append(nav_row("srv"))
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
 SYS_TEXT = (
     "🖥 <b>Sistem və server</b>\n"
     "━━━━━━━━━━━━━━━━━━\n"
-    "🚀 <b>Speedtest</b> — serverin internet sürəti\n"
-    "🖥 <b>Fastfetch</b> — sistem məlumatı, <i>canlı · 3 san.</i>\n"
-    "📈 <b>htop</b> — CPU / RAM / proseslər, <i>canlı · 3 san.</i>\n"
-    "🌿 <b>GitHub</b> — kod dəyişiklikləri, push\n"
-    "🧩 <b>Plugin-lər</b> — quraşdır, yenilə, söndür\n"
-    "🎧 <b>Yükləmə formatı</b> — birbaşa m4a / ffmpeg çevirmə\n"
-    "🔎 <b>Axtarış mənbəyi</b> — YouTube / YouTube Music / hər ikisi\n"
-    "🌐 <b>Brauzer / cookies</b> — Chrome, Firefox, Brave, Edge... profil, User-Agent, test\n"
-    "📜 <b>Loglar</b> — bot loglarını kanala göndər (interval)\n"
+    "📡 <b>Server</b> — CPU / RAM / disk bir baxışda + 🚀 Speedtest, 🖥 Fastfetch, 📈 htop\n"
+    "🛠 <b>Bot idarəsi</b> — 🌿 GitHub, 🧩 Plugin-lər, 📜 Loglar\n"
+    "🎵 <b>YouTube</b> — axtarış, format, cookies, User-Agent, PO token, 403 cooldown\n"
+    "⚙️ <b>Performans</b> — bütün nüvələr, proses hovuzları, donma monitoru\n"
+    "📱 <b>Userbotlar</b> — 1️⃣ əsas (tam səlahiyyət) və 2️⃣ canlı yayım asistanı (yalnız səs), 🔑 bot daxilində qoşma\n"
+    "\n<i>Düymələr vəziyyəti özləri göstərir — problem varsa ⚠️ görünür.</i>\n"
     "━━━━━━━━━━━━━━━━━━"
 )
 
@@ -366,17 +405,401 @@ SYS_TEXT = (
 def sys_kb():
     """Sistem alətləri — ayrıca, iki sütunlu blok."""
     return InlineKeyboardMarkup(inline_keyboard=[
-        [_btn("🚀 Speedtest", "speed"), _btn("🖥 Fastfetch", "fetch")],
-        [InlineKeyboardButton(text="📈 htop", callback_data="htop:start"),          # htop_plugin
-         InlineKeyboardButton(text="🌿 GitHub", callback_data="ghf:open")],         # update_notifier_plugin
-        [InlineKeyboardButton(text="🧩 Plugin-lər", callback_data="pm:list"),      # plugin_manager_plugin
-         _btn("🎧 Yükləmə formatı", "dlf")],
-        [InlineKeyboardButton(text="📜 Loglar", callback_data="lg:panel"),          # logs_plugin
-         _btn("🔎 Axtarış mənbəyi", "srch")],
-        [_btn("🌐 Brauzer / cookies", "web"),
-         InlineKeyboardButton(text="📊 Depo monitor", callback_data="dt:start")],  # depo_filler_plugin
+        [_btn(srv_button_label(), "srv")],      # 🚀 Speedtest + 🖥 Fastfetch + 📈 htop
+        [_btn(dev_button_label(), "dev")],      # 🌿 GitHub + 🧩 Plugin-lər + 📜 Loglar
+        [_btn(yt_button_label(), "yt")],        # 🎧 Format + 🔎 Axtarış + 🌐 Brauzer / cookies
+        [_btn(perf_button_label(), "perf")],    # 🧠 proseslər + 🧵 thread + 🫀 watchdog
+        [_btn(userbots_button_label(), "ubacc")],      # telethon_plugin (menyu özü açır — xəta olsa səbəbi göstərir)
         nav_row("main"),
     ])
+
+
+# ───────────────────────── 📡 Server — hibrid panel ─────────────────────────
+def _fmt_secs(sec: float) -> str:
+    sec = int(sec)
+    d, h, m = sec // 86400, sec % 86400 // 3600, sec % 3600 // 60
+    return f"{d} gün {h} saat" if d else (f"{h} saat {m} dəq" if h else f"{m} dəq")
+
+
+def _bar(pct: float, width: int = 10) -> str:
+    pct = max(0.0, min(100.0, pct))
+    full = round(pct / 100 * width)
+    return "▰" * full + "▱" * (width - full)
+
+
+def _lvl(pct: float) -> str:
+    return "🟢" if pct < 70 else ("🟡" if pct < 90 else "🔴")
+
+
+def server_snapshot() -> dict:
+    """/proc-dan sürətli oxunuş — subprocess yoxdur, düymə etiketində də istifadə olunur."""
+    snap = {}
+    try:
+        load1, load5, load15 = os.getloadavg()
+        cores = os.cpu_count() or 1
+        snap.update(load=(load1, load5, load15), cores=cores, cpu=load1 / cores * 100)
+    except OSError:
+        pass
+    try:
+        mem = {}
+        with open("/proc/meminfo") as f:
+            for line in f:
+                k, v = line.split(":", 1)
+                mem[k] = int(v.split()[0]) * 1024
+        total, avail = mem["MemTotal"], mem.get("MemAvailable", mem.get("MemFree", 0))
+        snap.update(ram_total=total, ram_used=total - avail, ram=(total - avail) / total * 100)
+        if mem.get("SwapTotal"):
+            snap.update(swap=(mem["SwapTotal"] - mem.get("SwapFree", 0)) / mem["SwapTotal"] * 100)
+    except (OSError, KeyError, ValueError, ZeroDivisionError):
+        pass
+    try:
+        du = shutil.disk_usage("/")
+        snap.update(disk_total=du.total, disk_used=du.used, disk=du.used / du.total * 100)
+    except OSError:
+        pass
+    try:
+        with open("/proc/uptime") as f:
+            snap["uptime"] = float(f.read().split()[0])
+    except (OSError, ValueError):
+        pass
+    try:
+        with open("/proc/self/status") as f:
+            for line in f:
+                if line.startswith("VmRSS:"):
+                    snap["bot_rss"] = int(line.split()[1]) * 1024
+                    break
+    except (OSError, ValueError):
+        pass
+    snap["bot_uptime"] = time.time() - _BOT_STARTED
+    return snap
+
+
+def srv_button_label() -> str:
+    s = server_snapshot()
+    parts = []
+    if "cpu" in s:
+        parts.append(f"CPU {s['cpu']:.0f}%")
+    if "ram" in s:
+        parts.append(f"RAM {s['ram']:.0f}%")
+    if "disk" in s and s["disk"] >= 85:
+        parts.append(f"💾 {s['disk']:.0f}%")
+    warn = any(s.get(k, 0) >= 90 for k in ("cpu", "ram", "disk"))
+    return "📡 Server" + (" · " + " · ".join(parts) if parts else "") + (" ⚠️" if warn else "")
+
+
+def srv_hub_view(note: str = ""):
+    s = server_snapshot()
+    gb = 1024 ** 3
+    lines = ["📡 <b>Server</b>\n━━━━━━━━━━━━━━━━━━"]
+    if "cpu" in s:
+        l1, l5, l15 = s["load"]
+        lines.append(f"{_lvl(s['cpu'])} <b>CPU</b>  {_bar(s['cpu'])} {s['cpu']:.0f}%\n"
+                     f"     <i>load {l1:.2f} · {l5:.2f} · {l15:.2f} · {s['cores']} nüvə</i>")
+    if "ram" in s:
+        lines.append(f"{_lvl(s['ram'])} <b>RAM</b>  {_bar(s['ram'])} {s['ram']:.0f}%\n"
+                     f"     <i>{s['ram_used'] / gb:.1f} / {s['ram_total'] / gb:.1f} GB"
+                     + (f" · swap {s['swap']:.0f}%" if "swap" in s else "") + "</i>")
+    if "disk" in s:
+        lines.append(f"{_lvl(s['disk'])} <b>Disk</b> {_bar(s['disk'])} {s['disk']:.0f}%\n"
+                     f"     <i>{s['disk_used'] / gb:.0f} / {s['disk_total'] / gb:.0f} GB</i>")
+    lines.append("━━━━━━━━━━━━━━━━━━")
+    if "uptime" in s:
+        lines.append(f"⏱ <b>Server işləyir:</b> {_fmt_secs(s['uptime'])}")
+    lines.append(f"🤖 <b>Bot işləyir:</b> {_fmt_secs(s['bot_uptime'])}"
+                 + (f" · {s['bot_rss'] / 1048576:.0f} MB RAM" if "bot_rss" in s else ""))
+    lines.append("\n<i>🚀 sürət testi · 🖥 tam sistem məlumatı · 📈 canlı proseslər</i>")
+    if note:
+        lines.append(f"\n{note}")
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [_btn("🚀 Speedtest", "speed"), _btn("🖥 Fastfetch", "fetch"),
+         InlineKeyboardButton(text="📈 htop", callback_data="htop:start")],        # htop_plugin
+        [_btn("🔄 Yenilə", "srv")],
+        nav_row("sys"),
+    ])
+    return "\n".join(lines), kb
+
+
+def userbots_button_label() -> str:
+    fn = getattr(_CTX, "userbots_label", None)
+    if fn is None:
+        return "📱 Userbotlar · ❌"
+    try:
+        return fn()
+    except Exception:
+        return "📱 Userbotlar"
+
+
+def va_button_label() -> str:
+    va = getattr(_CTX, "voice_assistant", None)
+    if va is None:
+        return "🎙 Canlı yayım · ❌"
+    try:
+        return va.label()
+    except Exception:
+        return "🎙 Canlı yayım"
+
+
+# ───────────────────────── ⚙️ Performans — hibrid panel ─────────────────────────
+def perf_button_label() -> str:
+    try:
+        from core import cpu_pool as cp
+    except Exception:
+        return "⚙️ Performans · ❌"
+    warn = cp.health()
+    icon = "🧠" if cp.mode() == "process" else "🧵"
+    return f"⚙️ Performans · {icon} {cp.CORES} nüvə" + (f" · ⚠️ {warn}" if warn else "")
+
+
+def _ms(sec: float) -> str:
+    return f"{sec * 1000:.0f} ms" if sec < 1 else f"{sec:.1f} san"
+
+
+def perf_hub_view(note: str = ""):
+    try:
+        from core import cpu_pool as cp
+    except Exception as e:
+        return f"❌ core/cpu_pool.py yüklənmədi: <code>{escape(str(e))}</code>", \
+            InlineKeyboardMarkup(inline_keyboard=[nav_row("sys")])
+    m = cp.mode()
+    w = cp.WATCHDOG.snapshot()
+    snap = server_snapshot()
+    lines = ["⚙️ <b>Performans</b>\n━━━━━━━━━━━━━━━━━━"]
+    # 🫀 sağlamlıq
+    if w["now_frozen"]:
+        lines.append("🔴 <b>Bot hazırda donub!</b>")
+    elif w["freezes_hour"]:
+        lines.append(f"🟡 <b>Son 1 saatda {w['freezes_hour']} donma</b> (>{cp.FREEZE_AT:.0f} san.)")
+    else:
+        lines.append("🟢 <b>Bot cavab verir</b> — donma yoxdur")
+    lines.append(f"🫀 Event loop gecikməsi: indi {_ms(w['lag'])} · orta {_ms(w['lag_avg'])} · "
+                 f"max {_ms(w['lag_max'])} <i>(5 dəq.)</i>" if cp.WATCHDOG.enabled else "🫀 Watchdog söndürülüb")
+    if w["last"]:
+        ts, dur, where = w["last"]
+        ago = int(time.time() - ts)
+        lines.append(f"     Son donma: <b>{dur:.1f} san.</b>, {_fmt_secs(ago) if ago >= 60 else f'{ago} san.'} əvvəl\n"
+                     f"     <code>{escape(where[:150])}</code>")
+    lines.append("━━━━━━━━━━━━━━━━━━")
+    cpu = f" · yük {snap['cpu']:.0f}%" if "cpu" in snap else ""
+    lines.append(f"💻 <b>CPU:</b> {cp.CORES} nüvə{cpu}")
+    lines.append(f"🔧 <b>Rejim:</b> {cp.MODES[m]}")
+    if m == "process":
+        for pool in cp.LANES.values():
+            p = pool.snapshot()
+            avg = p["secs"] / p["done"] if p["done"] else 0
+            lines.append(f"{pool.label}: <b>{p['running']}/{p['size']}</b> işləyir · {p['alive']} proses açıq"
+                         + (f" · ⏳ {p['waiting']} növbədə" if p["waiting"] else "")
+                         + f"\n     <i>✅ {p['done']} · ❌ {p['err']}"
+                         + (f" · 💥 {p['crash']}" if p["crash"] else "")
+                         + (f" · ↩️ thread {p['fallback']}" if p["fallback"] else "")
+                         + (f" · orta {avg:.1f} san." if avg else "") + "</i>")
+        est = (cp.user_procs() + cp.depo_procs()) * 70
+        lines.append(f"     <i>Hər proses ~60–80 MB RAM · maksimum ≈ {est} MB</i>")
+    else:
+        lines.append("     <i>yt-dlp bot ilə eyni prosesdə (GIL) — çox yükləmədə bot ləngiyə bilər</i>")
+    lines.append(f"🧵 <b>Thread hovuzu:</b> {cp.thread_pool_size()} <i>(baza, fayl, Spotify)</i>")
+    lines.append(f"🐢 <b>Prioritet:</b> nice +{cp.nice()} <i>(yt-dlp prosesləri və ffmpeg — bot həmişə üstün)</i>")
+    lines.append("\n<i>👤 istifadəçi zolağı ayrıcadır — depo nə qədər yükləsə də axtarış və istifadəçi "
+                 "yükləmələri gözləmir.</i>")
+    if note:
+        lines.append(f"\n{note}")
+    rows = [
+        [_btn(("✅ " if m == "process" else "") + "🧠 Proses", "perf:mode:process"),
+         _btn(("✅ " if m == "thread" else "") + "🧵 Thread", "perf:mode:thread")],
+    ]
+    if m == "process":
+        rows += [
+            [_btn("➖", "perf:u:-"), _btn(f"👤 İstifadəçi: {cp.user_procs()}", "perf:info:u"), _btn("➕", "perf:u:+")],
+            [_btn("➖", "perf:d:-"), _btn(f"📦 Depo: {cp.depo_procs()}", "perf:info:d"), _btn("➕", "perf:d:+")],
+        ]
+    rows += [
+        [_btn("➖", "perf:t:-"), _btn(f"🧵 Thread: {cp.threads()}", "perf:info:t"), _btn("➕", "perf:t:+")],
+        [_btn("➖", "perf:n:-"), _btn(f"🐢 nice +{cp.nice()}", "perf:info:n"), _btn("➕", "perf:n:+")],
+        [_btn(f"🫀 Watchdog: {'✅' if cp.WATCHDOG.enabled else '❌'}", "perf:wd"),
+         _btn("♻️ Prosesləri yenilə", "perf:restart")],
+        [_btn("⚡ Avto-tənzimlə", "perf:auto"), _btn("🔄 Yenilə", "perf")],
+        nav_row("sys"),
+    ]
+    return "\n".join(lines), InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+PERF_INFO = {
+    "u": "👤 İstifadəçi zolağı: axtarış, /music, /mix, inline və istifadəçilərin yükləmələri üçün eyni anda "
+         "neçə yt-dlp prosesi. Depo bunları heç vaxt gözlətmir.",
+    "d": "📦 Depo zolağı: doldurucunun eyni anda neçə yükləməsi ayrıca prosesdə işləsin. Doldurucunun "
+         "işçi sayından çox olmasına ehtiyac yoxdur; az olsa işçilər növbə gözləyir.",
+    "t": "🧵 asyncio thread hovuzu: baza, fayl, Spotify kimi qısa bloklayan işlər üçün.",
+    "n": "🐢 nice: yt-dlp prosesləri və ffmpeg-in prioriteti (0 — eyni, 19 — ən aşağı). "
+         "Yüksək dəyər botun özünü həmişə sürətli saxlayır. Yeni proseslərə tətbiq olunur — ♻️ bas.",
+}
+
+
+# ───────────────────────── 🛠 Bot idarəsi — hibrid panel ─────────────────────────
+def _logs_cfg() -> dict:
+    try:
+        db = get_db()
+        iv = db.get_setting("logs:interval")
+        return {"chat": db.get_setting("logs:chat"),
+                "title": db.get_setting("logs:chat_title"),
+                "iv": int(iv) if iv and str(iv).isdigit() else 0,
+                "warn": db.get_setting("logs:level") == "warn"}
+    except Exception:
+        return {"chat": None, "title": None, "iv": 0, "warn": False}
+
+
+def _iv_label(minutes: int) -> str:
+    if not minutes:
+        return "❌"
+    return f"{minutes // 60} saat" if minutes % 60 == 0 and minutes >= 60 else f"{minutes} dəq"
+
+
+def dev_button_label() -> str:
+    lc = _logs_cfg()
+    logs = f"📜 {_iv_label(lc['iv'])}" if lc["chat"] else "📜 ⚠️"
+    return f"🛠 Bot idarəsi · 🌿 🧩 · {logs}"
+
+
+async def git_summary() -> str:
+    """Branch, son commit və dəyişmiş fayl sayı — git yoxdursa boş."""
+    if not shutil.which("git"):
+        return ""
+    try:
+        rc, branch, _ = await run_cmd("git", "rev-parse", "--abbrev-ref", "HEAD", timeout=5)
+        if rc != 0:
+            return ""
+        _, last, _ = await run_cmd("git", "log", "-1", "--format=%h · %cr · %s", timeout=5)
+        _, dirty, _ = await run_cmd("git", "status", "--porcelain", timeout=5)
+        n = len([x for x in dirty.splitlines() if x.strip()])
+        return (f"🌿 <b>Git:</b> <code>{escape(branch.strip())}</code> · {escape(last.strip()[:70])}"
+                + (f"\n     ✏️ <i>{n} fayl commit olunmayıb</i>" if n else "\n     ✅ <i>təmiz</i>"))
+    except Exception:
+        return ""
+
+
+def dev_hub_view(git_line: str = "", note: str = ""):
+    lc = _logs_cfg()
+    title = lc["title"] or lc["chat"]
+    lines = ["🛠 <b>Bot idarəsi</b>\n━━━━━━━━━━━━━━━━━━"]
+    lines.append(git_line or "🌿 <b>Git:</b> <i>məlumat yoxdur</i>")
+    lines.append(f"📜 <b>Loglar:</b> "
+                 + (f"{escape(str(title))} · hər {_iv_label(lc['iv'])} · {'⚠️+❌' if lc['warn'] else 'hamısı'}"
+                    if lc["chat"] else "⚠️ kanal təyin edilməyib"))
+    lines += [
+        "━━━━━━━━━━━━━━━━━━",
+        "🌿 <b>GitHub</b> — dəyişikliklər, push",
+        "🧩 <b>Plugin-lər</b> — quraşdır, yenilə, söndür",
+        "📜 <b>Loglar</b> — kanal, interval, səviyyə",
+    ]
+    if note:
+        lines.append(f"\n{note}")
+    rows = [
+        [InlineKeyboardButton(text="🌿 GitHub", callback_data="ghf:open"),          # update_notifier_plugin
+         InlineKeyboardButton(text="🧩 Plugin-lər", callback_data="pm:list")],     # plugin_manager_plugin
+        [InlineKeyboardButton(text="📜 Loglar", callback_data="lg:panel")]          # logs_plugin
+        + ([InlineKeyboardButton(text="📤 Logları indi göndər", callback_data="lg:send")] if lc["chat"] else []),
+        [_btn("🔄 Yenilə", "dev")],
+        nav_row("sys"),
+    ]
+    return "\n".join(lines), InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+# ───────────────────────── 🎵 YouTube — hibrid panel ─────────────────────────
+# Əvvəlki 3 ayrı düymə (🎧 Yükləmə formatı, 🔎 Axtarış mənbəyi, 🌐 Brauzer / cookies) bir paneldə:
+# hər düymə həm hazırkı vəziyyəti göstərir, həm də basanda növbəti seçimə keçir (bir toxunuşla).
+# Ətraflı ayarlar (brauzer, profil, keyring, izahlar) 📖 sətrindəki düymələrdən açılır.
+FMT_PRESETS = [
+    # (açar, ⚡ direct_m4a, 🎞 ffmpeg, qısa ad, izah)
+    ("hybrid", True, True, "⚡+🎞 Hibrid", "m4a varsa birbaşa, yoxdursa ffmpeg — <i>tövsiyə olunan</i>"),
+    ("direct", True, False, "⚡ Birbaşa", "yalnız hazır m4a; yoxdursa orijinal format (webm/opus)"),
+    ("ffmpeg", False, True, "🎞 ffmpeg", "həmişə ən yaxşı audio + ffmpeg ilə m4a — yavaş"),
+    ("raw", False, False, "📄 Çevirməsiz", "fayl olduğu kimi göndərilir (webm/opus ola bilər)"),
+]
+
+
+def _yt_state() -> dict:
+    """Panel və düymə etiketi üçün bütün vəziyyət — xəta olsa boş dict."""
+    try:
+        from core import youtube_handler as yh
+        from core import webprofile as wp
+    except Exception:
+        return {}
+    m = yh.download_mode()
+    preset = next((p for p in FMT_PRESETS if p[1] == m["direct_m4a"] and p[2] == m["ffmpeg"]), FMT_PRESETS[0])
+    return {"yh": yh, "wp": wp, "cfg": wp.current(), "preset": preset, "src": yh.search_source(),
+            "pot": yh._pot_cache.get("ok", False), "pot_checked": bool(yh._pot_cache.get("checked")),
+            "cd": yh.cooldown_left(), "has_ff": yh.ffmpeg_available()}
+
+
+def yt_button_label() -> str:
+    """Sistem menyusundakı düymə: problem varsa dərhal görünsün."""
+    st = _yt_state()
+    if not st:
+        return "🎵 YouTube · ❌"
+    if st["cd"]:
+        return f"🎵 YouTube · ⏸ {st['cd'] // 60 + 1} dəq"
+    if st["pot_checked"] and not st["pot"]:
+        return "🎵 YouTube · ⚠️"
+    return "🎵 YouTube"
+
+
+def yt_hub_view(note: str = ""):
+    st = _yt_state()
+    if not st:
+        return "❌ youtube_handler / webprofile yüklənmədi", InlineKeyboardMarkup(inline_keyboard=[nav_row("sys")])
+    yh, wp, cfg, preset = st["yh"], st["wp"], st["cfg"], st["preset"]
+    st["pot"] = yh.pot_provider_up()                     # 60 san keşli, ən çox 0.5 san
+
+    # sağlamlıq sətri
+    if st["cd"]:
+        health = f"⏸ <b>403 cooldown:</b> {st['cd']} san qalıb — YouTube müvəqqəti blokladı, növbə gözləyir"
+    elif not st["pot"]:
+        health = ("⚠️ <b>PO token provider yoxdur</b> — çoxlu yükləmədən sonra 403 ehtimalı yüksəkdir\n"
+                  "<i>Quraşdır:</i> <code>pip install bgutil-ytdlp-pot-provider</code> + docker (port 4416)")
+    else:
+        health = "✅ <b>Hər şey qaydasındadır</b> — PO token aktiv, cooldown yoxdur"
+
+    ff_warn = "" if st["has_ff"] or not preset[2] else " · ⚠️ ffmpeg serverdə yoxdur"
+    ua_warn = "" if cfg["ua"] == "ytdlp" else " · <i>(yalnız axtarışa təsir edir)</i>"
+    total_dl = sum(yh.DL_STATS.values())
+    total_s = sum(yh.SEARCH_STATS.values())
+    lines = [
+        "🎵 <b>YouTube ayarları</b>\n━━━━━━━━━━━━━━━━━━",
+        health,
+        "━━━━━━━━━━━━━━━━━━",
+        f"🔎 <b>Axtarış:</b> {yh.SEARCH_SOURCES[st['src']]}",
+        f"🎧 <b>Format:</b> {preset[3]} — {preset[4]}{ff_warn}",
+        f"🍪 <b>Cookies:</b> {escape(wp.describe(cfg))}",
+        f"🕵️ <b>User-Agent:</b> {wp.UA_MODES[cfg['ua']]}{ua_warn}",
+        f"🛡 <b>PO token:</b> {'✅ aktiv' if st['pot'] else '❌ yoxdur'} <code>{yh.POT_HOST}:{yh.POT_PORT}</code>",
+        f"⬇️ <b>Toplu yükləmə:</b> {yh.batch_parallel()} paralel"
+        + (" · ⚠️ <i>çox paralel 403 riskini artırır</i>" if yh.batch_parallel() > 4 else "")
+        + "\n     <i>Hamısını yüklə, Spotify / YouTube playlist, albom — sıra qorunur</i>",
+        "━━━━━━━━━━━━━━━━━━",
+        "📊 <b>Bu sessiyada:</b> "
+        + (f"⚡ {yh.DL_STATS['direct']} · 🎞 {yh.DL_STATS['converted']} · 📄 {yh.DL_STATS['original']}"
+           if total_dl else "<i>yükləmə yoxdur</i>")
+        + " | "
+        + (f"🎵 {yh.SEARCH_STATS['ytm']} · ▶️ {yh.SEARCH_STATS['yt']} · ↪️ {yh.SEARCH_STATS['fallback']}"
+           if total_s else "<i>axtarış yoxdur</i>"),
+        "\n<i>Düyməyə bas — növbəti seçimə keçir. Dəyişiklik dərhal tətbiq olunur, restart lazım deyil.</i>",
+    ]
+    if note:
+        lines.append(f"\n{note}")
+
+    rows = [
+        [_btn(f"🔎 {yh.SEARCH_SOURCES[st['src']]}", "yt:src"),
+         _btn(f"🎧 {preset[3]}", "yt:fmt")],
+        [_btn(f"🍪 {wp.COOKIE_SOURCES[cfg['cookies']]}", "yt:ck"),
+         _btn(f"🕵️ {wp.UA_MODES[cfg['ua']]}", "yt:ua")],
+        [_btn("➖", "yt:bp:-"), _btn(f"⬇️ Toplu: {yh.batch_parallel()} paralel", "yt:bp:i"), _btn("➕", "yt:bp:+")],
+        [_btn("🧪 Cookie testi", "yt:test"),
+         _btn("🛡 PO token yoxla", "yt:pot")],
+    ]
+    if st["cd"]:
+        rows.append([_btn(f"⏭ Cooldown-u sıfırla ({st['cd']} san)", "yt:cd")])
+    rows.append([_btn("📖 Axtarış", "srch"), _btn("📖 Format", "dlf"), _btn("📖 Brauzer", "web")])
+    rows.append([_btn("🔄 Yenilə", "yt")])
+    rows.append(nav_row("sys"))
+    return "\n".join(lines), InlineKeyboardMarkup(inline_keyboard=rows)
 
 
 def dl_format_view(note: str = ""):
@@ -385,7 +808,7 @@ def dl_format_view(note: str = ""):
         from core.youtube_handler import download_mode, ffmpeg_available, DL_STATS
     except Exception as e:
         return f"❌ youtube_handler yüklənmədi: <code>{escape(str(e))[:200]}</code>", \
-            InlineKeyboardMarkup(inline_keyboard=[nav_row("sys")])
+            InlineKeyboardMarkup(inline_keyboard=[nav_row("yt")])
     m = download_mode()
     has_ff = ffmpeg_available()
     direct, ff = m["direct_m4a"], m["ffmpeg"]
@@ -420,7 +843,7 @@ def dl_format_view(note: str = ""):
         [_btn(f"⚡ Birbaşa m4a: {'✅' if direct else '❌'}", "dlf_direct"),
          _btn(f"🎞 ffmpeg: {'✅' if ff else '❌'}", "dlf_ffmpeg")],
         [_btn("🔄 Yenilə", "dlf")],
-        nav_row("sys"),
+        nav_row("yt"),
     ])
     return text, kb
 
@@ -431,7 +854,7 @@ def search_source_view(note: str = ""):
         from core.youtube_handler import SEARCH_SOURCES, SEARCH_STATS, search_source, ytmusicapi_available
     except Exception as e:
         return f"❌ youtube_handler yüklənmədi: <code>{escape(str(e))[:200]}</code>", \
-            InlineKeyboardMarkup(inline_keyboard=[nav_row("sys")])
+            InlineKeyboardMarkup(inline_keyboard=[nav_row("yt")])
     cur = search_source()
     engine = ("✅ <b>ytmusicapi</b> — artist adı və müddət ilə dəqiq nəticələr" if ytmusicapi_available() else
               "⚠️ <b>ytmusicapi</b> yoxdur — yt-dlp istifadə olunur (artist / müddət görünməyə bilər).\n"
@@ -457,7 +880,7 @@ def search_source_view(note: str = ""):
     kb = InlineKeyboardMarkup(inline_keyboard=[
         btns[:2], btns[2:],
         [_btn("🔄 Yenilə", "srch")],
-        nav_row("sys"),
+        nav_row("yt"),
     ])
     return text, kb
 
@@ -468,7 +891,7 @@ def web_profile_view(note: str = ""):
         from core import webprofile as wp
     except Exception as e:
         return f"❌ webprofile yüklənmədi: <code>{escape(str(e))[:200]}</code>", \
-            InlineKeyboardMarkup(inline_keyboard=[nav_row("sys")])
+            InlineKeyboardMarkup(inline_keyboard=[nav_row("yt")])
     cfg = wp.current()
     found = wp.detect()
     eff = wp.effective_source(cfg)
@@ -533,7 +956,7 @@ def web_profile_view(note: str = ""):
     rows.append(prof_row)
     rows.append([_btn(f"🕵️ UA: {wp.UA_MODES[cfg['ua']]}", "web:ua"), _btn("🧪 Cookie testi", "web:test")])
     rows.append([_btn("🔄 Yenilə (yenidən axtar)", "web:scan")])
-    rows.append(nav_row("sys"))
+    rows.append(nav_row("yt"))
     return "\n".join(lines), InlineKeyboardMarkup(inline_keyboard=rows)
 
 
@@ -654,6 +1077,13 @@ async def send_one(bot, db, kind: str, chat_id: int, text: str) -> str:
 
 
 def setup(context):
+    global _CTX
+    _CTX = context
+    try:
+        from core import cpu_pool
+        cpu_pool.init(context)              # ⚙️ thread hovuzu + 🫀 donma monitoru (proseslər tənbəl açılır)
+    except Exception as e:
+        logger.warning(f"⚙️ cpu_pool başladılmadı: {e}")
     dp = context.dp
     speed_lock = asyncio.Lock()
     # Broadcast vəziyyəti (yalnız creator istifadə edir). music_plugin də oxuyur ki,
@@ -1637,10 +2067,10 @@ def setup(context):
 
     def fetch_kb(sess, running=True):
         if not running:
-            return InlineKeyboardMarkup(inline_keyboard=[[_btn("▶️ Yenidən başlat", "fetch")], nav_row("sys")])
+            return InlineKeyboardMarkup(inline_keyboard=[[_btn("▶️ Yenidən başlat", "fetch")], nav_row("srv")])
         return InlineKeyboardMarkup(inline_keyboard=[
             [_btn("▶️ Davam" if sess["paused"] else "⏸ Fasilə", "fetch_pause"), _btn("⏹ Dayandır", "fetch_stop")],
-            nav_row("sys"),
+            nav_row("srv"),
         ])
 
     def start_fetch_live(key, message):
@@ -2070,6 +2500,170 @@ def setup(context):
             await cb.answer()
             reset_inputs()
             await edit(cb, SYS_TEXT, sys_kb())
+
+        elif action == "ubacc":
+            view = getattr(context, "userbots_hub_view", None)
+            if view is not None:
+                try:
+                    text, kb = view()
+                    await cb.answer()
+                    await edit(cb, text, kb)
+                    return
+                except Exception as e:
+                    logger.error(f"📱 Userbotlar paneli: {e}", exc_info=True)
+                    diag = f"❌ Panel açılmadı: <code>{escape(str(e)[:300])}</code>"
+            else:
+                diag = "❌ <b>telethon_plugin paneli yüklənməyib</b>"
+            # diaqnostika: hansı fayl yoxdur / hansı plugin xəta verib
+            root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            st = getattr(context, "plugin_status", {}) or {}
+            checks = []
+            for rel in ("core/tg_login.py", "core/tg_session.py", "plugins/telethon_plugin.py",
+                        "plugins/voice_assistant_plugin.py"):
+                checks.append(("✅" if os.path.isfile(os.path.join(root, rel)) else "❌ yoxdur") + f" <code>{rel}</code>")
+            for name in ("telethon_plugin.py", "voice_assistant_plugin.py"):
+                v = st.get(name)
+                if v is not None:
+                    checks.append(f"{'✅' if v == 'ok' else '❌'} {name}: <code>{escape(str(v)[:200])}</code>")
+            await cb.answer()
+            await edit(cb, f"📱 <b>Userbotlar</b>\n\n{diag}\n\n" + "\n".join(checks)
+                       + "\n\n<i>Faylları yerinə qoyub botu restart et.</i>",
+                       InlineKeyboardMarkup(inline_keyboard=[nav_row("sys")]))
+
+        elif action == "perf":
+            from core import cpu_pool as cp
+            sub = parts[2] if len(parts) > 2 else ""
+            arg = parts[3] if len(parts) > 3 else ""
+            note = ""
+            if sub == "mode" and arg in cp.MODES:
+                cp.set_mode(arg)
+                await cb.answer(cp.MODES[arg])
+            elif sub in ("u", "d", "t", "n") and arg in ("+", "-"):
+                fn = {"u": cp.step_user, "d": cp.step_depo, "t": cp.step_threads, "n": cp.step_nice}[sub]
+                v = fn(1 if arg == "+" else -1)
+                await cb.answer({"u": f"👤 {v} proses", "d": f"📦 {v} proses", "t": f"🧵 {v} thread",
+                                 "n": f"🐢 nice +{v} — ♻️ ilə bütün proseslərə"}[sub])
+            elif sub == "info" and arg in PERF_INFO:
+                await cb.answer(PERF_INFO[arg], show_alert=True)
+                return
+            elif sub == "wd":
+                on = cp.toggle_watchdog()
+                await cb.answer("🫀 Watchdog " + ("açıldı" if on else "söndürüldü"))
+            elif sub == "restart":
+                await cp.restart_pools()
+                await cb.answer("♻️ Proseslər bağlandı — növbəti tapşırıqda yeniləri açılacaq")
+                note = "♻️ <i>Bütün işçi proseslər yeniləndi (yeni nice / ölçü tətbiq olundu)</i>"
+            elif sub == "auto":
+                # nüvə sayına və RAM-a görə: istifadəçi = min(4, nüvə), depo = 2×nüvə (RAM-ın ~1/4-ü həddində)
+                snap = server_snapshot()
+                free_mb = (snap.get("ram_total", 0) - snap.get("ram_used", 0)) / 1048576
+                depo_cap = max(1, int(free_mb / 4 / 75)) if free_mb else cp.CORES * 2
+                u = max(2, min(4, cp.CORES))
+                d = max(1, min(cp.CORES * 2, depo_cap, cp.DEPO_STEPS[-1]))
+                t = max(64, cp.CORES * 8)
+                db = get_db()
+                for k, v in ((cp.S_MODE, "process" if cp.CORES > 1 else "thread"), (cp.S_USER, u),
+                             (cp.S_DEPO, d), (cp.S_THREADS, min(t, cp.THREAD_STEPS[-1])), (cp.S_NICE, 5)):
+                    await asyncio.to_thread(db.set_setting, k, str(v))
+                cp.LANES["user"].size, cp.LANES["depo"].size = u, d
+                cp.apply_threads(force=True)
+                await cb.answer("⚡ Tənzimləndi")
+                note = (f"⚡ <b>Avto-tənzimləndi:</b> {cp.CORES} nüvə, ~{free_mb:.0f} MB boş RAM → "
+                        f"👤 {u} · 📦 {d} proses · 🧵 {cp.threads()} thread · nice +5")
+            else:
+                await cb.answer()
+            await edit(cb, *perf_hub_view(note))
+
+        elif action == "srv":
+            await cb.answer()
+            await edit(cb, *srv_hub_view())
+
+        elif action == "dev":
+            await cb.answer()
+            await edit(cb, *dev_hub_view(await git_summary()))
+
+        elif action == "dq":                                     # 📦 Depo ⏸/▶️ — menyudan çıxmadan
+            filler = getattr(context, "depo_filler", None)
+            if filler is None:
+                await cb.answer("📦 Depo plugin-i yüklənməyib", show_alert=True)
+                return
+            stall = filler.stall_reason() if hasattr(filler, "stall_reason") else ""
+            if filler.running and stall and hasattr(filler, "force"):
+                done = await filler.force()
+                await cb.answer("⚡ Məcburi davam:\n" + "\n".join(done)[:180], show_alert=True)
+            elif filler.running:
+                await cb.answer("🔴 Söndürülür — depoya gedən mahnılar bitirilir...")
+                await filler.stop()
+            else:
+                filler.start()
+                await cb.answer("🟢 Depo doldurucu işə salındı")
+            await edit(cb, MAIN_TEXT, main_kb())
+
+        elif action == "yt":
+            from core import webprofile as wp
+            import core.youtube_handler as yh
+            sub = parts[2] if len(parts) > 2 else ""
+            note = ""
+            db = get_db()
+            if sub == "src":                                     # 🔎 YT Music → YouTube → hər ikisi → ...
+                keys = list(yh.SEARCH_SOURCES)
+                nxt = keys[(keys.index(yh.search_source()) + 1) % len(keys)]
+                await asyncio.to_thread(db.set_setting, yh.SEARCH_SETTING, nxt)
+                await cb.answer(f"🔎 {yh.SEARCH_SOURCES[nxt]}")
+            elif sub == "fmt":                                   # 🎧 hibrid → birbaşa → ffmpeg → çevirməsiz
+                m = yh.download_mode()
+                idx = next((i for i, p in enumerate(FMT_PRESETS)
+                            if p[1] == m["direct_m4a"] and p[2] == m["ffmpeg"]), -1)
+                p = FMT_PRESETS[(idx + 1) % len(FMT_PRESETS)]
+                await asyncio.to_thread(db.set_setting, "dl:direct_m4a", "on" if p[1] else "off")
+                await asyncio.to_thread(db.set_setting, "dl:ffmpeg", "on" if p[2] else "off")
+                await cb.answer(f"🎧 {p[3]}")
+            elif sub == "ck":                                    # 🍪 avto → brauzer → cookies.txt → cookiesiz
+                keys = list(wp.COOKIE_SOURCES)
+                nxt = keys[(keys.index(wp.current()["cookies"]) + 1) % len(keys)]
+                await asyncio.to_thread(wp.set_source, nxt)
+                if nxt == "file" and not os.path.isfile(wp.cookies_file() or "/nonexistent"):
+                    note = "⚠️ YOUTUBE_COOKIES_FILE tapılmadı — fayl qoyulana qədər brauzer istifadə olunacaq"
+                await cb.answer(f"🍪 {wp.COOKIE_SOURCES[nxt]}")
+            elif sub == "ua":
+                v = await asyncio.to_thread(wp.cycle_ua_mode)
+                await cb.answer(f"🕵️ {wp.UA_MODES[v]}")
+            elif sub == "bp":                                    # ⬇️ toplu yükləmə paralelliyi
+                arg = parts[3] if len(parts) > 3 else ""
+                if arg in ("+", "-"):
+                    cur = yh.batch_parallel()
+                    v = await asyncio.to_thread(yh.step_batch_parallel, 1 if arg == "+" else -1)
+                    await cb.answer(f"⬇️ {v} paralel" if v != cur else
+                                    ("Minimum 1 (ardıcıl)" if v == 1 else f"Maksimum {v}"))
+                else:
+                    await cb.answer("Eyni anda neçə mahnı hazırlansın — ➖ / ➕ ilə dəyiş. "
+                                    "Göndərmə həmişə siyahının sırası ilə olur.", show_alert=True)
+                    return
+            elif sub == "pot":
+                ok = await asyncio.to_thread(yh.recheck_pot)
+                await cb.answer("🛡 PO token provider aktivdir" if ok else "❌ PO token provider cavab vermir",
+                                show_alert=not ok)
+            elif sub == "cd":
+                yh.reset_cooldown()
+                await cb.answer("⏭ Cooldown sıfırlandı — növbə davam edir")
+            elif sub == "test":
+                await cb.answer("🧪 Yoxlanılır...")
+                await edit(cb, "🎵 <b>YouTube ayarları</b>\n\n🧪 <i>Cookies oxunur... (keyring varsa 30 san.-yə qədər)</i>")
+                try:
+                    r = await asyncio.wait_for(asyncio.to_thread(wp.test_cookies), 45)
+                    if r.get("error") and not r.get("ok"):
+                        note = f"🧪 ❌ {escape(str(r['error'])[:200])}"
+                    elif r.get("source") == "none":
+                        note = "🧪 🚫 cookiesiz rejim — yoxlanacaq cookie yoxdur"
+                    else:
+                        note = (f"🧪 ✅ {r['total']} cookie · YouTube: <b>{r['yt']}</b> · "
+                                + ("🔓 hesaba daxil olunub" if r["logged_in"] else "🔒 anonim (giriş yoxdur)"))
+                except asyncio.TimeoutError:
+                    note = "🧪 ❌ 45 san.-də bitmədi — keyring parol gözləyir. 📖 Brauzer → 🔐 Keyring: BASICTEXT sına"
+            else:
+                await cb.answer()
+            text, kb = await asyncio.to_thread(yt_hub_view, note)
+            await edit(cb, text, kb)
 
         elif action in ("dlf", "dlf_direct", "dlf_ffmpeg"):
             note = ""

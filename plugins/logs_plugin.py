@@ -213,7 +213,7 @@ def setup(context):
                                                              callback_data="lg:iv:0")],
             [InlineKeyboardButton(text=f"📊 Səviyyə: {'⚠️+❌' if lvl_warn else 'Hamısı'}", callback_data="lg:level"),
              InlineKeyboardButton(text="🔄 Yenilə", callback_data="lg:panel")],
-            [InlineKeyboardButton(text="⬅️ Sistem", callback_data="menu:sys"),
+            [InlineKeyboardButton(text="⬅️ Bot idarəsi", callback_data="menu:dev"),
              InlineKeyboardButton(text="❌ Bağla", callback_data="lg:close")],
         ]
         return text, InlineKeyboardMarkup(inline_keyboard=rows)

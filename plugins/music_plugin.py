@@ -111,6 +111,9 @@ def build_keyboard(url: str, sl=None, owner_id: int = 0):
 
 KB_HIDE_AFTER = 15                # mahnının altındakı 🔀 Mix / 🙈 Gizlət neçə saniyə sonra özü yox olsun
 BATCH_MAX_DURATION = 15 * 60      # toplu yükləmədə bundan uzun videolar (mix, albom) ötürülür
+PAGE_SIZE = 5                     # axtarış / mix: bir səhifədə neçə mahnı
+SEARCH_STEP = 25                  # son səhifəyə çatanda bu qədər əlavə nəticə gətirilir
+SEARCH_MAX = 1000                 # sonsuz səhifələmənin təhlükəsizlik həddi
 
 
 def download_all_row(count: int) -> list:
@@ -258,6 +261,93 @@ def setup(context):
                 rest.append(r)
         return top + in_depo + rest
 
+    # ═════════════ ♾ Sonsuz səhifələmə (axtarış və /mix üçün ortaq) ═════════════
+    def _rkey(r: dict):
+        return video_id_from_url(r.get("url")) or r.get("url") or r.get("title")
+
+    def results_view(user_data: dict, page: int):
+        """Səhifənin mətni və klaviaturası. Son yüklənmiş səhifədə daha çox nəticə varsa ▶️ yenə görünür."""
+        results = user_data['results']
+        loaded = max(1, (len(results) + PAGE_SIZE - 1) // PAGE_SIZE)
+        page = max(0, min(page, loaded - 1))
+        more = not user_data.get('exhausted')
+        start = page * PAGE_SIZE
+        rows = [[result_button(r, start + i)] for i, r in enumerate(results[start:start + PAGE_SIZE])]
+        nav = []
+        if page > 1:
+            nav.append(InlineKeyboardButton(text="⏮", callback_data="page_0"))
+        if page > 0:
+            nav.append(InlineKeyboardButton(text="◀️ Geri", callback_data=f"page_{page - 1}"))
+        if page < loaded - 1 or more:
+            nav.append(InlineKeyboardButton(text="İrəli ▶️", callback_data=f"page_{page + 1}"))
+        if nav:
+            rows.append(nav)
+        rows.append(download_all_row(len(results)))
+        rows.append([InlineKeyboardButton(text="❌ Ləğv et", callback_data="cancel")])
+        total = f"{loaded}+" if more else str(loaded)
+        header = user_data.get('header', '🎵 Tapılan Mahnılar')
+        text = [f"<b>{header} (Səhifə {page + 1}/{total}):</b>"]
+        if any(r.get("depo") for r in results[start:start + PAGE_SIZE]):
+            text.append("<i>📦 — depoda var, dərhal göndərilir</i>")
+        text.append(f"<i>{len(results)} nəticə" + (" · ▶️ ilə daha çox gəlir" if more else " · hamısı göstərilir") + "</i>")
+        return "\n".join(text), InlineKeyboardMarkup(inline_keyboard=rows), page
+
+    async def load_more(user_data: dict) -> int:
+        """Növbəti SEARCH_STEP nəticəni gətirir. YT Music bitəndə YouTube-a, Mix bitəndə son mahnının Mix-inə keçir."""
+        if user_data.get('exhausted'):
+            return 0
+        known = {_rkey(r) for r in user_data['results']}
+        ym = context.youtube_manager
+        added = []
+        for _ in range(8):                                   # mənbə dəyişəndə / təkrarlar çox olanda bir neçə cəhd
+            want = user_data.get('fetched', SEARCH_STEP) + SEARCH_STEP
+            if want > SEARCH_MAX:
+                break
+            try:
+                if user_data.get('command_used') == "mix":
+                    seed = user_data.get('mix_seed')
+                    new = await ym.youtube_mix(seed, limit=want) if seed else []
+                else:
+                    new = await ym.youtube_search(user_data['query'], limit=want,
+                                                  source=user_data.get('src_override'))
+            except Exception as e:
+                logger.warning(f"Daha çox nəticə alınmadı: {e}")
+                new = []
+            user_data['fetched'] = want
+            added = [dict(r) for r in new or [] if _rkey(r) not in known]
+            if added:
+                break
+            if len(new or []) >= want - 5:                   # mənbə hələ dolu cavab verir — sadəcə təkrarlardır
+                continue
+            # bu mənbə bitdi → növbəti mənbə
+            if user_data.get('command_used') == "mix":
+                used = user_data.setdefault('mix_used', {user_data.get('mix_seed')})
+                nxt = next((video_id_from_url(r.get("url")) for r in reversed(user_data['results'])
+                            if video_id_from_url(r.get("url")) and video_id_from_url(r.get("url")) not in used), None)
+                if not nxt:
+                    break
+                used.add(nxt)
+                user_data.update(mix_seed=nxt, fetched=0)
+            elif user_data.get('src_override') != "yt" and user_data.get('query'):
+                user_data.update(src_override="yt", fetched=0)   # YT Music bitdi → adi YouTube
+            else:
+                break
+        if not added:
+            user_data['exhausted'] = True
+            return 0
+        for r in added:
+            r.setdefault("original_title", r.get("title"))
+        try:
+            vids = [video_id_from_url(r.get("url")) for r in added]
+            cached = await asyncio.to_thread(audio_cache.cached_ids, [v for v in vids if v])
+            for r, v in zip(added, vids):
+                if v and v in cached:
+                    r["depo"] = True
+        except Exception:
+            pass
+        user_data['results'].extend(added)
+        return len(added)
+
     async def handle_music_search(message: types.Message, search_query: str, command_used: str = "music"):
         try:
             if not search_query:
@@ -292,52 +382,18 @@ def setup(context):
                     pass
                 raise ValueError("Nəticə tapılmadı")
             
-            total_pages = (len(results) + 4) // 5
-            current_page = 0
-            start = current_page * 5
-            current_results = results[start:start+5]
-
-            response = [
-                f"<b>🎵 Tapılan Mahnılar (Səhifə {current_page +1}/{total_pages}):</b>",
-                "<i>📦 — depoda var, dərhal göndərilir</i>" if any(r.get("depo") for r in results) else "",
-            ]
-
-            keyboard_rows = []
-            for i, res in enumerate(current_results):
-                original_index = start + i
-                keyboard_rows.append([result_button(res, original_index)])
-
-            pagination_buttons = []
-            if total_pages > 1:
-                if current_page > 0:
-                    pagination_buttons.append(InlineKeyboardButton(text="◀️ Geri", callback_data=f"page_{current_page-1}"))
-                if current_page < total_pages - 1:
-                    pagination_buttons.append(InlineKeyboardButton(text="İrəli ▶️", callback_data=f"page_{current_page+1}"))
-
-            if pagination_buttons:
-                keyboard_rows.append(pagination_buttons)
-
-            keyboard_rows.append(download_all_row(len(results)))
-            keyboard_rows.append([
-                InlineKeyboardButton(text="❌ Ləğv et", callback_data="cancel")
-            ])
-
-            keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_rows)
-            
-            await search_msg.edit_text(
-                "\n".join(response),
-                reply_markup=keyboard,
-                parse_mode="HTML",
-                disable_web_page_preview=True
-            )
-            
-            user_searches[message.from_user.id] = {
+            user_data = {
                 'results': results,
                 'search_message_id': search_msg.message_id,
                 'original_message_id': message.message_id,
                 'command_used': command_used,
-                'current_page': current_page
+                'current_page': 0,
+                'query': search_query,
+                'fetched': SEARCH_STEP,
             }
+            text, keyboard, _ = results_view(user_data, 0)
+            await search_msg.edit_text(text, reply_markup=keyboard, parse_mode="HTML", disable_web_page_preview=True)
+            user_searches[message.from_user.id] = user_data
             
         except Exception as e:
             error_msg = await message.answer(
@@ -357,47 +413,32 @@ def setup(context):
             return
 
         user_data = user_searches[user_id]
+        if callback.message.message_id != user_data.get('search_message_id'):
+            await callback.answer("Bu siyahı köhnəlib — yenidən axtar", show_alert=True)
+            return
         new_page = int(callback.data.split("_")[1])
+        loaded = (len(user_data['results']) + PAGE_SIZE - 1) // PAGE_SIZE
+        if new_page >= loaded:                              # ♾ son səhifə — daha çox gətir
+            if user_data.get('loading'):
+                await callback.answer("⏳ Yüklənir...")
+                return
+            user_data['loading'] = True
+            await callback.answer("⏳ Daha çox nəticə axtarılır...")
+            try:
+                n = await load_more(user_data)
+            finally:
+                user_data['loading'] = False
+            if not n:
+                new_page = loaded - 1
+                with contextlib.suppress(Exception):
+                    await callback.answer("Başqa nəticə yoxdur — hamısı göstərildi", show_alert=False)
+        else:
+            await callback.answer()
+        text, keyboard, new_page = results_view(user_data, new_page)
         user_data['current_page'] = new_page
-        results = user_data['results']
-        total_pages = (len(results) + 4) // 5
-        start = new_page * 5
-        current_results = results[start:start+5]
-
-        response = [
-            f"<b>{user_data.get('header', '🎵 Tapılan Mahnılar')} (Səhifə {new_page +1}/{total_pages}):</b>",
-            ""
-        ]
-
-        keyboard_rows = []
-        for i, res in enumerate(current_results):
-            original_index = start + i
-            keyboard_rows.append([result_button(res, original_index)])
-
-        pagination_buttons = []
-        if total_pages > 1:
-            if new_page > 0:
-                pagination_buttons.append(InlineKeyboardButton(text="◀️ Geri", callback_data=f"page_{new_page-1}"))
-            if new_page < total_pages - 1:
-                pagination_buttons.append(InlineKeyboardButton(text="İrəli ▶️", callback_data=f"page_{new_page+1}"))
-
-        if pagination_buttons:
-            keyboard_rows.append(pagination_buttons)
-
-        keyboard_rows.append(download_all_row(len(results)))
-        keyboard_rows.append([
-            InlineKeyboardButton(text="❌ Ləğv et", callback_data="cancel")
-        ])
-
-        keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_rows)
-        
-        await callback.message.edit_text(
-            "\n".join(response),
-            reply_markup=keyboard,
-            parse_mode="HTML",
-            disable_web_page_preview=True
-        )
-        await callback.answer()
+        with contextlib.suppress(Exception):
+            await callback.message.edit_text(text, reply_markup=keyboard, parse_mode="HTML",
+                                             disable_web_page_preview=True)
 
     @dp.message(Command("music", "mahnı", "song"))
     async def music_cmd(message: types.Message, command: CommandObject):
@@ -516,21 +557,21 @@ def setup(context):
 
             label = escape(clean_youtube_title(seed_title)[:60]) if seed_title else "bu mahnı"
             header = f"🔀 Mix: {label}"
-            kb, total_pages = mix_page_kb(results, 0)
-            await status.edit_text(
-                f"<b>{header} (Səhifə 1/{total_pages}):</b>\n"
-                f"<i>{len(results)} oxşar mahnı tapıldı — yükləmək üçün seç</i>",
-                parse_mode="HTML", reply_markup=kb, disable_web_page_preview=True,
-            )
             # /music ilə eyni axın: choice_ / page_ / cancel handler-ləri bunu istifadə edir
-            user_searches[message.from_user.id] = {
+            user_data = {
                 'results': results,
                 'search_message_id': status.message_id,
                 'original_message_id': message.message_id,
                 'command_used': "mix",
                 'current_page': 0,
                 'header': header,
+                'mix_seed': vid,
+                'mix_used': {vid},
+                'fetched': MIX_PAGE * MIX_PAGES,
             }
+            text, kb, _ = results_view(user_data, 0)
+            await status.edit_text(text, parse_mode="HTML", reply_markup=kb, disable_web_page_preview=True)
+            user_searches[message.from_user.id] = user_data
         except Exception as e:
             logger.warning(f"/mix xətası: {e}")
             try:
@@ -551,6 +592,10 @@ def setup(context):
         # depo doldurucusu mənbə linki (@kanal, t.me/...) gözləyir
         depo_waiting = getattr(context, "depo_waiting", None)
         if depo_waiting and depo_waiting(message.from_user.id):
+            return False
+        # 🎙 canlı yayım asistanı: hesab girişi (telefon / kod / parol) gözlənilir
+        va_waiting = getattr(context, "va_waiting", None)
+        if va_waiting and va_waiting(message.from_user.id):
             return False
         # menu_plugin creator-dan mətn gözləyir (broadcast mətni, premium üçün ID/@username)
         waiting = getattr(context, "menu_waiting_text", None)
@@ -686,10 +731,14 @@ def setup(context):
         bot = context.bot
         vid = video_id_from_url(url)
         sl_task = asyncio.create_task(get_songlink(url))
-        async with (audio_cache.lock_for(vid) if vid else contextlib.nullcontext()):
+        async with contextlib.AsyncExitStack() as locks:
+            if vid:
+                await locks.enter_async_context(audio_cache.lock_for(vid))
             cached = await asyncio.to_thread(audio_cache.get_cached, vid)
-            if cached and (cached.get("performer") or "").strip() in ("", "YouTube"):
-                # köhnə keş: artist adı yoxdur — bir dəfə yenidən yüklənib düzgün artistlə depoya düşsün
+            if cached and (cached.get("performer") or "").strip() in ("", "YouTube") \
+                    and await asyncio.to_thread(audio_cache.refetch_once, vid):
+                # köhnə keş: artist adı yoxdur — YALNIZ BİR DƏFƏ yenidən yüklənib düzgün artistlə depoya düşsün
+                # (əvvəl hər istəkdə yenidən yüklənirdi → eyni video depoda dəfələrlə təkrarlanırdı)
                 await asyncio.to_thread(audio_cache.invalidate, vid)
                 cached = None
             if cached:
@@ -714,6 +763,11 @@ def setup(context):
                 g_artist, g_track, _ = resolve_meta(yt_title, sl_early)
             same = None
             if g_artist and g_artist not in ("YouTube", "Naməlum"):
+                # 🔒 eyni mahnı (ad üzrə) — fərqli video ID-ləri eyni anda yüklənməsin: ikinci gözləyir,
+                # sonra birincinin depoya yüklədiyini find_same ilə tapır (paralel işçilərdə dublikat olmur)
+                tt = song_names.track_tokens(g_track or "")
+                if tt:
+                    await locks.enter_async_context(audio_cache.lock_for("song:" + "|".join(sorted(tt))))
                 same = await asyncio.to_thread(audio_cache.find_same, g_artist, g_track, duration)
             if same and vid:
                 await asyncio.to_thread(audio_cache.alias, vid, same, yt_title)
@@ -812,7 +866,7 @@ def setup(context):
                     break
                 except Exception as e:
                     if attempt == 1 and res["cached"] and audio_cache.is_bad_file_id(e):
-                        await asyncio.to_thread(audio_cache.invalidate, res["vid"])
+                        await audio_cache.recover_bad_file(context, res["vid"])   # yenidən yükləmə — son çarə
                         continue                       # yenidən: bu dəfə YouTube-dan
                     raise
             if res["cached"]:
@@ -972,16 +1026,21 @@ def setup(context):
                 best, best_score = r, score
         return best["url"] if best else None
 
-    async def send_track(target: types.Message, selected: dict, user_id: int, event) -> tuple:
-        """Bir mahnını keş/depo və ya yükləmə ilə göndərir → (artist, ad). handle_choice ilə eyni məntiq."""
+    async def prepare_track(selected: dict, event) -> dict:
+        """Yükləmə hissəsi (paralel işləyə bilər): YouTube linki tapılır, mahnı keşdən / YouTube-dan hazırlanır."""
         duration = int(selected.get('raw_duration', 0) or 0)
         if not selected.get('url'):
             selected['url'] = await resolve_youtube(selected.get('query') or selected['title'], duration)
             if not selected['url']:
                 raise ValueError(f"YouTube-da tapılmadı: {selected['title']}")
+        return await fetch_audio(selected['url'], selected['title'], duration, event,
+                                 meta=selected.get('meta'), thumb_url=selected.get('thumb'))
+
+    async def deliver_track(target: types.Message, selected: dict, res: dict, user_id: int, event) -> tuple:
+        """Göndərmə hissəsi (həmişə ardıcıl — siyahının sırası qorunur) → (artist, ad)."""
+        duration = int(selected.get('raw_duration', 0) or 0)
         for attempt in (1, 2):
-            res = await fetch_audio(selected['url'], selected['title'], duration, event,
-                                    meta=selected.get('meta'), thumb_url=selected.get('thumb'))
+            path = res.get("path")
             try:
                 if event.is_set():
                     raise DownloadCancelled("İstifadəçi dayandırdı")
@@ -1013,13 +1072,18 @@ def setup(context):
                 return res["artist"], res["track"]
             except Exception as e:
                 if attempt == 1 and res["cached"] and audio_cache.is_bad_file_id(e):
-                    await asyncio.to_thread(audio_cache.invalidate, res["vid"])
+                    await audio_cache.recover_bad_file(context, res["vid"])       # yenidən yükləmə — son çarə
+                    res = await prepare_track(selected, event)        # köhnə file_id — yenidən yüklə
                     continue
                 raise
             finally:
-                if res.get("path"):
+                if path:
                     with contextlib.suppress(OSError):
-                        os.remove(res["path"])
+                        os.remove(path)
+
+    async def send_track(target: types.Message, selected: dict, user_id: int, event) -> tuple:
+        """Bir mahnını keş/depo və ya yükləmə ilə göndərir → (artist, ad). handle_choice ilə eyni məntiq."""
+        return await deliver_track(target, selected, await prepare_track(selected, event), user_id, event)
 
     def batch_stop_kb():
         return InlineKeyboardMarkup(inline_keyboard=[[
@@ -1084,12 +1148,34 @@ def setup(context):
         errors = []
         note = f"\n<i>⏭ {skipped} uzun video (15 dəq.+) ötürüldü</i>" if skipped else ""
 
+        # ⚙️ /menu → 🖥 Sistem → 🎵 YouTube → ⬇️ Toplu: N paralel
+        # N mahnı eyni anda hazırlanır (yüklənir), amma çata siyahının sırası ilə göndərilir
+        par = 1 if single else yt_handler.batch_parallel()
+        sem = asyncio.Semaphore(par)
+        window = max(1, par * 2)                  # ən çox bu qədər mahnı qabaqcadan hazırlanır (disk / RAM)
+        prep = {}                                 # index → hazırlıq task-ı
+
+        async def prepare(item):
+            async with sem:
+                if event.is_set():
+                    raise DownloadCancelled("İstifadəçi dayandırdı")
+                return await prepare_track(item, event)
+
+        def schedule(upto: int):
+            for j in range(upto):
+                if j < len(items) and j not in prep and j not in done_idx:
+                    prep[j] = asyncio.create_task(prepare(items[j]))
+
+        done_idx = set()
+
         async def progress(i, current=""):
             if single:
                 text = f"⏳ <b>Yüklənir:</b>\n{escape(current[:80])}"
             else:
+                busy = sum(1 for t in prep.values() if not t.done())
                 text = (f"⬇️ <b>Yüklənir</b> — {escape(header)}\n\n"
                         f"📊 {i}/{len(items)} · ✅ {ok} · ❌ {failed}"
+                        + (f" · ⚙️ {busy}/{par} paralel" if par > 1 else "")
                         + (f"\n⏳ <i>{escape(current[:60])}</i>" if current else "") + note)
             with contextlib.suppress(Exception):
                 await status_msg.edit_text(text, parse_mode="HTML", reply_markup=batch_stop_kb())
@@ -1098,14 +1184,18 @@ def setup(context):
             for i, item in enumerate(items):
                 if event.is_set():
                     break
+                schedule(i + window)
                 await progress(i, item['title'])
                 try:
-                    artist, track = await send_track(status_msg, item, user_id, event)
+                    res = await prep.pop(i)
+                    done_idx.add(i)
+                    artist, track = await deliver_track(status_msg, item, res, user_id, event)
                     ok += 1
                     await log_download(user_id, f"{artist} - {track}", item['url'], source, chat_id=chat_id)
                 except DownloadCancelled:
                     break
                 except Exception as e:
+                    done_idx.add(i)
                     failed += 1
                     errors.append(item['title'])
                     logger.warning(f"Yükləmə xətası ({item.get('url') or item.get('query')}): {e}")
@@ -1113,6 +1203,14 @@ def setup(context):
                     await asyncio.sleep(delay)
         finally:
             batch_jobs.pop(job_key, None)
+            # dayandırılıbsa — qabaqcadan hazırlananlar ləğv olunur, yüklənmiş fayllar silinir
+            for t in prep.values():
+                t.cancel()
+            for r in await asyncio.gather(*prep.values(), return_exceptions=True):
+                if isinstance(r, dict) and r.get("path"):
+                    with contextlib.suppress(OSError):
+                        os.remove(r["path"])
+            prep.clear()
 
         stopped = event.is_set()
         if single:
@@ -1391,7 +1489,7 @@ def setup(context):
                     break
                 except Exception as e:
                     if attempt == 1 and res["cached"] and audio_cache.is_bad_file_id(e):
-                        await asyncio.to_thread(audio_cache.invalidate, res["vid"])
+                        await audio_cache.recover_bad_file(context, res["vid"])   # yenidən yükləmə — son çarə
                         continue
                     raise
             if res["cached"]:

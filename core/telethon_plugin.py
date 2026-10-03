@@ -116,50 +116,11 @@ def setup(context):
         else:
             rows.append([InlineKeyboardButton(text="🔑 1️⃣ Əsas userbotu qoş", callback_data="ubacc:login")])
         rows.append([InlineKeyboardButton(text="🎙 2️⃣ Canlı yayım asistanı →", callback_data="va:panel")])
-        rows.append([InlineKeyboardButton(text="🗄 Userbot bazası →", callback_data="ubacc:db")])
         rows.append([InlineKeyboardButton(text="🔄 Yenilə", callback_data="ubacc:panel"),
                      InlineKeyboardButton(text="⬅️ Sistem", callback_data="menu:sys")])
         return "\n".join(lines), InlineKeyboardMarkup(inline_keyboard=rows)
 
     context.userbots_hub_view = hub_view
-
-    # ── 🗄 userbot bazası ──
-    NS_NAMES = {"filters": "🎯 Filtrlər", "settings": "⚙️ Ayarlar (köhnə userbot:*)", "meta": "🏷 Xidməti"}
-
-    def _size(n) -> str:
-        return f"{n / 1048576:.1f} MB" if n >= 1048576 else f"{n / 1024:.0f} KB"
-
-    def db_view(note: str = ""):
-        try:
-            from core.userbot_db import get_udb
-            st = get_udb().stats()
-        except Exception as e:
-            return (f"❌ Userbot bazası açılmadı: <code>{escape(str(e)[:200])}</code>",
-                    InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="⬅️ Userbotlar",
-                                                                                callback_data="ubacc:panel")]]))
-        lines = ["🗄 <b>Userbot bazası</b>\n━━━━━━━━━━━━━━━━━━",
-                 f"📁 <code>{escape(st['path'])}</code>",
-                 f"💾 Ölçü: <b>{_size(st['size'])}</b> <i>(botun əsas bazasından ayrıdır)</i>"]
-        if st["records"]:
-            lines.append("\n📑 <b>Qeydlər</b>")
-            for ns, (n, chats) in sorted(st["records"].items()):
-                lines.append(f"• {escape(NS_NAMES.get(ns, ns))}: <b>{n}</b> · {chats} çat")
-        if st["kv"]:
-            lines.append("\n🔑 <b>Açar / dəyər</b>")
-            for ns, n in sorted(st["kv"].items()):
-                lines.append(f"• {escape(NS_NAMES.get(ns, ns))}: {n}")
-        if st["log"]:
-            lines.append("\n📜 <b>Jurnal</b>")
-            for ns, n in sorted(st["log"].items()):
-                lines.append(f"• {escape(ns)}: {n}")
-        lines.append("\n<i>Userbot pluginləri: <code>ub.db.kv_* / rec_* / log_*</code> — core/userbot_db.py</i>")
-        if note:
-            lines.append(f"\n{note}")
-        return "\n".join(lines), InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="💾 Yedəyi göndər", callback_data="ubacc:dbbak"),
-             InlineKeyboardButton(text="🧹 Sıxlaşdır", callback_data="ubacc:dbvac")],
-            [InlineKeyboardButton(text="🔄 Yenilə", callback_data="ubacc:db"),
-             InlineKeyboardButton(text="⬅️ Userbotlar", callback_data="ubacc:panel")]])
 
     # ── 🔑 1️⃣ giriş ──
     async def on_done(session_str, me, client):
@@ -189,14 +150,6 @@ def setup(context):
 
     @dp.callback_query(F.data.startswith("ubacc:"))
     async def ubacc_cb(cb: types.CallbackQuery):
-        try:
-            await _ubacc_cb(cb)
-        except Exception as e:
-            logger.error(f"📱 Userbotlar paneli xətası: {e}", exc_info=True)
-            with contextlib.suppress(Exception):
-                await cb.answer(f"❌ {str(e)[:180]}", show_alert=True)
-
-    async def _ubacc_cb(cb: types.CallbackQuery):
         if not is_creator(cb.from_user.id):
             await cb.answer("⛔ Yalnız bot sahibi", show_alert=True)
             return
@@ -210,33 +163,6 @@ def setup(context):
                 return
             await cb.answer()
             await show(cb, text, kb)
-            return
-        if act in ("db", "dbbak", "dbvac"):
-            from core.userbot_db import get_udb
-            note = ""
-            if act == "dbbak":
-                await cb.answer("💾 Hazırlanır...")
-                import os
-                import tempfile
-                from aiogram.types import FSInputFile
-                path = os.path.join(tempfile.gettempdir(), f"userbot_{time.strftime('%Y%m%d_%H%M')}.db")
-                try:
-                    await asyncio.to_thread(get_udb().backup, path)
-                    await bot.send_document(cb.message.chat.id, FSInputFile(path),
-                                            caption="🗄 Userbot bazasının yedəyi (SQLite)")
-                    note = "✅ Yedək göndərildi"
-                except Exception as e:
-                    note = f"❌ Yedək alınmadı: <code>{escape(str(e)[:150])}</code>"
-                finally:
-                    with contextlib.suppress(OSError):
-                        os.remove(path)
-            elif act == "dbvac":
-                await cb.answer("🧹 Sıxlaşdırılır...")
-                freed = await asyncio.to_thread(get_udb().vacuum)
-                note = f"🧹 Sıxlaşdırıldı — {_size(max(0, freed))} boşaldı"
-            else:
-                await cb.answer()
-            await show(cb, *db_view(note))
             return
         if act == "cancel":
             await flow.cancel()

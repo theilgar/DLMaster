@@ -9,6 +9,7 @@ config.env:
 Bot kanalda "Mesaj göndərmə" icazəsi olan admin olmalıdır.
 """
 import asyncio
+import contextlib
 import logging
 import os
 import time
@@ -72,6 +73,23 @@ def get_cached(video_id: str):
     except Exception as e:
         logger.warning(f"Keş oxunmadı: {e}")
         return None
+
+
+def refetch_once(video_id: str) -> bool:
+    """Artisti "YouTube" olan köhnə keşi yenidən yükləmək olar? Hər video üçün yalnız bir dəfə True.
+    Əvvəl hər dəfə yenidən yüklənirdi — artist yenə tapılmayanda eyni mahnı depoya təkrar-təkrar düşürdü."""
+    if not video_id:
+        return False
+    try:
+        db = get_db()
+        with db._lock:
+            db._conn.execute("CREATE TABLE IF NOT EXISTS cache_refetch (video_id TEXT PRIMARY KEY, ts INTEGER)")
+            cur = db._conn.execute("INSERT OR IGNORE INTO cache_refetch VALUES (?, ?)", (video_id, int(time.time())))
+            db._conn.commit()
+            return cur.rowcount > 0
+    except Exception as e:
+        logger.debug(f"cache_refetch: {e}")
+        return False
 
 
 def mark_hit(video_id: str):
@@ -201,7 +219,7 @@ async def upload_to_depo(bot, file_path, filename: str, title: str, performer: s
         f"🎵 <b>{escape(performer or '')}{' — ' if performer else ''}{escape(title or '')}</b>\n"
         f"🔗 <a href=\"{escape(url, quote=True)}\">YouTube</a> · {tag}"
     )
-    try:
+    async def _send_and_save():
         msg = await bot.send_audio(
             chat_id=chat_id,
             audio=(BufferedInputFile(file_path, filename=filename) if isinstance(file_path, (bytes, bytearray))
@@ -214,13 +232,70 @@ async def upload_to_depo(bot, file_path, filename: str, title: str, performer: s
             disable_notification=True,
             thumbnail=BufferedInputFile(thumb, filename="cover.jpg") if thumb else None,
         )
+        # keşə yazma göndərmə ilə bir yerdədir: restart / ləğv arada olsa belə post bazaya düşür
+        return await asyncio.to_thread(save_from_message, video_id, msg, title, performer, duration,
+                                       yt_title=yt_title)
+
+    try:
+        # 🛡 shield: işçi ləğv olunsa (restart, ⏹) göndərmə yarımçıq qalmır — yoxsa post depoda olur,
+        # bazada olmur və növbəti dəfə eyni mahnı yenidən yüklənirdi
+        inner = asyncio.ensure_future(_send_and_save())
+        # çağıran ləğv olunsa da daxili xəta loglansın ("exception in shielded future" əvəzinə aydın mesaj)
+        inner.add_done_callback(lambda f: f.cancelled() or not f.exception() or
+                                logger.warning(f"📦 Depo yazısı (fon): {f.exception()}"))
+        return await asyncio.shield(inner)
+    except asyncio.CancelledError:
+        raise
     except Exception as e:
         logger.warning(f"📦 Depoya yüklənmədi: {e}")
         if "chat not found" in str(e).lower() or "not enough rights" in str(e).lower() \
                 or "forbidden" in str(e).lower():
             _depo["id"], _depo["error"], _depo["checked"] = None, str(e), time.time()
         return None
-    return save_from_message(video_id, msg, title, performer, duration, yt_title=yt_title)
+
+
+async def recover_bad_file(context, video_id: str) -> str:
+    """
+    Keşdəki file_id işləmədi. Əvvəl yenidən yükləmə əvəzinə depodakı postu sink çatına forward edib
+    botun yeni file_id-sini alırıq (köməkçi bot file_id-si, çevrilməmiş indeks postu və s.).
+    'retry'    — keş düzəldi, eyni postdan göndər
+    'reupload' — post depoda yoxdur, keş silindi → yenidən yüklənəcək
+    Müvəqqəti xətada (flood) RuntimeError — dublikat yaratmamaq üçün yenidən yükləmirik.
+    """
+    c = get_cached(video_id)
+    pool = getattr(context, "depo_helpers", None)
+    if c and c.get("chat_id") and c.get("message_id") and pool is not None:
+        try:
+            audio = await pool._forward_audio(context.bot, c["chat_id"], c["message_id"], None)
+        except Exception as e:
+            err = str(e).lower()
+            if "not found" in err or "message_id_invalid" in err or "can't be forwarded" in err:
+                logger.info(f"📦 Depo postu yoxdur ({c['chat_id']}/{c['message_id']}) — yenidən yüklənəcək")
+                await asyncio.to_thread(_drop_post, c["chat_id"], c["message_id"])
+                return "reupload"
+            raise RuntimeError(f"Depo müvəqqəti əlçatan deyil, bir az sonra yenidən yoxla ({str(e)[:80]})")
+        new = {"file_id": audio.file_id, "unique_id": audio.file_unique_id, "title": c.get("title"),
+               "performer": c.get("performer"), "duration": c.get("duration"), "size": audio.file_size,
+               "chat_id": c["chat_id"], "message_id": c["message_id"]}
+        await asyncio.to_thread(get_db().cache_repoint, c["chat_id"], c["message_id"], new)
+        with contextlib.suppress(Exception):
+            pool.foreign.pop(c["file_id"], None)
+            pool.converted[c["file_id"]] = audio.file_id
+            await asyncio.to_thread(pool._save_converted, c["file_id"], audio.file_id)
+        mark_dirty()
+        logger.info(f"📦 file_id depo postundan bərpa olundu: {video_id}")
+        return "retry"
+    invalidate(video_id)
+    return "reupload"
+
+
+def _drop_post(chat_id, message_id):
+    """Silinmiş depo postuna bağlı bütün keş sətirləri (aliaslar da)."""
+    db = get_db()
+    with db._lock:
+        db._conn.execute("DELETE FROM audio_cache WHERE chat_id=? AND message_id=?", (chat_id, message_id))
+        db._conn.commit()
+    mark_dirty()
 
 
 def is_bad_file_id(err: Exception) -> bool:

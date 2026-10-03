@@ -3,10 +3,13 @@ import logging
 import asyncio
 import re
 import shutil
+import socket
+import time
 from yt_dlp import YoutubeDL
 from yt_dlp.utils import DownloadCancelled   # plugin-lər "dayandırıldı" halını tanımaq üçün import edir
 from core.utilities import format_duration, sanitize_filename
 from core import webprofile
+from core import cpu_pool          # ⚙️ yt-dlp ayrıca proseslərdə — bot donmur, bütün nüvələr işləyir
 from core.webprofile import get_cookies_from_browser
 
 logging.basicConfig(
@@ -66,7 +69,7 @@ async def convert_to_m4a(src_path: str, base_name: str, cancel_event=None) -> st
         return dst_path
 
     proc = await asyncio.create_subprocess_exec(
-        "ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
+        *cpu_pool.ffmpeg_prefix(), "ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
         "-i", src_path,
         "-vn", "-map", "0:a:0",
         "-c:a", "aac", "-b:a", "192k",
@@ -139,6 +142,32 @@ def _setting_on(key: str, default: bool = True) -> bool:
     return str(value).strip().lower() in ("1", "on", "true", "yes")
 
 
+# ⬇️ Toplu yükləmə (Hamısını yüklə, Spotify playlist / albom): eyni anda neçə mahnı hazırlansın
+BATCH_PARALLEL_SETTING = "dl:batch_parallel"
+BATCH_PARALLEL_STEPS = [1, 2, 3, 4, 5, 6, 8, 10]
+BATCH_PARALLEL_DEFAULT = 2
+
+
+def batch_parallel() -> int:
+    try:
+        from core.database import get_db
+        v = int(get_db().get_setting(BATCH_PARALLEL_SETTING) or BATCH_PARALLEL_DEFAULT)
+    except Exception:
+        v = BATCH_PARALLEL_DEFAULT
+    return max(1, min(BATCH_PARALLEL_STEPS[-1], v))
+
+
+def step_batch_parallel(direction: int) -> int:
+    cur = batch_parallel()
+    if direction > 0:
+        nxt = next((x for x in BATCH_PARALLEL_STEPS if x > cur), BATCH_PARALLEL_STEPS[-1])
+    else:
+        nxt = next((x for x in reversed(BATCH_PARALLEL_STEPS) if x < cur), 1)
+    from core.database import get_db
+    get_db().set_setting(BATCH_PARALLEL_SETTING, str(nxt))
+    return nxt
+
+
 def download_mode() -> dict:
     return {"direct_m4a": _setting_on("dl:direct_m4a"), "ffmpeg": _setting_on("dl:ffmpeg")}
 
@@ -152,6 +181,81 @@ def _format_string(direct: bool, ffmpeg: bool) -> str:
         # əvvəl hazır m4a audio, olmasa istənilən audio; birləşdirmə (video+audio) yalnız ffmpeg ilə
         return "bestaudio[ext=m4a]/bestaudio/best" + ("/bestvideo+bestaudio" if ffmpeg else "")
     return "bestaudio/best" + ("/bestvideo+bestaudio" if ffmpeg else "")
+
+
+# ───────────────────────── PO token provider + 403 cooldown ─────────────────────────
+# bgutil-ytdlp-pot-provider (pip + docker, port 4416) işləyirsə yt-dlp GVS PO Token-i avtomatik alır.
+# Onda mweb/web klientləri 403 vermədən işləyir.
+POT_HOST, POT_PORT = "127.0.0.1", int(os.getenv("BGUTIL_POT_PORT", "4416"))
+_pot_cache = {"ok": False, "checked": 0.0}
+
+
+def pot_provider_up() -> bool:
+    """bgutil HTTP serverinin açıq olduğunu yoxlayır (nəticə 60 san keşlənir)."""
+    now = time.monotonic()
+    if now - _pot_cache["checked"] < 60:
+        return _pot_cache["ok"]
+    try:
+        with socket.create_connection((POT_HOST, POT_PORT), timeout=0.5):
+            ok = True
+    except OSError:
+        ok = False
+    if ok != _pot_cache["ok"] or not _pot_cache["checked"]:
+        logger.info(f"PO token provider ({POT_HOST}:{POT_PORT}): {'✅ aktiv' if ok else '❌ yoxdur'}")
+    _pot_cache.update(ok=ok, checked=now)
+    return ok
+
+
+# Bütün cəhdlər 403 ilə bitəndə YouTube IP/hesabı müvəqqəti flag-ləyib.
+# Davam edib vurmaq flag-i uzadır → növbə bir müddət gözlədilir.
+COOLDOWN_SECONDS = int(os.getenv("YT_403_COOLDOWN", "300"))
+_cooldown_until = 0.0
+
+
+def cooldown_left() -> int:
+    return max(0, int(_cooldown_until - time.monotonic()))
+
+
+def reset_cooldown():
+    """/menu → 🎵 YouTube → ⏭ cooldown-u əl ilə sıfırlamaq üçün."""
+    global _cooldown_until
+    _cooldown_until = 0.0
+
+
+def recheck_pot() -> bool:
+    """Keşi atıb PO token provider-i yenidən yoxlayır (bloklayır — to_thread ilə çağır)."""
+    _pot_cache["checked"] = 0.0
+    return pot_provider_up()
+
+
+async def _wait_cooldown(cancelled):
+    left = cooldown_left()
+    if not left:
+        return
+    logger.warning(f"403 cooldown aktivdir — {left} san gözlənilir")
+    while cooldown_left():
+        if cancelled():
+            raise DownloadCancelled("İstifadəçi yükləməni dayandırdı")
+        await asyncio.sleep(1)
+
+
+def _is_403(err) -> bool:
+    text = str(err)
+    return "403" in text or "Forbidden" in text
+
+
+def _build_attempts() -> list:
+    """(təsvir, cookies istifadə olunsun?, player_client)"""
+    attempts = []
+    if pot_provider_up():
+        attempts.append(("cookies + mweb (PO token)", True, ['mweb']))
+        attempts.append(("cookies + web (PO token)", True, ['web']))
+    attempts += [
+        ("cookies + default client", True, None),
+        ("cookies + tv/web_safari", True, ['tv', 'web_safari']),
+        ("cookies-siz + android_vr", False, ['android_vr']),   # token istəyir — son çarə
+    ]
+    return attempts
 
 
 async def download_as_m4a(url: str, base_name: str, browser: str, cookies=None, cancel_event=None) -> str:
@@ -174,13 +278,11 @@ async def download_as_m4a(url: str, base_name: str, browser: str, cookies=None, 
     use_ffmpeg = mode["ffmpeg"] and ffmpeg_available()
     fmt = _format_string(mode["direct_m4a"], use_ffmpeg)
 
-    # (təsvir, cookies istifadə olunsun?, player_client)
-    attempts = [
-        ("cookies + default client", True, None),
-        ("cookies + tv/web_safari", True, ['tv', 'web_safari']),
-        ("cookies-siz + android_vr", False, ['android_vr']),
-    ]
+    global _cooldown_until
+    await _wait_cooldown(cancelled)
 
+    attempts = _build_attempts()
+    errors = []          # (label, xəta) — bütün cəhdlər loglanır
     last_error = None
     for label, use_cookies, clients in attempts:
         if cancelled():
@@ -188,14 +290,16 @@ async def download_as_m4a(url: str, base_name: str, browser: str, cookies=None, 
             raise DownloadCancelled("İstifadəçi yükləməni dayandırdı")
         ydl_opts = {
             'format': fmt,
-            'outtmpl': os.path.join(DOWNLOAD_DIR, f"{base_name}.%(ext)s"),
+            'outtmpl': os.path.abspath(os.path.join(DOWNLOAD_DIR, f"{base_name}.%(ext)s")),
             'noplaylist': True,
             'nopart': True,
             'retries': 3,
+            'fragment_retries': 5,
+            'sleep_interval_requests': 1,    # sorğular arası pauza — rate-limit-i yumşaldır
             'quiet': True,
-            **webprofile.ua_opts(),
-            'progress_hooks': [progress_hook],
-            **JS_OPTS,
+            # ua_opts() BURADA YOXDUR: googlevideo URL-ləri klientin öz UA-sına bağlıdır,
+            # təsadüfi masaüstü UA (xüsusən tv / android_vr ilə) 403 verir. yt-dlp UA-nı özü seçir.
+            **JS_OPTS,          # ⏹ dayandırma: cpu_pool bayraq faylı ilə (proses daxilində progress_hook)
         }
         if use_cookies:
             ydl_opts.update(cookie_opts())
@@ -204,14 +308,16 @@ async def download_as_m4a(url: str, base_name: str, browser: str, cookies=None, 
 
         try:
             logger.info(f"Yükləmə cəhdi: {label}")
-            with YoutubeDL(ydl_opts) as ydl:
-                info = await asyncio.to_thread(ydl.extract_info, url, download=True)
-                remember_meta(info)
-                downloads = info.get('requested_downloads') or []
-                src_path = downloads[0]['filepath'] if downloads else ydl.prepare_filename(info)
+            res = await cpu_pool.ytdl_download(url, ydl_opts, cancel_event)
+            info = res["info"]
+            remember_meta(info)
+            src_path = res["path"]
 
             if not os.path.exists(src_path):
                 raise FileNotFoundError("Yüklənən fayl tapılmadı")
+
+            if errors:
+                logger.info(f"Yükləmə '{label}' ilə alındı (əvvəlki uğursuz: {', '.join(l for l, _ in errors)})")
 
             if cancelled():
                 raise DownloadCancelled("İstifadəçi yükləməni dayandırdı")
@@ -235,7 +341,16 @@ async def download_as_m4a(url: str, base_name: str, browser: str, cookies=None, 
                 remove_partial(base_name)
                 raise DownloadCancelled("İstifadəçi yükləməni dayandırdı")
             last_error = e
+            errors.append((label, e))
             logger.warning(f"Cəhd uğursuz ({label}): {e}")
+            remove_partial(base_name)
+
+    if errors and all(_is_403(e) for _, e in errors):
+        _cooldown_until = time.monotonic() + COOLDOWN_SECONDS
+        hint = "" if pot_provider_up() else " | PO token provider yoxdur — bgutil-ytdlp-pot-provider quraşdırın"
+        logger.error(f"Bütün cəhdlər 403 — YouTube müvəqqəti blokladı, {COOLDOWN_SECONDS} san cooldown{hint}")
+    else:
+        logger.error("Bütün cəhdlər uğursuz: " + " || ".join(f"[{l}] {e}" for l, e in errors))
 
     raise last_error
 
@@ -390,8 +505,7 @@ class YoutubeManager:
 
     async def _yt_search(self, query: str, limit: int) -> list:
         """Adi YouTube axtarışı (ytsearch)."""
-        with YoutubeDL(self.get_ydl_opts()) as ydl:
-            info = await asyncio.to_thread(ydl.extract_info, f"ytsearch{int(limit)}:{query}", download=False)
+        info = await cpu_pool.ytdl_extract(f"ytsearch{int(limit)}:{query}", self.get_ydl_opts())
         return [{
             'title': entry.get('title', 'Naməlum Mahnı'),
             'url': entry.get('url', ''),
@@ -404,7 +518,11 @@ class YoutubeManager:
         """YouTube Music — yalnız mahnılar. ytmusicapi varsa onu, yoxdursa yt-dlp-ni istifadə edir."""
         yt_music = _get_ytmusic()
         if yt_music is not None:
-            items = await asyncio.to_thread(yt_music.search, query, filter="songs", limit=limit)
+            try:
+                items = await cpu_pool.ytm_search(query, limit)
+            except Exception as e:                           # işçi prosesdə alınmadı — əsas prosesdə
+                logger.debug(f"YTM prosesdə: {e}")
+                items = await asyncio.to_thread(yt_music.search, query, filter="songs", limit=limit)
             results = []
             for it in items or []:
                 vid = it.get('videoId')
@@ -426,9 +544,7 @@ class YoutubeManager:
         from urllib.parse import quote_plus
         opts = self.get_ydl_opts()
         opts['playlistend'] = limit
-        with YoutubeDL(opts) as ydl:
-            info = await asyncio.to_thread(
-                ydl.extract_info, f"https://music.youtube.com/search?q={quote_plus(query)}#songs", download=False)
+        info = await cpu_pool.ytdl_extract(f"https://music.youtube.com/search?q={quote_plus(query)}#songs", opts)
         results = []
         for entry in info.get('entries') or []:
             if not entry:
@@ -522,8 +638,7 @@ class YoutubeManager:
         opts['playlistend'] = limit
         opts['noplaylist'] = False
         try:
-            with YoutubeDL(opts) as ydl:
-                info = await asyncio.to_thread(ydl.extract_info, url, download=False)
+            info = await cpu_pool.ytdl_extract(url, opts, timeout=600 if opts.get('playlistend', 0) > 500 else 180)
         except Exception as e:
             logger.error(f"Playlist xətası: {e}")
             raise RuntimeError(f"Playlist açılmadı: {str(e)}")
@@ -554,8 +669,7 @@ class YoutubeManager:
         opts = self.get_ydl_opts()
         opts['playlistend'] = limit + 10
         try:
-            with YoutubeDL(opts) as ydl:
-                info = await asyncio.to_thread(ydl.extract_info, url, download=False)
+            info = await cpu_pool.ytdl_extract(url, opts, timeout=600 if opts.get('playlistend', 0) > 500 else 180)
         except Exception as e:
             logger.error(f"Mix xətası: {e}")
             raise RuntimeError(f"Mix xətası: {str(e)}")
