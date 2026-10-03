@@ -4834,3 +4834,775 @@
 2026.10.03 12:37:22 aiogram.event        INFO     Update id=875928662 is handled. Duration 36 ms by bot id=8976652462
 2026.10.03 12:37:23 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
 2026.10.03 12:37:23 aiogram.event        INFO     Update id=875928663 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:37:24 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:37:24 aiogram.event        INFO     Update id=875928661 is handled. Duration 2778 ms by bot id=8976652462
+2026.10.03 12:37:24 aiogram.event        INFO     Update id=875928664 is handled. Duration 67 ms by bot id=8976652462
+2026.10.03 12:37:25 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:37:25 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - Skin
+2026.10.03 12:37:25 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - Early (feat. Jafaris)
+2026.10.03 12:37:25 aiogram.event        INFO     Update id=875928665 is handled. Duration 21 ms by bot id=8976652462
+2026.10.03 12:37:26 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:37:26 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - Wild Jasmine
+2026.10.03 12:37:26 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - Lover Don't
+2026.10.03 12:37:26 aiogram.event        INFO     Update id=875928666 is handled. Duration 69 ms by bot id=8976652462
+2026.10.03 12:37:27 aiogram.event        INFO     Update id=875928667 is handled. Duration 39 ms by bot id=8976652462
+2026.10.03 12:37:27 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - I Don't Mind
+2026.10.03 12:37:27 aiogram.event        INFO     Update id=875928668 is handled. Duration 1 ms by bot id=8976652462
+2026.10.03 12:37:27 core.audio_cache     INFO     📦 Dublikat qarşısı: bw0dnWLIVog → depodakı 'Joy Crookes - Brave'
+2026.10.03 12:37:28 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - Man's World
+2026.10.03 12:37:28 core.audio_cache     INFO     📦 Dublikat qarşısı: CDTAyyKsjiE → depodakı 'Joy Crookes - Pass the Salt (feat. Vince Staples)'
+2026.10.03 12:37:29 core.audio_cache     INFO     📦 Dublikat qarşısı: ig1MbuySRQg → depodakı 'Joy Crookes - Carmen'
+2026.10.03 12:37:29 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - Poison
+2026.10.03 12:37:29 aiogram.event        INFO     Update id=875928669 is handled. Duration 30 ms by bot id=8976652462
+2026.10.03 12:37:29 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - Sinatra
+2026.10.03 12:37:30 core.audio_cache     INFO     📦 Dublikat qarşısı: JhAqvMxo49I → depodakı 'Joy Crookes - Perfect Crime'
+2026.10.03 12:37:30 aiogram.event        INFO     Update id=875928670 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:37:30 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - To Lose Someone
+2026.10.03 12:37:30 aiogram.event        INFO     Update id=875928671 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:37:30 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - New Manhattan
+2026.10.03 12:37:31 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - Theek Ache
+2026.10.03 12:37:31 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - Unlearn You
+2026.10.03 12:37:31 core.audio_cache     INFO     📦 Dublikat qarşısı: c7rpPrjWzJA → depodakı 'Joy Crookes - Mathematics (feat. Kano)'
+2026.10.03 12:37:32 core.audio_cache     INFO     📦 Dublikat qarşısı: fvvYtDWBc2U → depodakı 'Joy Crookes - House With A Pool'
+2026.10.03 12:37:32 aiogram.event        INFO     Update id=875928672 is handled. Duration 21 ms by bot id=8976652462
+2026.10.03 12:37:32 core.audio_cache     INFO     📦 Dublikat qarşısı: FgqgNHen81M → depodakı 'Joy Crookes - First Last Dance'
+2026.10.03 12:37:33 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - Power
+2026.10.03 12:37:33 aiogram.event        INFO     Update id=875928673 is handled. Duration 67 ms by bot id=8976652462
+2026.10.03 12:37:33 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - Paris
+2026.10.03 12:37:33 core.audio_cache     INFO     📦 Dublikat qarşısı: cG4EJnVmCV4 → depodakı 'Joy Crookes - I Know You'd Kill'
+2026.10.03 12:37:34 core.audio_cache     INFO     📦 Dublikat qarşısı: -ec22jTkz-Y → depodakı 'Joy Crookes - Somebody To You'
+2026.10.03 12:37:34 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - For a Minute (feat. KarimThaPeasant)
+2026.10.03 12:37:34 aiogram.event        INFO     Update id=875928674 is handled. Duration 31 ms by bot id=8976652462
+2026.10.03 12:37:34 core.audio_cache     INFO     📦 Dublikat qarşısı: qar9BsnSTQ4 → depodakı 'Joy Crookes - Mother'
+2026.10.03 12:37:34 aiogram.event        INFO     Update id=875928675 is handled. Duration 114 ms by bot id=8976652462
+2026.10.03 12:37:35 core.audio_cache     INFO     📦 Dublikat qarşısı: jXpUsKqVDtw → depodakı 'Joy Crookes - Forever'
+2026.10.03 12:37:35 core.audio_cache     INFO     📦 Dublikat qarşısı: kF4dQCTsR0E → depodakı 'Joy Crookes - 19th Floor'
+2026.10.03 12:37:35 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes, Toddla T - When You Were Mine (Toddla T Joyful Remix)
+2026.10.03 12:37:36 aiogram.event        INFO     Update id=875928676 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:37:36 core.audio_cache     INFO     📦 Dublikat qarşısı: CpjiSV3NwlA → depodakı 'Joy Crookes - Trouble'
+2026.10.03 12:37:36 core.audio_cache     INFO     📦 Dublikat qarşısı: 3BUzRO6J4gE → depodakı 'Joy Crookes - When You Were Mine'
+2026.10.03 12:37:36 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - I Know You'd Kill (The Blessed Madonna's Godsquad Mix)
+2026.10.03 12:37:37 aiogram.event        INFO     Update id=875928677 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:37:38 core.audio_cache     INFO     📦 Dublikat qarşısı: juLb0uqKN6U → depodakı 'Joy Crookes - Kingdom'
+2026.10.03 12:37:38 aiogram.event        INFO     Update id=875928678 is handled. Duration 67 ms by bot id=8976652462
+2026.10.03 12:37:38 aiogram.event        INFO     Update id=875928679 is handled. Duration 25 ms by bot id=8976652462
+2026.10.03 12:37:38 core.audio_cache     INFO     📦 Dublikat qarşısı: HCgiyAfQqL0 → depodakı 'Joy Crookes - I Don't Mind'
+2026.10.03 12:37:39 core.audio_cache     INFO     📦 Dublikat qarşısı: fiZNJUceg7A → depodakı 'Joy Crookes - Skin'
+2026.10.03 12:37:39 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes, Prospa - When You Were Mine (Prospa Remix)
+2026.10.03 12:37:39 core.audio_cache     INFO     📦 Dublikat qarşısı: xLFCcnYSCyE → depodakı 'Joy Crookes - Feet Don't Fail Me Now'
+2026.10.03 12:37:40 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 17 san. — digər köməkçiyə keçilir
+2026.10.03 12:37:40 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes, Bklava - When You Were Mine (Bklava Remix)
+2026.10.03 12:37:40 aiogram.event        INFO     Update id=875928680 is handled. Duration 1 ms by bot id=8976652462
+2026.10.03 12:37:41 core.audio_cache     INFO     📦 Dublikat qarşısı: uNnzgJdl6wU → depodakı 'Joy Crookes - Wild Jasmine'
+2026.10.03 12:37:41 core.audio_cache     INFO     📦 Dublikat qarşısı: 1RWN4mer2yE → depodakı 'sped up + slowed, Joy Crookes - Feet Don't Fail Me Now (Joy Crookes) (slowed down)'
+2026.10.03 12:37:41 aiogram.event        INFO     Update id=875928681 is handled. Duration 16 ms by bot id=8976652462
+2026.10.03 12:37:41 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 15 san. — digər köməkçiyə keçilir
+2026.10.03 12:37:42 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:37:43 core.audio_cache     INFO     📦 Dublikat qarşısı: lz1R_bQqjiA → depodakı 'Joy Crookes - Painkiller (feat. Denzel Curry)'
+2026.10.03 12:37:43 core.audio_cache     INFO     📦 Dublikat qarşısı: _7KlSeHB240 → depodakı 'sped up + slowed, Joy Crookes - Feet Don't Fail Me Now (Joy Crookes) (sped up)'
+2026.10.03 12:37:43 core.audio_cache     INFO     📦 Dublikat qarşısı: ZowR-5bF6QE → depodakı 'Joy Crookes - Feet Don't Fail Me Now (Live Acoustic Version)'
+2026.10.03 12:37:43 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:37:43 telethon.client.updates INFO     Got difference for channel 1339620626 updates
+2026.10.03 12:37:43 core.audio_cache     INFO     📦 Dublikat qarşısı: KxaaQ9Dyrjo → depodakı 'Joy Crookes - Anyone But Me'
+2026.10.03 12:37:44 core.audio_cache     INFO     📦 Dublikat qarşısı: 3vnhNZtGWcM → depodakı 'Joy Crookes - You & Me Song'
+2026.10.03 12:37:44 core.audio_cache     INFO     📦 Dublikat qarşısı: PqsKDDi8024 → depodakı 'Joy Crookes - Fade Your Heart'
+2026.10.03 12:37:44 core.audio_cache     INFO     📦 Dublikat qarşısı: CzQB73EGmJI → depodakı 'Joy Crookes - Yah / Element (Medley)'
+2026.10.03 12:37:44 core.audio_cache     INFO     📦 Dublikat qarşısı: fxFYc1P2W2I → depodakı 'Joy Crookes - Early (feat. Jafaris)'
+2026.10.03 12:37:44 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 12 san. — digər köməkçiyə keçilir
+2026.10.03 12:37:45 aiogram.event        INFO     Update id=875928682 is handled. Duration 22 ms by bot id=8976652462
+2026.10.03 12:37:45 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 11 san. — digər köməkçiyə keçilir
+2026.10.03 12:37:46 core.audio_cache     INFO     📦 Dublikat qarşısı: IE36xMovCeM → depodakı 'Joy Crookes - Poison'
+2026.10.03 12:37:46 core.audio_cache     INFO     📦 Dublikat qarşısı: XgLO4OKr-54 → depodakı 'Joy Crookes - Hurts'
+2026.10.03 12:37:46 aiogram.event        INFO     Update id=875928683 is handled. Duration 16 ms by bot id=8976652462
+2026.10.03 12:37:46 core.audio_cache     INFO     📦 Dublikat qarşısı: oF4QouhQyIA → depodakı 'Joy Crookes - London Mine'
+2026.10.03 12:37:46 core.audio_cache     INFO     📦 Dublikat qarşısı: HDZUe0TIKnA → depodakı 'Joy Crookes - Theek Ache'
+2026.10.03 12:37:47 aiogram.event        INFO     Update id=875928684 is handled. Duration 16 ms by bot id=8976652462
+2026.10.03 12:37:47 core.audio_cache     INFO     📦 Dublikat qarşısı: D2skZ5KzX0c → depodakı 'Joy Crookes - No Hands'
+2026.10.03 12:37:47 core.audio_cache     INFO     📦 Dublikat qarşısı: NpEt0YjgBLE → depodakı 'Joy Crookes - Since I Left You (Demo)'
+2026.10.03 12:37:48 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:37:48 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:37:48 core.audio_cache     INFO     📦 Dublikat qarşısı: BD72zauI3dU → depodakı 'Joy Crookes - Darkest Hour'
+2026.10.03 12:37:49 aiogram.event        INFO     Update id=875928685 is handled. Duration 3 ms by bot id=8976652462
+2026.10.03 12:37:51 aiogram.event        INFO     Update id=875928686 is handled. Duration 61 ms by bot id=8976652462
+2026.10.03 12:37:52 core.audio_cache     INFO     📦 Dublikat qarşısı: t7Zrv95Sxlw → depodakı 'Joy Crookes - Lover Don't'
+2026.10.03 12:37:52 core.audio_cache     INFO     📦 Dublikat qarşısı: _VSnBflvcgY → depodakı 'Joy Crookes - Two Nights'
+2026.10.03 12:37:53 core.audio_cache     INFO     📦 Dublikat qarşısı: wIZW6tjuQNk → depodakı 'Joy Crookes - Man's World'
+2026.10.03 12:37:53 core.audio_cache     INFO     📦 Dublikat qarşısı: D1CBTANEVpQ → depodakı 'Joy Crookes - I Know You'd Kill (The Blessed Madonna's Godsquad Mix)'
+2026.10.03 12:37:53 core.audio_cache     INFO     📦 Dublikat qarşısı: 9zBWRkw2ETA → depodakı 'Joy Crookes - Don't Let Me Down (Demo)'
+2026.10.03 12:37:53 core.audio_cache     INFO     📦 Dublikat qarşısı: MTV1V9dQaVI → depodakı 'Joy Crookes - For a Minute (feat. KarimThaPeasant)'
+2026.10.03 12:37:53 core.audio_cache     INFO     📦 Dublikat qarşısı: hOnGmuSMLus → depodakı 'Joy Crookes - Sinatra'
+2026.10.03 12:37:54 aiogram.event        INFO     Update id=875928687 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:37:54 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:37:55 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:37:56 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - To Lose Someone
+2026.10.03 12:37:56 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:37:57 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:37:57 aiogram.event        INFO     Update id=875928688 is handled. Duration 20 ms by bot id=8976652462
+2026.10.03 12:37:58 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:37:59 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:37:59 aiogram.event        INFO     Update id=875928689 is handled. Duration 17 ms by bot id=8976652462
+2026.10.03 12:37:59 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:37:59 aiogram.event        INFO     Update id=875928690 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:38:00 plugins.music_plugin INFO     Metadata (spotify): Joy Crookes - Power
+2026.10.03 12:38:00 aiogram.event        INFO     Update id=875928691 is handled. Duration 46 ms by bot id=8976652462
+2026.10.03 12:38:00 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:00 core.audio_cache     INFO     📦 Dublikat qarşısı: FlyJ5mZJFm8 → depodakı 'Joy Crookes - New Manhattan'
+2026.10.03 12:38:01 core.audio_cache     INFO     📦 Dublikat qarşısı: cI3l97jxSNo → depodakı 'Joy Crookes, Prospa - When You Were Mine (Prospa Remix)'
+2026.10.03 12:38:01 core.audio_cache     INFO     📦 Dublikat qarşısı: LOBesx7rA6Q → depodakı 'Joy Crookes, Paul Woolford - Feet Don't Fail Me Now (Paul Woolford Remix)'
+2026.10.03 12:38:01 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:03 aiogram.event        INFO     Update id=875928692 is handled. Duration 1 ms by bot id=8976652462
+2026.10.03 12:38:05 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:05 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:06 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:06 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:38:07 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:07 plugins.music_plugin INFO     Metadata (spotify): Charlotte Clark - Lilypad
+2026.10.03 12:38:08 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:08 plugins.music_plugin INFO     Metadata (spotify): Charlotte Clark - Of Course You're Bored
+2026.10.03 12:38:08 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:09 core.audio_cache     INFO     📦 Dublikat qarşısı: 2hQ04E0YgDg → depodakı 'Joy Crookes, Bklava - When You Were Mine (Bklava Remix)'
+2026.10.03 12:38:09 core.audio_cache     INFO     📦 Dublikat qarşısı: Uxv4Scyv01s → depodakı 'Joy Crookes - Unlearn You'
+2026.10.03 12:38:09 core.audio_cache     INFO     📦 Dublikat qarşısı: _Qf1YzyUmiU → depodakı 'Joy Crookes - Paris'
+2026.10.03 12:38:09 core.audio_cache     INFO     📦 Dublikat qarşısı: VnE1BUkPQ9k → depodakı 'Joy Crookes, Toddla T - When You Were Mine (Toddla T Joyful Remix)'
+2026.10.03 12:38:09 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:09 aiogram.event        INFO     Update id=875928693 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:38:10 plugins.music_plugin INFO     Metadata (spotify): Charlotte Clark - Over and Over
+2026.10.03 12:38:10 core.audio_cache     INFO     📦 Dublikat qarşısı: -mjF2D1vcA8 → depodakı 'Joy Crookes - Power'
+2026.10.03 12:38:10 plugins.music_plugin INFO     Metadata (spotify): Charlotte Clark - Warm Weather
+2026.10.03 12:38:11 plugins.music_plugin INFO     Metadata (spotify): Charlotte Clark - Babygirl
+2026.10.03 12:38:11 core.audio_cache     INFO     📦 Dublikat qarşısı: -hsBSMEYC5I → depodakı 'Charlotte Clark - Lilypad'
+2026.10.03 12:38:11 aiogram.event        INFO     Update id=875928694 is handled. Duration 63 ms by bot id=8976652462
+2026.10.03 12:38:12 core.audio_cache     INFO     📦 Dublikat qarşısı: IjTcvE13CX8 → depodakı 'Joy Crookes - Power'
+2026.10.03 12:38:12 plugins.music_plugin INFO     Metadata (spotify): Charlotte Clark - The Shadow in My Company
+2026.10.03 12:38:12 core.audio_cache     INFO     📦 Dublikat qarşısı: W0Un_8XcLLQ → depodakı 'Charlotte Clark - Lilypad'
+2026.10.03 12:38:13 plugins.music_plugin INFO     Metadata (spotify): Charlotte Clark - Odyssey
+2026.10.03 12:38:13 aiogram.event        INFO     Update id=875928695 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:38:13 core.audio_cache     INFO     📦 Dublikat qarşısı: VUPvaNNre0k → depodakı 'Charlotte Clark - Of Course You're Bored'
+2026.10.03 12:38:14 aiogram.event        INFO     Update id=875928696 is handled. Duration 46 ms by bot id=8976652462
+2026.10.03 12:38:14 core.audio_cache     INFO     📦 Dublikat qarşısı: 2rxpupmmiJU → depodakı 'Charlotte Clark - Lilypad'
+2026.10.03 12:38:14 plugins.music_plugin INFO     Metadata (spotify): Charlotte Clark - Made for Us
+2026.10.03 12:38:15 aiogram.event        INFO     Update id=875928697 is handled. Duration 51 ms by bot id=8976652462
+2026.10.03 12:38:15 core.audio_cache     INFO     📦 Dublikat qarşısı: CMHlHrCfYLY → depodakı 'Charlotte Clark - Warm Weather'
+2026.10.03 12:38:16 aiogram.event        INFO     Update id=875928698 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:38:16 core.depo_helpers    INFO     🤖 @dllmastercore7bot: flood 13 san. — digər köməkçiyə keçilir
+2026.10.03 12:38:17 aiogram.event        INFO     Update id=875928699 is handled. Duration 2 ms by bot id=8976652462
+2026.10.03 12:38:17 plugins.music_plugin INFO     Metadata (spotify): Charlotte Clark - Let It Breathe
+2026.10.03 12:38:18 plugins.music_plugin INFO     Metadata (spotify): Charlotte Clark - Summer Victoria
+2026.10.03 12:38:18 plugins.music_plugin INFO     Metadata (spotify): Charlotte Clark - Disarray
+2026.10.03 12:38:19 plugins.music_plugin INFO     Metadata (spotify): Charlotte Clark - Drive On
+2026.10.03 12:38:20 aiogram.event        INFO     Update id=875928700 is handled. Duration 1 ms by bot id=8976652462
+2026.10.03 12:38:20 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:38:21 aiogram.event        INFO     Update id=875928701 is handled. Duration 1 ms by bot id=8976652462
+2026.10.03 12:38:21 plugins.music_plugin INFO     Metadata (spotify): Charlotte Clark - Operator
+2026.10.03 12:38:21 plugins.music_plugin INFO     Metadata (spotify): Charlotte Clark - New Routine (Demo)
+2026.10.03 12:38:22 plugins.music_plugin INFO     Metadata (spotify): Charlotte Clark - Mother's Eyes
+2026.10.03 12:38:22 plugins.depo_filler_plugin INFO     🎵 YTM Oh Wonder: 179 mahnı (+179 növbəyə, 0 artıq depoda), +2 yeni ifaçı
+2026.10.03 12:38:23 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:23 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:24 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:24 aiogram.event        INFO     Update id=875928702 is handled. Duration 1732 ms by bot id=8976652462
+2026.10.03 12:38:25 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:25 aiogram.event        INFO     Update id=875928703 is handled. Duration 10 ms by bot id=8976652462
+2026.10.03 12:38:26 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:26 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:26 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:27 aiogram.event        INFO     Update id=875928704 is handled. Duration 57 ms by bot id=8976652462
+2026.10.03 12:38:27 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:28 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:28 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:29 aiogram.event        INFO     Update id=875928705 is handled. Duration 11 ms by bot id=8976652462
+2026.10.03 12:38:29 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:30 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:31 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:31 aiogram.event        INFO     Update id=875928706 is handled. Duration 36 ms by bot id=8976652462
+2026.10.03 12:38:32 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:32 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:32 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:33 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:33 aiogram.event        INFO     Update id=875928707 is handled. Duration 41 ms by bot id=8976652462
+2026.10.03 12:38:33 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:33 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:34 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:34 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Without You
+2026.10.03 12:38:35 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:35 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:35 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Landslide
+2026.10.03 12:38:36 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Lose It
+2026.10.03 12:38:36 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:36 core.audio_cache     INFO     📦 Dublikat qarşısı: oKSPfN-F70U → depodakı 'Charlotte Clark - Disarray'
+2026.10.03 12:38:37 core.audio_cache     INFO     📦 Dublikat qarşısı: TbPp2NZxrtQ → depodakı 'Charlotte Clark - Drive On'
+2026.10.03 12:38:37 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Technicolour Beat
+2026.10.03 12:38:37 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:38 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:38 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:38 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:38 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:38 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Without You (BBC Session)
+2026.10.03 12:38:38 aiogram.event        INFO     Update id=875928708 is handled. Duration 176 ms by bot id=8976652462
+2026.10.03 12:38:38 core.audio_cache     INFO     📦 Dublikat qarşısı: jGQihBa3SPQ → depodakı 'Charlotte Clark - Mother's Eyes'
+2026.10.03 12:38:38 aiogram.event        INFO     Update id=875928709 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:38:38 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Drive
+2026.10.03 12:38:38 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - All We Do
+2026.10.03 12:38:39 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Happy
+2026.10.03 12:38:39 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:38:40 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - White Blood
+2026.10.03 12:38:40 aiogram.event        INFO     Update id=875928710 is handled. Duration 23 ms by bot id=8976652462
+2026.10.03 12:38:40 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:40 aiogram.event        INFO     Update id=875928711 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:38:40 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:41 aiogram.event        INFO     Update id=875928712 is handled. Duration 29 ms by bot id=8976652462
+2026.10.03 12:38:41 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:41 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Ultralife
+2026.10.03 12:38:41 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Livewire
+2026.10.03 12:38:41 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Shark
+2026.10.03 12:38:42 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:42 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:42 aiogram.event        INFO     Update id=875928713 is handled. Duration 289 ms by bot id=8976652462
+2026.10.03 12:38:43 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:43 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Without You (10 Years On)
+2026.10.03 12:38:43 aiogram.event        INFO     Update id=875928714 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:38:44 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Magnificent
+2026.10.03 12:38:44 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:44 aiogram.event        INFO     Update id=875928715 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:38:44 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:45 plugins.music_plugin INFO     Metadata (spotify): Kygo, Oh Wonder - How Would I Know
+2026.10.03 12:38:45 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Waste
+2026.10.03 12:38:45 aiogram.event        INFO     Update id=875928716 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:38:46 aiogram.event        INFO     Update id=875928717 is handled. Duration 15 ms by bot id=8976652462
+2026.10.03 12:38:46 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:47 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Plans
+2026.10.03 12:38:47 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:48 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Happy (Acoustic)
+2026.10.03 12:38:48 aiogram.event        INFO     Update id=875928718 is handled. Duration 12 ms by bot id=8976652462
+2026.10.03 12:38:48 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:48 aiogram.event        INFO     Update id=875928719 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:38:49 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:49 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Body Gold
+2026.10.03 12:38:49 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - In And Out Of Love
+2026.10.03 12:38:49 aiogram.event        INFO     Update id=875928720 is handled. Duration 25 ms by bot id=8976652462
+2026.10.03 12:38:50 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - I Wish I Never Met You
+2026.10.03 12:38:50 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:50 aiogram.event        INFO     Update id=875928721 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:38:50 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - My Friends
+2026.10.03 12:38:51 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:51 aiogram.event        INFO     Update id=875928722 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:38:51 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - 22 Make
+2026.10.03 12:38:52 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Dazzle
+2026.10.03 12:38:52 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:52 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Don't You Worry
+2026.10.03 12:38:52 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:52 aiogram.event        INFO     Update id=875928723 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:38:54 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Midnight Moon
+2026.10.03 12:38:54 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Shark (ILLENIUM 2014 Remix)
+2026.10.03 12:38:54 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - The Rain
+2026.10.03 12:38:54 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:54 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:54 aiogram.event        INFO     Update id=875928724 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:38:56 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - High On Humans
+2026.10.03 12:38:56 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Heart Hope
+2026.10.03 12:38:56 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:56 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:56 aiogram.event        INFO     Update id=875928725 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:38:57 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Better Now
+2026.10.03 12:38:57 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Landslide (10 Years On)
+2026.10.03 12:38:58 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:38:58 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Hallelujah
+2026.10.03 12:38:58 aiogram.event        INFO     Update id=875928726 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:38:59 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Lonely Star
+2026.10.03 12:39:00 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:39:00 aiogram.event        INFO     Update id=875928727 is handled. Duration 36 ms by bot id=8976652462
+2026.10.03 12:39:00 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:00 aiogram.event        INFO     Update id=875928728 is handled. Duration 2 ms by bot id=8976652462
+2026.10.03 12:39:01 aiogram.event        INFO     Update id=875928729 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:39:01 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Crazy In Love (BBC Session)
+2026.10.03 12:39:01 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Lose It (10 Years On)
+2026.10.03 12:39:02 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Technicolour Beat (10 Years On)
+2026.10.03 12:39:02 aiogram.event        INFO     Update id=875928730 is handled. Duration 26 ms by bot id=8976652462
+2026.10.03 12:39:02 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:03 aiogram.event        INFO     Update id=875928731 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:39:03 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Heavy
+2026.10.03 12:39:03 aiogram.event        INFO     Update id=875928732 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:39:03 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Overgrown
+2026.10.03 12:39:03 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Lifetimes
+2026.10.03 12:39:03 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Dinner
+2026.10.03 12:39:04 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:04 aiogram.event        INFO     Update id=875928733 is handled. Duration 230 ms by bot id=8976652462
+2026.10.03 12:39:04 aiogram.event        INFO     Update id=875928734 is handled. Duration 31 ms by bot id=8976652462
+2026.10.03 12:39:05 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:05 aiogram.event        INFO     Update id=875928735 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:39:05 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Drunk On You
+2026.10.03 12:39:06 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - All We Do (10 Years On)
+2026.10.03 12:39:06 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Ultralife (Abbey Road Piano Sessions)
+2026.10.03 12:39:06 aiogram.event        INFO     Update id=875928736 is handled. Duration 21 ms by bot id=8976652462
+2026.10.03 12:39:06 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:06 aiogram.event        INFO     Update id=875928737 is handled. Duration 36 ms by bot id=8976652462
+2026.10.03 12:39:07 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:07 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:07 aiogram.event        INFO     Update id=875928738 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:39:08 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Drive (10 Years On)
+2026.10.03 12:39:08 aiogram.event        INFO     Update id=875928739 is handled. Duration 31 ms by bot id=8976652462
+2026.10.03 12:39:08 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Midnight Moon (10 Years On)
+2026.10.03 12:39:09 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:09 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - I Like It When You Love Me
+2026.10.03 12:39:09 aiogram.event        INFO     Update id=875928740 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:39:09 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Down
+2026.10.03 12:39:10 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:10 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Oceansize
+2026.10.03 12:39:11 aiogram.event        INFO     Update id=875928741 is handled. Duration 51 ms by bot id=8976652462
+2026.10.03 12:39:11 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:11 aiogram.event        INFO     Update id=875928742 is handled. Duration 33 ms by bot id=8976652462
+2026.10.03 12:39:12 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:13 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:13 aiogram.event        INFO     Update id=875928743 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:39:13 aiogram.event        INFO     Update id=875928744 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:39:13 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Dazzle (10 Years On)
+2026.10.03 12:39:13 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:39:14 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:15 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Nebraska
+2026.10.03 12:39:15 aiogram.event        INFO     Update id=875928745 is handled. Duration 47 ms by bot id=8976652462
+2026.10.03 12:39:15 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:16 core.depo_helpers    INFO     🤖 @dllmastercore7bot: flood 17 san. — digər köməkçiyə keçilir
+2026.10.03 12:39:16 aiogram.event        INFO     Update id=875928746 is handled. Duration 28 ms by bot id=8976652462
+2026.10.03 12:39:16 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:16 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Bigger Than Love
+2026.10.03 12:39:17 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:17 aiogram.event        INFO     Update id=875928747 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:39:17 core.depo_helpers    INFO     🤖 @dllmastercore7bot: flood 15 san. — digər köməkçiyə keçilir
+2026.10.03 12:39:17 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Dust
+2026.10.03 12:39:18 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - True Romance
+2026.10.03 12:39:18 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:19 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:19 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - I Wish I Never Met You (Acoustic)
+2026.10.03 12:39:19 core.depo_helpers    INFO     🤖 @dllmastercore7bot: flood 13 san. — digər köməkçiyə keçilir
+2026.10.03 12:39:19 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - 22 Break
+2026.10.03 12:39:20 aiogram.event        INFO     Update id=875928748 is handled. Duration 31 ms by bot id=8976652462
+2026.10.03 12:39:20 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:21 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:21 core.depo_helpers    INFO     🤖 @dllmastercore7bot: flood 11 san. — digər köməkçiyə keçilir
+2026.10.03 12:39:21 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Body Gold (10 Years On)
+2026.10.03 12:39:22 aiogram.event        INFO     Update id=875928749 is handled. Duration 36 ms by bot id=8976652462
+2026.10.03 12:39:22 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:22 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - The Rain (10 Years On)
+2026.10.03 12:39:23 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:23 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Shark (10 Years On)
+2026.10.03 12:39:23 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:23 aiogram.event        INFO     Update id=875928750 is handled. Duration 71 ms by bot id=8976652462
+2026.10.03 12:39:23 core.depo_helpers    INFO     🤖 @dllmastercore7bot: flood 9 san. — digər köməkçiyə keçilir
+2026.10.03 12:39:23 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:39:24 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - 365
+2026.10.03 12:39:25 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Nothing But You
+2026.10.03 12:39:26 aiogram.event        INFO     Update id=875928751 is handled. Duration 61 ms by bot id=8976652462
+2026.10.03 12:39:26 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:26 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Plans (10 Years On)
+2026.10.03 12:39:27 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:27 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Solo
+2026.10.03 12:39:28 aiogram.event        INFO     Update id=875928752 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:39:28 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Livewire (10 Years On)
+2026.10.03 12:39:28 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Don't Let The Neighbourhood Hear
+2026.10.03 12:39:29 aiogram.event        INFO     Update id=875928753 is handled. Duration 299 ms by bot id=8976652462
+2026.10.03 12:39:30 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:30 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - How It Goes
+2026.10.03 12:39:30 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Keep On Dancing
+2026.10.03 12:39:32 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Baby
+2026.10.03 12:39:32 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:32 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:39:32 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Free
+2026.10.03 12:39:33 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:33 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 27 san. — digər köməkçiyə keçilir
+2026.10.03 12:39:33 aiogram.event        INFO     Update id=875928754 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:39:33 aiogram.event        INFO     Update id=875928755 is handled. Duration 2 ms by bot id=8976652462
+2026.10.03 12:39:34 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - This Christmas
+2026.10.03 12:39:34 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 25 san. — digər köməkçiyə keçilir
+2026.10.03 12:39:34 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Rollercoaster Baby
+2026.10.03 12:39:35 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:39:35 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Heart Strings
+2026.10.03 12:39:36 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 23 san. — digər köməkçiyə keçilir
+2026.10.03 12:39:36 aiogram.event        INFO     Update id=875928757 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:39:36 aiogram.event        INFO     Update id=875928756 is handled. Duration 359 ms by bot id=8976652462
+2026.10.03 12:39:37 aiogram.event        INFO     Update id=875928758 is handled. Duration 20 ms by bot id=8976652462
+2026.10.03 12:39:37 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:37 plugins.depo_filler_plugin INFO     🎵 YTM Hovvdy: 182 mahnı (+179 növbəyə, 0 artıq depoda), +5 yeni ifaçı
+2026.10.03 12:39:38 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:38 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Better Now (Acoustic)
+2026.10.03 12:39:38 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:38 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Apollo
+2026.10.03 12:39:39 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 21 san. — digər köməkçiyə keçilir
+2026.10.03 12:39:40 aiogram.event        INFO     Update id=875928759 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:39:41 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 19 san. — digər köməkçiyə keçilir
+2026.10.03 12:39:41 aiogram.event        INFO     Update id=875928761 is handled. Duration 5 ms by bot id=8976652462
+2026.10.03 12:39:41 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:41 aiogram.event        INFO     Update id=875928760 is handled. Duration 826 ms by bot id=8976652462
+2026.10.03 12:39:41 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Say Something
+2026.10.03 12:39:41 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.03 12:39:42 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 17 san. — digər köməkçiyə keçilir
+2026.10.03 12:39:43 aiogram.event        INFO     Update id=875928762 is handled. Duration 1 ms by bot id=8976652462
+2026.10.03 12:39:43 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Slip Away
+2026.10.03 12:39:44 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:44 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:44 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Heart Hope (10 Years On)
+2026.10.03 12:39:45 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 15 san. — digər köməkçiyə keçilir
+2026.10.03 12:39:45 core.depo_helpers    INFO     🤖 @dllmastercore7bot: flood 664 san. — digər köməkçiyə keçilir
+2026.10.03 12:39:46 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:46 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 13 san. — digər köməkçiyə keçilir
+2026.10.03 12:39:47 aiogram.event        INFO     Update id=875928763 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:39:47 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:39:47 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.03 12:39:47 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.03 12:39:48 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 11 san. — digər köməkçiyə keçilir
+2026.10.03 12:39:49 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - You > Me
+2026.10.03 12:39:49 aiogram.event        INFO     Update id=875928764 is handled. Duration 1 ms by bot id=8976652462
+2026.10.03 12:39:50 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 9 san. — digər köməkçiyə keçilir
+2026.10.03 12:39:51 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - All About You
+2026.10.03 12:39:51 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:51 aiogram.event        INFO     Update id=875928765 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:39:51 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - White Blood (10 Years On)
+2026.10.03 12:39:51 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:39:52 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - High On Humans (Abbey Road Piano Sessions)
+2026.10.03 12:39:52 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.03 12:39:53 aiogram.event        INFO     Update id=875928766 is handled. Duration 33 ms by bot id=8976652462
+2026.10.03 12:39:53 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:55 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:55 aiogram.event        INFO     Update id=875928767 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:39:56 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Sweet Disaster
+2026.10.03 12:39:56 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Love Me Now
+2026.10.03 12:39:57 aiogram.event        INFO     Update id=875928768 is handled. Duration 33 ms by bot id=8976652462
+2026.10.03 12:39:57 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:39:58 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Twenty Fourteen
+2026.10.03 12:39:59 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 3 san. — digər köməkçiyə keçilir
+2026.10.03 12:39:59 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:40:00 aiogram.event        INFO     Update id=875928769 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:40:01 aiogram.event        INFO     Update id=875928770 is handled. Duration 31 ms by bot id=8976652462
+2026.10.03 12:40:01 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:40:02 aiogram.event        INFO     Update id=875928771 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:40:03 aiogram.event        INFO     Update id=875928772 is handled. Duration 1 ms by bot id=8976652462
+2026.10.03 12:40:03 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Little Tigers
+2026.10.03 12:40:04 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:40:04 aiogram.event        INFO     Update id=875928773 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:40:05 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:40:05 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:40:05 aiogram.event        INFO     Update id=875928774 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:40:06 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Can We Always Be Friends?
+2026.10.03 12:40:07 aiogram.event        INFO     Update id=875928775 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:40:07 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Hallelujah (Acoustic)
+2026.10.03 12:40:07 aiogram.event        INFO     Update id=875928776 is handled. Duration 25 ms by bot id=8976652462
+2026.10.03 12:40:08 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:40:08 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:40:08 aiogram.event        INFO     Update id=875928777 is handled. Duration 61 ms by bot id=8976652462
+2026.10.03 12:40:09 aiogram.event        INFO     Update id=875928778 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:40:09 core.audio_cache     INFO     📦 Dublikat qarşısı: K2zMySBI3M0 → depodakı 'Oh Wonder - Body Gold (10 Years On)'
+2026.10.03 12:40:09 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Drunk On You (Acoustic)
+2026.10.03 12:40:10 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:40:10 aiogram.event        INFO     Update id=875928779 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:40:11 aiogram.event        INFO     Update id=875928780 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:40:11 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Ultralife (Acoustic Version)
+2026.10.03 12:40:12 aiogram.event        INFO     Update id=875928781 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:40:13 core.audio_cache     INFO     📦 Dublikat qarşısı: ONswyx89a24 → depodakı 'Oh Wonder - Technicolour Beat (10 Years On)'
+2026.10.03 12:40:13 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Hallelujah (Unplugged)
+2026.10.03 12:40:14 core.audio_cache     INFO     📦 Dublikat qarşısı: vSfXTFEjFrE → depodakı 'Oh Wonder - Drive (10 Years On)'
+2026.10.03 12:40:14 core.audio_cache     INFO     📦 Dublikat qarşısı: nwm5cBlByaE → depodakı 'Oh Wonder - Lose It (10 Years On)'
+2026.10.03 12:40:14 aiogram.event        INFO     Update id=875928782 is handled. Duration 31 ms by bot id=8976652462
+2026.10.03 12:40:15 core.audio_cache     INFO     📦 Dublikat qarşısı: 6oO59OkgEgQ → depodakı 'Oh Wonder - Landslide (10 Years On)'
+2026.10.03 12:40:16 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Kicking The Doors Down
+2026.10.03 12:40:17 aiogram.event        INFO     Update id=875928783 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:40:17 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Stop Waiting
+2026.10.03 12:40:17 core.audio_cache     INFO     📦 Dublikat qarşısı: IhxPc6uOUYQ → depodakı 'Oh Wonder - Without You (10 Years On)'
+2026.10.03 12:40:17 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Fuck It I Love You
+2026.10.03 12:40:18 core.audio_cache     INFO     📦 Dublikat qarşısı: DZBpLt34Sas → depodakı 'Oh Wonder - The Rain (10 Years On)'
+2026.10.03 12:40:18 aiogram.event        INFO     Update id=875928784 is handled. Duration 5 ms by bot id=8976652462
+2026.10.03 12:40:18 core.audio_cache     INFO     📦 Dublikat qarşısı: JwCqx3xHuzU → depodakı 'Oh Wonder - Dazzle (10 Years On)'
+2026.10.03 12:40:20 aiogram.event        INFO     Update id=875928785 is handled. Duration 46 ms by bot id=8976652462
+2026.10.03 12:40:20 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Body Gold (Thero Remix)
+2026.10.03 12:40:20 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Happy (Joe Goddard Remix)
+2026.10.03 12:40:20 core.audio_cache     INFO     📦 Dublikat qarşısı: qvSNlqPULsk → depodakı 'Oh Wonder - All We Do (10 Years On)'
+2026.10.03 12:40:21 core.audio_cache     INFO     📦 Dublikat qarşısı: LTcfT-w_WZk → depodakı 'Oh Wonder - Midnight Moon (10 Years On)'
+2026.10.03 12:40:21 core.audio_cache     INFO     📦 Dublikat qarşısı: hUwAXj8Kt5k → depodakı 'Oh Wonder - Shark (10 Years On)'
+2026.10.03 12:40:22 aiogram.event        INFO     Update id=875928786 is handled. Duration 25 ms by bot id=8976652462
+2026.10.03 12:40:23 core.audio_cache     INFO     📦 Dublikat qarşısı: mv_qx5zZB9w → depodakı 'Oh Wonder - Livewire (10 Years On)'
+2026.10.03 12:40:23 core.audio_cache     INFO     📦 Dublikat qarşısı: lfCEz6ecAm8 → depodakı 'Oh Wonder - Plans (10 Years On)'
+2026.10.03 12:40:23 core.audio_cache     INFO     📦 Dublikat qarşısı: MoxmpH6z8Ec → depodakı 'Oh Wonder - 22 Make'
+2026.10.03 12:40:23 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - Lifetimes (Everything Everything Remix)
+2026.10.03 12:40:24 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:40:25 core.audio_cache     INFO     📦 Dublikat qarşısı: dDBwCcHRpig → depodakı 'Oh Wonder - Heart Hope (10 Years On)'
+2026.10.03 12:40:25 aiogram.event        INFO     Update id=875928787 is handled. Duration 1085 ms by bot id=8976652462
+2026.10.03 12:40:25 core.audio_cache     INFO     📦 Dublikat qarşısı: -085LqsijCw → depodakı 'Oh Wonder - Magnificent'
+2026.10.03 12:40:25 core.audio_cache     INFO     📦 Dublikat qarşısı: 1le0xDbrVj8 → depodakı 'Oh Wonder - True Romance'
+2026.10.03 12:40:26 core.audio_cache     INFO     📦 Dublikat qarşısı: GYZOoJv718c → depodakı 'Oh Wonder - Apollo'
+2026.10.03 12:40:26 aiogram.event        INFO     Update id=875928788 is handled. Duration 15 ms by bot id=8976652462
+2026.10.03 12:40:27 core.audio_cache     INFO     📦 Dublikat qarşısı: B_9z8yaWQHo → depodakı 'Oh Wonder - 365'
+2026.10.03 12:40:28 core.audio_cache     INFO     📦 Dublikat qarşısı: vaUPOsxHVt8 → depodakı 'Oh Wonder - Say Something'
+2026.10.03 12:40:28 aiogram.event        INFO     Update id=875928789 is handled. Duration 37 ms by bot id=8976652462
+2026.10.03 12:40:28 core.audio_cache     INFO     📦 Dublikat qarşısı: NcLgg5_qkd4 → depodakı 'Oh Wonder - White Blood (10 Years On)'
+2026.10.03 12:40:29 core.audio_cache     INFO     📦 Dublikat qarşısı: E0nCubRt6Ws → depodakı 'Oh Wonder - Down'
+2026.10.03 12:40:30 core.audio_cache     INFO     📦 Dublikat qarşısı: QCfsqSYPL5A → depodakı 'Oh Wonder - 22 Break'
+2026.10.03 12:40:30 aiogram.event        INFO     Update id=875928790 is handled. Duration 21 ms by bot id=8976652462
+2026.10.03 12:40:31 core.audio_cache     INFO     📦 Dublikat qarşısı: iAWc0Z1XaNo → depodakı 'Oh Wonder - Free'
+2026.10.03 12:40:32 aiogram.event        INFO     Update id=875928791 is handled. Duration 118 ms by bot id=8976652462
+2026.10.03 12:40:33 core.audio_cache     INFO     📦 Dublikat qarşısı: 1j9CZk3_gWo → depodakı 'Oh Wonder - Don't Let The Neighbourhood Hear'
+2026.10.03 12:40:33 core.audio_cache     INFO     📦 Dublikat qarşısı: aWRCildgnIM → depodakı 'Oh Wonder - Dinner'
+2026.10.03 12:40:33 core.audio_cache     INFO     📦 Dublikat qarşısı: izB7-GdArbk → depodakı 'Oh Wonder - Rollercoaster Baby'
+2026.10.03 12:40:34 aiogram.event        INFO     Update id=875928792 is handled. Duration 32 ms by bot id=8976652462
+2026.10.03 12:40:34 core.audio_cache     INFO     📦 Dublikat qarşısı: 0TGqXiYFT0U → depodakı 'Oh Wonder - Sweet Disaster'
+2026.10.03 12:40:34 core.audio_cache     INFO     📦 Dublikat qarşısı: uKKsh0_AVEQ → depodakı 'Oh Wonder - Love Me Now'
+2026.10.03 12:40:34 core.audio_cache     INFO     📦 Dublikat qarşısı: yeXie1Fhcdk → depodakı 'Oh Wonder - Happy'
+2026.10.03 12:40:34 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:40:35 aiogram.event        INFO     Update id=875928794 is handled. Duration 15 ms by bot id=8976652462
+2026.10.03 12:40:36 plugins.music_plugin INFO     Metadata (spotify): Oh Wonder - How it goes
+2026.10.03 12:40:36 aiogram.event        INFO     Update id=875928793 is handled. Duration 900 ms by bot id=8976652462
+2026.10.03 12:40:36 core.audio_cache     INFO     📦 Dublikat qarşısı: VBbFwoLOsQc → depodakı 'Oh Wonder - You > Me'
+2026.10.03 12:40:36 core.audio_cache     INFO     📦 Dublikat qarşısı: dB9cNtug_rE → depodakı 'Oh Wonder - Twenty Fourteen'
+2026.10.03 12:40:37 core.audio_cache     INFO     📦 Dublikat qarşısı: Y00Pkm-PnXs → depodakı 'Oh Wonder - Hallelujah'
+2026.10.03 12:40:37 core.audio_cache     INFO     📦 Dublikat qarşısı: KUKt_LbaBnM → depodakı 'Oh Wonder - Better Now'
+2026.10.03 12:40:37 core.audio_cache     INFO     📦 Dublikat qarşısı: DwRYh8lBjCI → depodakı 'Oh Wonder - I Wish I Never Met You'
+2026.10.03 12:40:37 core.audio_cache     INFO     📦 Dublikat qarşısı: Ci16Hl4KQ70 → depodakı 'Oh Wonder - In And Out Of Love'
+2026.10.03 12:40:38 aiogram.event        INFO     Update id=875928795 is handled. Duration 11 ms by bot id=8976652462
+2026.10.03 12:40:38 core.audio_cache     INFO     📦 Dublikat qarşısı: 3MEc3YjDWzY → depodakı 'Oh Wonder - Baby'
+2026.10.03 12:40:39 core.audio_cache     INFO     📦 Dublikat qarşısı: qiL4omm7CxI → depodakı 'Oh Wonder - Better Now (Acoustic)'
+2026.10.03 12:40:39 core.audio_cache     INFO     📦 Dublikat qarşısı: hu9pTGFjA4c → depodakı 'Oh Wonder - Ultralife'
+2026.10.03 12:40:40 aiogram.event        INFO     Update id=875928796 is handled. Duration 31 ms by bot id=8976652462
+2026.10.03 12:40:40 core.audio_cache     INFO     📦 Dublikat qarşısı: JKEJqCCxJTs → depodakı 'Oh Wonder - Lifetimes'
+2026.10.03 12:40:41 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 20 san. — digər köməkçiyə keçilir
+2026.10.03 12:40:43 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 18 san. — digər köməkçiyə keçilir
+2026.10.03 12:40:43 core.audio_cache     INFO     📦 Dublikat qarşısı: NgasVVGk5qM → depodakı 'Oh Wonder - Little Tigers'
+2026.10.03 12:40:44 core.audio_cache     INFO     📦 Dublikat qarşısı: ksKVVnELXHY → depodakı 'Oh Wonder - High On Humans'
+2026.10.03 12:40:44 core.audio_cache     INFO     📦 Dublikat qarşısı: har0NLi5DZ8 → depodakı 'Oh Wonder - All About You'
+2026.10.03 12:40:44 core.audio_cache     INFO     📦 Dublikat qarşısı: 5BEVAKe7UKU → depodakı 'Oh Wonder - Heart Strings'
+2026.10.03 12:40:44 core.audio_cache     INFO     📦 Dublikat qarşısı: g8RmfDg45SE → depodakı 'Oh Wonder - Heavy'
+2026.10.03 12:40:45 core.audio_cache     INFO     📦 Dublikat qarşısı: ErESVQ_PJkY → depodakı 'Oh Wonder - Can We Always Be Friends?'
+2026.10.03 12:40:45 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 16 san. — digər köməkçiyə keçilir
+2026.10.03 12:40:47 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 14 san. — digər köməkçiyə keçilir
+2026.10.03 12:40:48 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:40:49 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 12 san. — digər köməkçiyə keçilir
+2026.10.03 12:40:50 core.audio_cache     INFO     📦 Dublikat qarşısı: 1ypofGDdHpo → depodakı 'Oh Wonder - My Friends'
+2026.10.03 12:40:50 core.audio_cache     INFO     📦 Dublikat qarşısı: 8Ufw5oIcw2o → depodakı 'Oh Wonder - Body Gold'
+2026.10.03 12:40:50 core.audio_cache     INFO     📦 Dublikat qarşısı: qjgnOP8f5NU → depodakı 'Oh Wonder - Livewire'
+2026.10.03 12:40:50 core.audio_cache     INFO     📦 Dublikat qarşısı: Ar1grAdGkec → depodakı 'Oh Wonder - Waste'
+2026.10.03 12:40:50 core.audio_cache     INFO     📦 Dublikat qarşısı: W8fmOciEY8U → depodakı 'Oh Wonder - Technicolour Beat'
+2026.10.03 12:40:50 core.audio_cache     INFO     📦 Dublikat qarşısı: VgwcPiCjQ-0 → depodakı 'Oh Wonder - Lose It'
+2026.10.03 12:40:50 core.audio_cache     INFO     📦 Dublikat qarşısı: T6esRjpMjNc → depodakı 'Oh Wonder - White Blood'
+2026.10.03 12:40:50 core.audio_cache     INFO     📦 Dublikat qarşısı: _w5jPT8LMF0 → depodakı 'Oh Wonder - Drive'
+2026.10.03 12:40:51 core.audio_cache     INFO     📦 Dublikat qarşısı: PiGt9C76U0s → depodakı 'Oh Wonder - Landslide'
+2026.10.03 12:40:51 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 10 san. — digər köməkçiyə keçilir
+2026.10.03 12:40:54 core.audio_cache     INFO     📦 Dublikat qarşısı: Wz5R1rmxzIs → depodakı 'Oh Wonder - Dazzle'
+2026.10.03 12:40:54 core.audio_cache     INFO     📦 Dublikat qarşısı: zLAhRiUeJ8E → depodakı 'Oh Wonder - Without You'
+2026.10.03 12:40:55 core.audio_cache     INFO     📦 Dublikat qarşısı: vnVZJn28W7A → depodakı 'Oh Wonder - The Rain'
+2026.10.03 12:40:55 core.audio_cache     INFO     📦 Dublikat qarşısı: xPGREQvK-dQ → depodakı 'Oh Wonder - All We Do'
+2026.10.03 12:40:55 core.audio_cache     INFO     📦 Dublikat qarşısı: vq0eO8eKby8 → depodakı 'Oh Wonder - Midnight Moon'
+2026.10.03 12:40:55 core.audio_cache     INFO     📦 Dublikat qarşısı: njkzpq3c890 → depodakı 'Oh Wonder - Shark'
+2026.10.03 12:40:55 aiogram.event        INFO     Update id=875928797 is handled. Duration 4245 ms by bot id=8976652462
+2026.10.03 12:41:00 core.audio_cache     INFO     📦 Dublikat qarşısı: 8PxNachuC50 → depodakı 'Oh Wonder - Heart Hope'
+2026.10.03 12:41:00 core.audio_cache     INFO     📦 Dublikat qarşısı: jS_7u5dinTw → depodakı 'Oh Wonder - Keep On Dancing'
+2026.10.03 12:41:00 core.audio_cache     INFO     📦 Dublikat qarşısı: BlsshibWXQg → depodakı 'Oh Wonder - Lonely Star'
+2026.10.03 12:41:00 core.audio_cache     INFO     📦 Dublikat qarşısı: D4DmgQADBqM → depodakı 'Oh Wonder - Body Gold (10 Years On)'
+2026.10.03 12:41:00 core.audio_cache     INFO     📦 Dublikat qarşısı: zcXIaVetYkE → depodakı 'Oh Wonder - I Like It When You Love Me'
+2026.10.03 12:41:00 core.audio_cache     INFO     📦 Dublikat qarşısı: inXvbRCiqAw → depodakı 'Oh Wonder - Oceansize'
+2026.10.03 12:41:01 core.audio_cache     INFO     📦 Dublikat qarşısı: HlolEYHP80c → depodakı 'Oh Wonder - Don't You Worry'
+2026.10.03 12:41:01 core.audio_cache     INFO     📦 Dublikat qarşısı: hpjLiKRiViM → depodakı 'Oh Wonder - Happy (Acoustic)'
+2026.10.03 12:41:02 aiogram.event        INFO     Update id=875928798 is handled. Duration 36 ms by bot id=8976652462
+2026.10.03 12:41:03 aiogram.event        INFO     Update id=875928799 is handled. Duration 5 ms by bot id=8976652462
+2026.10.03 12:41:04 core.audio_cache     INFO     📦 Dublikat qarşısı: yiuZNVSSRwE → depodakı 'Oh Wonder - Lonely Star'
+2026.10.03 12:41:04 core.audio_cache     INFO     📦 Dublikat qarşısı: TrWLsbmndm0 → depodakı 'Oh Wonder - I Wish I Never Met You (Acoustic)'
+2026.10.03 12:41:04 core.audio_cache     INFO     📦 Dublikat qarşısı: -0TT3GTguB8 → depodakı 'Oh Wonder - This Christmas'
+2026.10.03 12:41:04 aiogram.event        INFO     Update id=875928800 is handled. Duration 38 ms by bot id=8976652462
+2026.10.03 12:41:04 core.audio_cache     INFO     📦 Dublikat qarşısı: PpnecW45pVM → depodakı 'Oh Wonder - Shark (ILLENIUM 2014 Remix)'
+2026.10.03 12:41:04 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:04 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:04 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:04 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:05 core.audio_cache     INFO     📦 Dublikat qarşısı: B7ehy6ooPZI → depodakı 'Oh Wonder - High On Humans (Abbey Road Piano Sessions)'
+2026.10.03 12:41:06 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:06 aiogram.event        INFO     Update id=875928801 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:41:06 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:07 aiogram.event        INFO     Update id=875928802 is handled. Duration 40 ms by bot id=8976652462
+2026.10.03 12:41:07 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:08 aiogram.event        INFO     Update id=875928803 is handled. Duration 16 ms by bot id=8976652462
+2026.10.03 12:41:08 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:08 core.audio_cache     INFO     📦 Dublikat qarşısı: jumLDhoGOuM → depodakı 'Oh Wonder - Fuck It I Love You'
+2026.10.03 12:41:09 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:09 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:09 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:09 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:09 aiogram.event        INFO     Update id=875928804 is handled. Duration 2 ms by bot id=8976652462
+2026.10.03 12:41:09 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:09 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:10 aiogram.event        INFO     Update id=875928805 is handled. Duration 15 ms by bot id=8976652462
+2026.10.03 12:41:11 aiogram.event        INFO     Update id=875928806 is handled. Duration 37 ms by bot id=8976652462
+2026.10.03 12:41:11 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:12 aiogram.event        INFO     Update id=875928807 is handled. Duration 6 ms by bot id=8976652462
+2026.10.03 12:41:12 core.audio_cache     INFO     📦 Dublikat qarşısı: r94kcs28xlw → depodakı 'Oh Wonder - Happy (Joe Goddard Remix)'
+2026.10.03 12:41:12 core.audio_cache     INFO     📦 Dublikat qarşısı: 9nCaVTnQocQ → depodakı 'Oh Wonder - Lifetimes (Everything Everything Remix)'
+2026.10.03 12:41:12 core.audio_cache     INFO     📦 Dublikat qarşısı: 0gspY-45Tho → depodakı 'Oh Wonder - How It Goes'
+2026.10.03 12:41:13 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:13 core.audio_cache     INFO     📦 Dublikat qarşısı: RMstqSo6SGg → depodakı 'Oh Wonder - Hallelujah (Acoustic)'
+2026.10.03 12:41:13 aiogram.event        INFO     Update id=875928808 is handled. Duration 450 ms by bot id=8976652462
+2026.10.03 12:41:13 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:41:14 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:14 aiogram.event        INFO     Update id=875928809 is handled. Duration 1 ms by bot id=8976652462
+2026.10.03 12:41:15 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Try Try Try
+2026.10.03 12:41:16 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:16 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - What I Had
+2026.10.03 12:41:16 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:17 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - True Love
+2026.10.03 12:41:17 core.audio_cache     INFO     📦 Dublikat qarşısı: pFjIUzRlNKs → depodakı 'Oh Wonder - Hallelujah (Unplugged)'
+2026.10.03 12:41:17 core.audio_cache     INFO     📦 Dublikat qarşısı: HKfCxniemfE → depodakı 'Oh Wonder - Kicking The Doors Down'
+2026.10.03 12:41:17 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Blindsided
+2026.10.03 12:41:17 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:17 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:18 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:18 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:18 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:18 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:18 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:18 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:18 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:18 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Way Down
+2026.10.03 12:41:18 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Blast
+2026.10.03 12:41:18 aiogram.event        INFO     Update id=875928810 is handled. Duration 40 ms by bot id=8976652462
+2026.10.03 12:41:18 core.audio_cache     INFO     📦 Dublikat qarşısı: 08jEnUKCZ0I → depodakı 'Oh Wonder - Stop Waiting'
+2026.10.03 12:41:19 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Watergun
+2026.10.03 12:41:20 aiogram.event        INFO     Update id=875928811 is handled. Duration 101 ms by bot id=8976652462
+2026.10.03 12:41:20 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - You Will Go Far
+2026.10.03 12:41:20 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Life So Wide
+2026.10.03 12:41:20 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:21 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:21 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:21 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - JJ
+2026.10.03 12:41:21 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:22 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:22 aiogram.event        INFO     Update id=875928812 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:41:22 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Around Again
+2026.10.03 12:41:22 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Forever
+2026.10.03 12:41:22 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Cathedral
+2026.10.03 12:41:23 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Jean
+2026.10.03 12:41:23 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Ruby
+2026.10.03 12:41:24 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:25 aiogram.event        INFO     Update id=875928813 is handled. Duration 104 ms by bot id=8976652462
+2026.10.03 12:41:25 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Untitled
+2026.10.03 12:41:26 aiogram.event        INFO     Update id=875928814 is handled. Duration 40 ms by bot id=8976652462
+2026.10.03 12:41:26 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:27 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Junk
+2026.10.03 12:41:28 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Tools
+2026.10.03 12:41:28 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:28 aiogram.event        INFO     Update id=875928815 is handled. Duration 1 ms by bot id=8976652462
+2026.10.03 12:41:29 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - claws
+2026.10.03 12:41:29 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Wannabe (Radio Queen)
+2026.10.03 12:41:30 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:30 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Junior Day League
+2026.10.03 12:41:30 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Left Out
+2026.10.03 12:41:30 aiogram.event        INFO     Update id=875928816 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:41:31 aiogram.event        INFO     Update id=875928817 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:41:32 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Starry
+2026.10.03 12:41:32 telethon.client.updates INFO     Got difference for channel 1450190758 updates
+2026.10.03 12:41:32 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:33 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Truck
+2026.10.03 12:41:33 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:33 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Give It Away
+2026.10.03 12:41:34 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Town
+2026.10.03 12:41:34 aiogram.event        INFO     Update id=875928818 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:41:34 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Bubba
+2026.10.03 12:41:35 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Petal
+2026.10.03 12:41:35 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:35 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Problem
+2026.10.03 12:41:35 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 26 san. — digər köməkçiyə keçilir
+2026.10.03 12:41:35 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Joy
+2026.10.03 12:41:36 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - I Never Wanna Make You Sad
+2026.10.03 12:41:37 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 24 san. — digər köməkçiyə keçilir
+2026.10.03 12:41:37 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Pretend
+2026.10.03 12:41:38 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.03 12:41:39 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:41:39 plugins.music_plugin INFO     Metadata (spotify): Hovvdy, Lomelda - Talk
+2026.10.03 12:41:39 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 22 san. — digər köməkçiyə keçilir
+2026.10.03 12:41:39 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Runner
+2026.10.03 12:41:41 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Lake June
+2026.10.03 12:41:41 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 20 san. — digər köməkçiyə keçilir
+2026.10.03 12:41:42 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Bad News
+2026.10.03 12:41:42 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Sometimes
+2026.10.03 12:41:43 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 18 san. — digər köməkçiyə keçilir
+2026.10.03 12:41:45 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.03 12:41:45 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Ruin (my ride)
+2026.10.03 12:41:45 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 16 san. — digər köməkçiyə keçilir
+2026.10.03 12:41:47 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Make Ya Proud
+2026.10.03 12:41:47 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 14 san. — digər köməkçiyə keçilir
+2026.10.03 12:41:48 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Late
+2026.10.03 12:41:49 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 12 san. — digər köməkçiyə keçilir
+2026.10.03 12:41:50 plugins.depo_filler_plugin INFO     🎵 YTM Wallice: 54 mahnı (+54 növbəyə, 0 artıq depoda), +6 yeni ifaçı
+2026.10.03 12:41:50 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - feel tall
+2026.10.03 12:41:51 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 10 san. — digər köməkçiyə keçilir
+2026.10.03 12:42:02 aiogram.event        INFO     Update id=875928819 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:42:03 aiogram.event        INFO     Update id=875928820 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:42:04 aiogram.event        INFO     Update id=875928821 is handled. Duration 1 ms by bot id=8976652462
+2026.10.03 12:42:05 aiogram.event        INFO     Update id=875928822 is handled. Duration 1 ms by bot id=8976652462
+2026.10.03 12:42:06 aiogram.event        INFO     Update id=875928823 is handled. Duration 15 ms by bot id=8976652462
+2026.10.03 12:42:06 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:07 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:07 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:08 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:09 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:10 aiogram.event        INFO     Update id=875928824 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:42:11 aiogram.event        INFO     Update id=875928825 is handled. Duration 1 ms by bot id=8976652462
+2026.10.03 12:42:12 aiogram.event        INFO     Update id=875928826 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:42:14 aiogram.event        INFO     Update id=875928827 is handled. Duration 31 ms by bot id=8976652462
+2026.10.03 12:42:14 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:14 aiogram.event        INFO     Update id=875928828 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:42:15 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:15 aiogram.event        INFO     Update id=875928829 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:42:16 aiogram.event        INFO     Update id=875928830 is handled. Duration 36 ms by bot id=8976652462
+2026.10.03 12:42:16 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:17 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Meant
+2026.10.03 12:42:18 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:18 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:19 aiogram.event        INFO     Update id=875928831 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:42:19 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:19 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:42:20 plugins.music_plugin INFO     Metadata (spotify): Hovvdy, runo plum - Shooting Star
+2026.10.03 12:42:20 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Jean (Julie's Version)
+2026.10.03 12:42:20 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Hope
+2026.10.03 12:42:20 aiogram.event        INFO     Update id=875928832 is handled. Duration 30 ms by bot id=8976652462
+2026.10.03 12:42:20 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:21 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - In The Sun
+2026.10.03 12:42:23 aiogram.event        INFO     Update id=875928833 is handled. Duration 109 ms by bot id=8976652462
+2026.10.03 12:42:23 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:24 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:24 aiogram.event        INFO     Update id=875928834 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:42:26 aiogram.event        INFO     Update id=875928835 is handled. Duration 250 ms by bot id=8976652462
+2026.10.03 12:42:26 telethon.client.updates INFO     Got difference for channel 3775621496 updates
+2026.10.03 12:42:26 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:27 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Shell
+2026.10.03 12:42:27 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:27 aiogram.event        INFO     Update id=875928836 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:42:28 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Big Blue
+2026.10.03 12:42:28 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Everything
+2026.10.03 12:42:29 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Brave
+2026.10.03 12:42:30 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Portrait
+2026.10.03 12:42:30 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:30 aiogram.event        INFO     Update id=875928837 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:42:31 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Hue
+2026.10.03 12:42:31 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:32 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - GSM
+2026.10.03 12:42:33 aiogram.event        INFO     Update id=875928838 is handled. Duration 0 ms by bot id=8976652462
+2026.10.03 12:42:34 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 27 san. — digər köməkçiyə keçilir
+2026.10.03 12:42:34 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:35 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 26 san. — digər köməkçiyə keçilir
+2026.10.03 12:42:35 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - 1999
+2026.10.03 12:42:35 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Every Exchange
+2026.10.03 12:42:36 core.youtube_handler INFO     Yükləmə cəhdi: cookies + mweb (PO token)
+2026.10.03 12:42:37 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 24 san. — digər köməkçiyə keçilir
+2026.10.03 12:42:39 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Bubba (Julie's Version)
+2026.10.03 12:42:39 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 22 san. — digər köməkçiyə keçilir
+2026.10.03 12:42:40 telethon.client.updates INFO     Got difference for channel 1270848742 updates
+2026.10.03 12:42:41 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Ruin (Demo) (Demo)
+2026.10.03 12:42:41 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 20 san. — digər köməkçiyə keçilir
+2026.10.03 12:42:41 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Til I Let You Know
+2026.10.03 12:42:43 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 18 san. — digər köməkçiyə keçilir
+2026.10.03 12:42:43 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Try Hard
+2026.10.03 12:42:45 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 16 san. — digər köməkçiyə keçilir
+2026.10.03 12:42:45 aiogram.event        INFO     Update id=875928839 is handled. Duration 490 ms by bot id=8976652462
+2026.10.03 12:42:47 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Meg
+2026.10.03 12:42:47 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 14 san. — digər köməkçiyə keçilir
+2026.10.03 12:42:48 plugins.music_plugin INFO     Metadata (spotify): Hovvdy - Clean
+2026.10.03 12:42:49 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 12 san. — digər köməkçiyə keçilir
+2026.10.03 12:42:51 aiogram.event        INFO     Update id=875928840 is handled. Duration 275 ms by bot id=8976652462
+2026.10.03 12:42:51 core.depo_helpers    INFO     🤖 @dllmastercore4bot: flood 10 san. — digər köməkçiyə keçilir
+2026.10.03 12:42:51 telethon.client.updates INFO     Got difference for channel 1327565517 updates
+2026.10.03 12:42:54 aiogram.event        INFO     Update id=875928841 is handled. Duration 268 ms by bot id=8976652462
+2026.10.03 12:42:55 aiogram.event        INFO     Update id=875928842 is handled. Duration 271 ms by bot id=8976652462
+2026.10.03 12:42:58 aiogram.event        INFO     Update id=875928843 is handled. Duration 343 ms by bot id=8976652462
