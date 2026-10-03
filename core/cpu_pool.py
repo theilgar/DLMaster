@@ -14,6 +14,10 @@ Məqsəd: bot heç vaxt donmasın və bütün CPU nüvələrindən istifadə ets
 3. 🫀 Watchdog — event loop-un gecikməsini ölçür; loop 1 san.-dən çox donanda əsas thread-in stack-ini tutub
    harada ilişdiyini yazır (/menu → ⚙️ Performans).
 4. 🐢 Prioritet — işçi proseslər və ffmpeg `nice` ilə işləyir, bot həmişə üstündür.
+5. 🚀 Avto-miqyas — hər 3 san. CPU / RAM ölçülür (SysMon). Növbədə tapşırıq varsa və CPU hədəfdən
+   aşağıdırsa zolaq böyüdülür (maks. 👤/📦 dəyərinə qədər), CPU hədəfi aşanda və ya RAM ehtiyatı
+   azalanda kiçildilir (əvvəl 📦 depo). 2 dəq. boş qalan artıq proseslər bağlanır (RAM qayıdır).
+   👤 / 📦 düymələri avto-miqyas açıqkən MAKSİMUM rolunu oynayır.
 
 Ayarlar bazada (perf:*) — /menu → 🖥 Sistem → ⚙️ Performans.
 """
@@ -49,6 +53,14 @@ EXTRACT_TIMEOUT = 180           # axtarış / playlist (san.)
 DOWNLOAD_TIMEOUT = 1200         # bir yükləmə (san.)
 CANCEL_KILL_AFTER = 15          # ⏹ basılıb, proses bu qədər vaxtda dayanmasa — öldürülür
 FREEZE_AT = 1.0                 # watchdog: loop bu qədər cavab verməsə — donma sayılır (san.)
+
+S_SCALE, S_TARGET, S_RESERVE = "perf:autoscale", "perf:cpu_target", "perf:ram_reserve"
+TARGET_STEPS = [50, 60, 70, 80, 85, 90, 95, 100]
+RESERVE_STEPS = [256, 512, 768, 1024, 1536, 2048, 4096, 8192]
+SCALE_EVERY = 3.0               # ölçmə / miqyas intervalı (san.)
+IDLE_KEEP = 120                 # bu qədər boş qalan artıq proses bağlanır (san.)
+PROC_MB = 75                    # bir işçi prosesin təxmini RAM-ı
+LAG_LIMIT = 0.25                # avto-miqyas: orta loop gecikməsi bundan çoxdursa böyütmə yox, kiçiltmə
 
 
 # ───────────────────────── ayarlar ─────────────────────────
@@ -116,14 +128,14 @@ def set_mode(m: str):
 def step_user(d):
     v = _step(user_procs(), USER_STEPS, d)
     _set(S_USER, v)
-    LANES["user"].size = v
+    LANES["user"].set_max(v)
     return v
 
 
 def step_depo(d):
     v = _step(depo_procs(), DEPO_STEPS, d)
     _set(S_DEPO, v)
-    LANES["depo"].size = v
+    LANES["depo"].set_max(v)
     return v
 
 
@@ -138,6 +150,38 @@ def step_nice(d):
     v = _step(nice(), NICE_STEPS, d)
     _set(S_NICE, v)
     return v                    # yeni proseslərə tətbiq olunur (♻️ ilə hamısına)
+
+
+def autoscale_on() -> bool:
+    return _get(S_SCALE, "on") != "off"
+
+
+def cpu_target() -> int:
+    return _int(S_TARGET, 90, 10, 100)
+
+
+def ram_reserve() -> int:
+    return _int(S_RESERVE, 512, 0, 1 << 20)
+
+
+def toggle_autoscale() -> bool:
+    on = not autoscale_on()
+    _set(S_SCALE, "on" if on else "off")
+    for pool in LANES.values():
+        pool.set_max(pool.max_size)          # rejimə görə effektiv ölçünü yenidən qurur
+    return on
+
+
+def step_target(d):
+    v = _step(cpu_target(), TARGET_STEPS, d)
+    _set(S_TARGET, v)
+    return v
+
+
+def step_reserve(d):
+    v = _step(ram_reserve(), RESERVE_STEPS, d)
+    _set(S_RESERVE, v)
+    return v
 
 
 def toggle_watchdog() -> bool:
@@ -161,6 +205,7 @@ class _Worker:
         self.proc = proc
         self.tasks = 0
         self.busy_since = None
+        self.idle_since = None
 
     @property
     def alive(self) -> bool:
@@ -181,6 +226,7 @@ class _Worker:
 class ProcPool:
     def __init__(self, name: str, label: str, size: int):
         self.name, self.label, self.size = name, label, size
+        self.max_size = size                      # istifadəçinin qoyduğu (avto-miqyasda — maksimum)
         self.workers = []
         self.idle = deque()
         self.waiters = deque()
@@ -258,7 +304,43 @@ class ProcPool:
                 fut.set_result(w)
                 return
         if w is not None:
+            w.idle_since = time.monotonic()
             self.idle.append(w)
+
+    # ── 🚀 avto-miqyas ──
+    def set_max(self, v: int):
+        self.max_size = v
+        if autoscale_on() and mode() == "process":
+            alive = sum(1 for w in self.workers if isinstance(w, _Worker))
+            # başlanğıc: nüvə sayı (və ya hazırda açıq proses sayı) — sonra yükə görə böyüyür / kiçilir
+            self.size = max(1, min(v, max(alive, CORES)))
+        else:
+            self.size = v
+        self.kick()
+
+    def kick(self):
+        """Ölçü böyüyəndə növbədəkiləri oyadır — onlar yeni proses açır."""
+        free = self.size - len(self.workers)
+        while free > 0 and self.waiters:
+            fut = self.waiters.popleft()
+            if not fut.done():
+                fut.set_result(None)
+                free -= 1
+
+    def reap_idle(self, keep: int = 1) -> int:
+        """IDLE_KEEP-dən çox boş qalan artıq prosesləri bağlayır (ən azı `keep` boş qalır)."""
+        now = time.monotonic()
+        idle = [w for w in self.idle if w.alive]
+        old = [w for w in idle if w.idle_since and now - w.idle_since > IDLE_KEEP]
+        victims = old[:max(0, len(idle) - keep)]
+        for w in victims:
+            try:
+                self.idle.remove(w)
+            except ValueError:
+                pass
+            w.kill()
+            self._forget(w)
+        return len(victims)
 
     async def call(self, name: str, args: tuple, timeout: float, cancel_event=None, cancel_path=None):
         w = await self._acquire()
@@ -322,8 +404,8 @@ class ProcPool:
 
     def snapshot(self) -> dict:
         alive = [w for w in self.workers if isinstance(w, _Worker) and w.alive]
-        return {"size": self.size, "alive": len(alive), "running": self.running, "waiting": self.waiting,
-                **self.stats}
+        return {"size": self.size, "max": self.max_size, "alive": len(alive), "running": self.running,
+                "waiting": self.waiting, "pids": [w.proc.pid for w in alive], **self.stats}
 
 
 LANES = {
@@ -339,7 +421,8 @@ async def shutdown_pools():
 
 async def restart_pools():
     await shutdown_pools()
-    LANES["user"].size, LANES["depo"].size = user_procs(), depo_procs()
+    LANES["user"].set_max(user_procs())
+    LANES["depo"].set_max(depo_procs())
 
 
 def _lane() -> str:
@@ -430,6 +513,153 @@ def ffmpeg_prefix() -> list:
     n = nice()
     import shutil
     return ["nice", "-n", str(n)] if n > 0 and shutil.which("nice") else []
+
+
+# ───────────────────────── 📊 sistem monitoru + 🚀 avto-miqyas ─────────────────────────
+def _read(path) -> str:
+    try:
+        with open(path) as f:
+            return f.read()
+    except OSError:
+        return ""
+
+
+def _proc_ticks(pid) -> int:
+    """utime + stime (taktla)."""
+    raw = _read(f"/proc/{pid}/stat")
+    if not raw:
+        return 0
+    try:
+        f = raw.rsplit(")", 1)[1].split()
+        return int(f[11]) + int(f[12])
+    except (IndexError, ValueError):
+        return 0
+
+
+def _tree(pid, depth=0) -> list:
+    """pid + bütün övladları (ffmpeg və s. — yt-dlp-nin açdığı proseslər də sayılsın)."""
+    out = [pid]
+    if depth > 4:
+        return out
+    try:
+        tids = os.listdir(f"/proc/{pid}/task")
+    except OSError:
+        return out
+    for tid in tids:
+        for c in _read(f"/proc/{pid}/task/{tid}/children").split():
+            if c.isdigit():
+                out += _tree(int(c), depth + 1)
+    return out
+
+
+class SysMon:
+    def __init__(self):
+        self.hz = os.sysconf("SC_CLK_TCK") if hasattr(os, "sysconf") else 100
+        self.prev_cpu = None
+        self.prev_ticks = {}
+        self.prev_t = None
+        self.cpu = 0.0                 # ümumi %
+        self.cores = []                # hər nüvə %
+        self.bot_cpu = 0.0             # botun özü (maşının %-i)
+        self.work_cpu = 0.0            # işçi proseslər + övladları (maşının %-i)
+        self.avail_mb = 0
+        self.total_mb = 0
+        self.hist = deque(maxlen=60)   # ~3 dəq.
+        self.events = deque(maxlen=8)  # (ts, mətn) — miqyas dəyişiklikləri
+
+    def sample(self):
+        cur = []
+        for line in _read("/proc/stat").splitlines():
+            if not line.startswith("cpu"):
+                break
+            vals = [int(x) for x in line.split()[1:]]
+            cur.append((vals[3] + (vals[4] if len(vals) > 4 else 0), sum(vals)))
+        if self.prev_cpu and len(self.prev_cpu) == len(cur):
+            pct = [100.0 * (1 - (i1 - i0) / (t1 - t0)) if t1 > t0 else 0.0
+                   for (i0, t0), (i1, t1) in zip(self.prev_cpu, cur)]
+            self.cpu, self.cores = pct[0], pct[1:]
+            self.hist.append(self.cpu)
+        self.prev_cpu = cur
+
+        now = time.monotonic()
+        groups = {"bot": [os.getpid()], "work": []}
+        for pool in LANES.values():
+            for w in pool.workers:
+                if isinstance(w, _Worker) and w.alive:
+                    groups["work"] += _tree(w.proc.pid)
+        ticks = {}
+        for g, pids in groups.items():
+            ticks[g] = {p: _proc_ticks(p) for p in pids}
+        if self.prev_t:
+            dt = max(0.001, now - self.prev_t) * self.hz * CORES
+            for g in ticks:
+                used = sum(max(0, t - self.prev_ticks.get(p, t)) for p, t in ticks[g].items())
+                setattr(self, "bot_cpu" if g == "bot" else "work_cpu", min(100.0, 100.0 * used / dt))
+        self.prev_ticks = {p: t for g in ticks.values() for p, t in g.items()}
+        self.prev_t = now
+
+        mem = {}
+        for line in _read("/proc/meminfo").splitlines():
+            k, _, v = line.partition(":")
+            if v.split():
+                mem[k] = int(v.split()[0]) // 1024
+        self.total_mb = mem.get("MemTotal", 0)
+        self.avail_mb = mem.get("MemAvailable", mem.get("MemFree", 0))
+
+    def event(self, text):
+        self.events.append((time.time(), text))
+        logger.info(f"🚀 Avto-miqyas: {text}")
+
+
+MON = SysMon()
+
+
+def _scale_step():
+    cpu, avail = MON.cpu, MON.avail_mb
+    target, reserve = cpu_target(), ram_reserve()
+    user, depo = LANES["user"], LANES["depo"]
+    # bot ləngiyirsə (event loop gecikməsi) — CPU boş olsa da böyütmə; darboğaz başqa yerdədir (baza kilidi, şəbəkə)
+    w = WATCHDOG.snapshot() if WATCHDOG.enabled else {"lag_avg": 0.0, "now_frozen": False}
+    laggy = w["now_frozen"] or w["lag_avg"] > LAG_LIMIT
+    over = cpu > min(100, target + 5) or (avail and avail < reserve) or laggy
+    room = cpu < target - 3 and (not avail or avail - PROC_MB > reserve) and w["lag_avg"] < LAG_LIMIT / 2
+    step = max(1, CORES // 4)
+    why = f"CPU {cpu:.0f}%, boş RAM {avail} MB" + (f", bot gecikməsi {w['lag_avg'] * 1000:.0f} ms" if laggy else "")
+    if over:
+        for pool in (depo, user):                  # əvvəl depo kiçilir — istifadəçi qorunur
+            if pool.size > 1:
+                old = pool.size
+                pool.size -= 1
+                MON.event(f"{pool.label} {old}→{pool.size} ({why})")
+                break
+    elif room:
+        for pool in (user, depo):                  # əvvəl istifadəçi böyüyür
+            if pool.waiting and pool.size < pool.max_size:
+                old = pool.size
+                ram_cap = (avail - reserve) // PROC_MB if avail else step
+                grow = max(1, min(step, pool.waiting, ram_cap))
+                pool.size = min(pool.max_size, pool.size + grow)
+                pool.kick()
+                MON.event(f"{pool.label} {old}→{pool.size} ({why}, növbə {pool.waiting})")
+                break
+    for pool in (user, depo):
+        n = pool.reap_idle()
+        if n:
+            logger.info(f"🚀 {pool.label}: {n} boş proses bağlandı (RAM qaytarıldı)")
+
+
+async def _scaler():
+    while True:
+        await asyncio.sleep(SCALE_EVERY)
+        try:
+            await asyncio.to_thread(MON.sample)
+            if mode() == "process" and autoscale_on():
+                _scale_step()
+        except Exception as e:
+            logger.debug(f"avto-miqyas: {e}")
+
+
+_scaler_task = None
 
 
 # ───────────────────────── 🫀 event loop watchdog ─────────────────────────
@@ -540,8 +770,14 @@ def init(context=None):
         _started = True
         apply_threads()
         WATCHDOG.start(loop)
+        global _scaler_task
+        for pool, v in ((LANES["user"], user_procs()), (LANES["depo"], depo_procs())):
+            pool.set_max(v)
+        if _scaler_task is None or _scaler_task.done():
+            _scaler_task = loop.create_task(_scaler())
         logger.info(f"⚙️ Performans: {MODES[mode()]} · {CORES} nüvə · 👤 {user_procs()} + 📦 {depo_procs()} proses"
-                    f" · 🧵 {threads()} thread · nice +{nice()}")
+                    f" · 🧵 {threads()} thread · nice +{nice()}"
+                    + (f" · 🚀 avto-miqyas: CPU hədəfi {cpu_target()}%" if autoscale_on() else ""))
 
     try:
         asyncio.get_running_loop()

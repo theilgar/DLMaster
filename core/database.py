@@ -129,6 +129,10 @@ class Database:
             if "checked" not in cols:
                 self._conn.execute("ALTER TABLE audio_cache ADD COLUMN checked INTEGER")
             self._conn.execute("CREATE INDEX IF NOT EXISTS idx_cache_msg ON audio_cache(chat_id, message_id)")
+            try:   # cache_stats-dakı GROUP BY üçün
+                self._conn.execute("CREATE INDEX IF NOT EXISTS idx_cache_uid ON audio_cache(COALESCE(unique_id, file_id))")
+            except sqlite3.Error as e:
+                logger.debug(f"idx_cache_uid: {e}")
             self._conn.commit()
             self._settings = {
                 r["key"]: r["value"] for r in self._conn.execute("SELECT key, value FROM settings")
@@ -346,7 +350,44 @@ class Database:
             self._conn.execute("DELETE FROM audio_cache WHERE video_id=?", (video_id,))
             self._conn.commit()
 
+    CACHE_STATS_TTL = 30          # san. — bütün cədvəli GROUP BY edən ağır sorğu tez-tez işləməsin
+
     def cache_stats(self, depo_chat_id=None) -> dict:
+        """
+        Keşlənir (CACHE_STATS_TTL). Event loop thread-indən çağırılıb baza kilidi məşğuldursa
+        gözləmir — son nəticəni qaytarır (bot donmasın). Thread-dən çağırılanda normal gözləyir.
+        """
+        key = depo_chat_id or 0
+        cached = getattr(self, "_cs_cache", None)
+        if cached and cached[1] == key and time.monotonic() - cached[0] < self.CACHE_STATS_TTL:
+            return dict(cached[2])
+        try:
+            asyncio.get_running_loop()
+            on_loop = True
+        except RuntimeError:
+            on_loop = False
+        if on_loop:
+            logger.debug("cache_stats event loop-dan çağırıldı — asyncio.to_thread ilə çağırın")
+            if not self._lock.acquire(timeout=0.05):
+                return dict(cached[2]) if cached else {"songs": 0, "hits": 0, "size": 0, "in_depo": 0}
+            self._lock.release()
+            if cached:                              # köhnə də olsa dərhal qaytar, təzəsini fonda hesabla
+                loop = asyncio.get_running_loop()
+                if not getattr(self, "_cs_busy", False):
+                    self._cs_busy = True
+                    loop.run_in_executor(None, self._cache_stats_fresh, key)
+                return dict(cached[2])
+        return self._cache_stats_fresh(key)
+
+    def _cache_stats_fresh(self, key) -> dict:
+        try:
+            res = self._cache_stats_query(key)
+            self._cs_cache = (time.monotonic(), key, res)
+            return dict(res)
+        finally:
+            self._cs_busy = False
+
+    def _cache_stats_query(self, depo_chat_id) -> dict:
         # birləşdirilmiş dublikatlar eyni posta baxır — mahnı sayı/ölçü posta görə hesablanır
         with self._lock:
             row = self._conn.execute(

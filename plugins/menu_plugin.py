@@ -579,20 +579,37 @@ def perf_hub_view(note: str = ""):
         lines.append(f"     Son donma: <b>{dur:.1f} san.</b>, {_fmt_secs(ago) if ago >= 60 else f'{ago} san.'} əvvəl\n"
                      f"     <code>{escape(where[:150])}</code>")
     lines.append("━━━━━━━━━━━━━━━━━━")
-    cpu = f" · yük {snap['cpu']:.0f}%" if "cpu" in snap else ""
-    lines.append(f"💻 <b>CPU:</b> {cp.CORES} nüvə{cpu}")
+    mon = cp.MON
+    if mon.hist:
+        lines.append(f"💻 <b>CPU:</b> {cp.CORES} nüvə · {_lvl(mon.cpu)} <b>{mon.cpu:.0f}%</b> "
+                     f"<code>{_spark(mon.hist)}</code> <i>(3 dəq.)</i>")
+        lines.append(f"     🤖 bot {mon.bot_cpu:.0f}% · ⚙️ işçilər+ffmpeg {mon.work_cpu:.0f}% · "
+                     f"💾 boş RAM {mon.avail_mb / 1024:.1f}/{mon.total_mb / 1024:.1f} GB")
+    else:
+        cpu = f" · yük {snap['cpu']:.0f}%" if "cpu" in snap else ""
+        lines.append(f"💻 <b>CPU:</b> {cp.CORES} nüvə{cpu} <i>(ölçülür...)</i>")
     lines.append(f"🔧 <b>Rejim:</b> {cp.MODES[m]}")
+    scale = m == "process" and cp.autoscale_on()
+    if m == "process":
+        if scale:
+            lines.append(f"🚀 <b>Avto-miqyas:</b> ✅ hədəf CPU <b>{cp.cpu_target()}%</b> · "
+                         f"RAM ehtiyatı {cp.ram_reserve()} MB")
+            for ts, txt in list(mon.events)[-2:]:
+                lines.append(f"     <i>{time.strftime('%H:%M', time.localtime(ts))} {escape(txt)}</i>")
+        else:
+            lines.append("🚀 <b>Avto-miqyas:</b> ❌ <i>(ölçülər sabitdir)</i>")
     if m == "process":
         for pool in cp.LANES.values():
             p = pool.snapshot()
             avg = p["secs"] / p["done"] if p["done"] else 0
-            lines.append(f"{pool.label}: <b>{p['running']}/{p['size']}</b> işləyir · {p['alive']} proses açıq"
+            lim = f"{p['size']}" + (f" <i>(maks {p['max']})</i>" if scale else "")
+            lines.append(f"{pool.label}: <b>{p['running']}/{lim}</b> işləyir · {p['alive']} proses açıq"
                          + (f" · ⏳ {p['waiting']} növbədə" if p["waiting"] else "")
                          + f"\n     <i>✅ {p['done']} · ❌ {p['err']}"
                          + (f" · 💥 {p['crash']}" if p["crash"] else "")
                          + (f" · ↩️ thread {p['fallback']}" if p["fallback"] else "")
                          + (f" · orta {avg:.1f} san." if avg else "") + "</i>")
-        est = (cp.user_procs() + cp.depo_procs()) * 70
+        est = (cp.LANES["user"].size + cp.LANES["depo"].size) * 70
         lines.append(f"     <i>Hər proses ~60–80 MB RAM · maksimum ≈ {est} MB</i>")
     else:
         lines.append("     <i>yt-dlp bot ilə eyni prosesdə (GIL) — çox yükləmədə bot ləngiyə bilər</i>")
@@ -607,9 +624,19 @@ def perf_hub_view(note: str = ""):
          _btn(("✅ " if m == "thread" else "") + "🧵 Thread", "perf:mode:thread")],
     ]
     if m == "process":
+        mx = "maks " if scale else ""
         rows += [
-            [_btn("➖", "perf:u:-"), _btn(f"👤 İstifadəçi: {cp.user_procs()}", "perf:info:u"), _btn("➕", "perf:u:+")],
-            [_btn("➖", "perf:d:-"), _btn(f"📦 Depo: {cp.depo_procs()}", "perf:info:d"), _btn("➕", "perf:d:+")],
+            [_btn(f"🚀 Avto-miqyas: {'✅' if scale else '❌'}", "perf:as"), _btn("🧮 Nüvələr", "perf:cores")],
+        ]
+        if scale:
+            rows += [
+                [_btn("➖", "perf:c:-"), _btn(f"🎯 CPU hədəfi: {cp.cpu_target()}%", "perf:info:c"), _btn("➕", "perf:c:+")],
+                [_btn("➖", "perf:r:-"), _btn(f"💾 RAM ehtiyatı: {cp.ram_reserve()} MB", "perf:info:r"),
+                 _btn("➕", "perf:r:+")],
+            ]
+        rows += [
+            [_btn("➖", "perf:u:-"), _btn(f"👤 İstifadəçi {mx}{cp.user_procs()}", "perf:info:u"), _btn("➕", "perf:u:+")],
+            [_btn("➖", "perf:d:-"), _btn(f"📦 Depo {mx}{cp.depo_procs()}", "perf:info:d"), _btn("➕", "perf:d:+")],
         ]
     rows += [
         [_btn("➖", "perf:t:-"), _btn(f"🧵 Thread: {cp.threads()}", "perf:info:t"), _btn("➕", "perf:t:+")],
@@ -622,12 +649,53 @@ def perf_hub_view(note: str = ""):
     return "\n".join(lines), InlineKeyboardMarkup(inline_keyboard=rows)
 
 
+def _spark(vals, width=15) -> str:
+    vals = list(vals)[-width * 4:]
+    if not vals:
+        return ""
+    chunk = max(1, len(vals) // width)
+    pts = [sum(vals[i:i + chunk]) / len(vals[i:i + chunk]) for i in range(0, len(vals), chunk)][-width:]
+    return "".join("▁▂▃▄▅▆▇█"[min(7, int(v / 100 * 8))] for v in pts)
+
+
+def perf_cores_view():
+    from core import cpu_pool as cp
+    mon = cp.MON
+    lines = [f"🧮 <b>Nüvələr</b> — {cp.CORES} nüvə · ümumi {mon.cpu:.0f}%", ""]
+    if not mon.cores:
+        lines.append("<i>Ölçülür — bir neçə saniyə sonra 🔄 bas.</i>")
+    else:
+        rows = [f"{i:>2} {_bar(v, 8)} {v:>3.0f}%" for i, v in enumerate(mon.cores)]
+        pairs = [rows[i] + ("   " + rows[i + 1] if i + 1 < len(rows) else "") for i in range(0, len(rows), 2)] \
+            if len(rows) > 8 else rows
+        lines.append("<pre>" + escape("\n".join(pairs)) + "</pre>")
+        busy = sum(1 for v in mon.cores if v >= 80)
+        idle = sum(1 for v in mon.cores if v < 20)
+        lines.append(f"🔥 dolu (≥80%): {busy} · 💤 boş (<20%): {idle}")
+    lines.append(f"🤖 bot: {mon.bot_cpu:.0f}% · ⚙️ işçilər+ffmpeg: {mon.work_cpu:.0f}% <i>(maşının %-i)</i>")
+    try:
+        l1, l5, l15 = os.getloadavg()
+        lines.append(f"📈 load: {l1:.2f} {l5:.2f} {l15:.2f} <i>(nüvə sayından çox — növbə var)</i>")
+    except OSError:
+        pass
+    lines.append("\n<i>Boş nüvə + 📦 növbədə tapşırıq = avto-miqyas zolağı böyüdəcək.\n"
+                 "Yükləmə əsasən şəbəkədir — CPU-nu ffmpeg çevirməsi və axtarış işlədir.</i>")
+    rows = [[_btn("🔄 Yenilə", "perf:cores"), _btn("⬅️ Performans", "perf")]]
+    return "\n".join(lines), InlineKeyboardMarkup(inline_keyboard=rows)
+
+
 PERF_INFO = {
     "u": "👤 İstifadəçi zolağı: axtarış, /music, /mix, inline və istifadəçilərin yükləmələri üçün eyni anda "
          "neçə yt-dlp prosesi. Depo bunları heç vaxt gözlətmir.",
     "d": "📦 Depo zolağı: doldurucunun eyni anda neçə yükləməsi ayrıca prosesdə işləsin. Doldurucunun "
          "işçi sayından çox olmasına ehtiyac yoxdur; az olsa işçilər növbə gözləyir.",
     "t": "🧵 asyncio thread hovuzu: baza, fayl, Spotify kimi qısa bloklayan işlər üçün.",
+    "s": "🚀 Avto-miqyas: hər 3 san. CPU və RAM ölçülür. Növbədə iş varsa və CPU hədəfdən aşağıdırsa "
+         "zolaq böyüyür (👤/📦 maksimumuna qədər), hədəf aşılanda və ya RAM ehtiyatı azalanda kiçilir. "
+         "2 dəq. boş qalan artıq proseslər bağlanır.",
+    "c": "🎯 CPU hədəfi: ümumi CPU bu faizə çatana qədər yeni proseslər açılır. 100% — hamısını işlət, "
+         "80–90% — bota və sistemə nəfəs payı saxla.",
+    "r": "💾 RAM ehtiyatı: boş RAM bundan aşağı düşəndə yeni proses açılmır, zolaq kiçilir (OOM-dan qoruma).",
     "n": "🐢 nice: yt-dlp prosesləri və ffmpeg-in prioriteti (0 — eyni, 19 — ən aşağı). "
          "Yüksək dəyər botun özünü həmişə sürətli saxlayır. Yeni proseslərə tətbiq olunur — ♻️ bas.",
 }
@@ -2543,6 +2611,17 @@ def setup(context):
                 v = fn(1 if arg == "+" else -1)
                 await cb.answer({"u": f"👤 {v} proses", "d": f"📦 {v} proses", "t": f"🧵 {v} thread",
                                  "n": f"🐢 nice +{v} — ♻️ ilə bütün proseslərə"}[sub])
+            elif sub == "as":
+                on = cp.toggle_autoscale()
+                await cb.answer("🚀 Avto-miqyas " + ("açıldı" if on else "söndürüldü — ölçülər sabit"))
+            elif sub == "c" and arg in ("+", "-"):
+                await cb.answer(f"🎯 CPU hədəfi {cp.step_target(1 if arg == '+' else -1)}%")
+            elif sub == "r" and arg in ("+", "-"):
+                await cb.answer(f"💾 RAM ehtiyatı {cp.step_reserve(1 if arg == '+' else -1)} MB")
+            elif sub == "cores":
+                await cb.answer()
+                await edit(cb, *perf_cores_view())
+                return
             elif sub == "info" and arg in PERF_INFO:
                 await cb.answer(PERF_INFO[arg], show_alert=True)
                 return
@@ -2563,13 +2642,15 @@ def setup(context):
                 t = max(64, cp.CORES * 8)
                 db = get_db()
                 for k, v in ((cp.S_MODE, "process" if cp.CORES > 1 else "thread"), (cp.S_USER, u),
-                             (cp.S_DEPO, d), (cp.S_THREADS, min(t, cp.THREAD_STEPS[-1])), (cp.S_NICE, 5)):
+                             (cp.S_DEPO, d), (cp.S_THREADS, min(t, cp.THREAD_STEPS[-1])), (cp.S_NICE, 5),
+                             (cp.S_SCALE, "on")):
                     await asyncio.to_thread(db.set_setting, k, str(v))
-                cp.LANES["user"].size, cp.LANES["depo"].size = u, d
+                cp.LANES["user"].set_max(u)
+                cp.LANES["depo"].set_max(d)
                 cp.apply_threads(force=True)
                 await cb.answer("⚡ Tənzimləndi")
                 note = (f"⚡ <b>Avto-tənzimləndi:</b> {cp.CORES} nüvə, ~{free_mb:.0f} MB boş RAM → "
-                        f"👤 {u} · 📦 {d} proses · 🧵 {cp.threads()} thread · nice +5")
+                        f"👤 maks {u} · 📦 maks {d} proses · 🧵 {cp.threads()} thread · nice +5 · 🚀 avto-miqyas ✅")
             else:
                 await cb.answer()
             await edit(cb, *perf_hub_view(note))

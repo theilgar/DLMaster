@@ -15,6 +15,7 @@ from aiogram.types import (
     InlineKeyboardButton,
 )
 from aiogram.enums import ChatMemberStatus
+from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError, TelegramMigrateToChat
 from datetime import datetime, timedelta, timezone
 from html import escape
 import asyncio
@@ -42,6 +43,9 @@ ADMIN_LINK_RIGHTS = "delete_messages+pin_messages"
 
 # Eyni çatda eyni çatışmazlıq bildirişini təkrar göndərməmək üçün
 _last_notice = {}
+# Qrupda yazma yetkisi olmadığı üçün salamı şəxsidə göndərilən qruplar —
+# yetki veriləndə salam qrupun özünə də göndərilir
+_pending_welcome = set()
 
 
 async def setup(context):
@@ -447,6 +451,62 @@ async def send_group_welcome(bot: Bot, chat_id: int, text: str, keyboard):
     await send_welcome(bot, chat_id, text, keyboard)
 
 
+def no_rights_note(title: str) -> str:
+    return (
+        f"⚠️ <b>{escape(title)}</b> qrupunda mesaj yazmaq icazəm yoxdur, "
+        "ona görə bu mesajı sənə göndərirəm.\n"
+        "<i>Qrupda işləməyim üçün mənə yazmaq icazəsi və ya admin yetkisi verin.</i>\n\n"
+    )
+
+
+async def deliver(bot: Bot, chat, user, text: str, keyboard=None, *,
+                  welcome: bool = True, reply_to: int = None) -> str:
+    """
+    Mesajı qrupa göndərir. Qrupda yazmaq icazəsi yoxdursa (Forbidden / BadRequest)
+    eyni mesajı `user`-ə (botu əlavə edənə / komandanı yazana) şəxsidə göndərir.
+    Qaytarır: "group" | "private" | "failed"
+    """
+    async def to_chat(cid, rt):
+        if welcome:
+            await send_welcome(bot, cid, text, keyboard, reply_to=rt)
+        else:
+            kw = {"reply_to_message_id": rt, "allow_sending_without_reply": True} if rt else {}
+            await bot.send_message(cid, text, parse_mode="HTML", reply_markup=keyboard,
+                                   disable_web_page_preview=True, **kw)
+
+    try:
+        try:
+            await to_chat(chat.id, reply_to)
+        except TelegramMigrateToChat as e:
+            # Botu admin edəndə adi qrup supergroup-a çevrilir → chat_id dəyişir
+            logger.info(f"↪️ Qrup supergroup-a çevrilib: {chat.id} → {e.migrate_to_chat_id}")
+            await to_chat(e.migrate_to_chat_id, None)
+        return "group"
+    except (TelegramForbiddenError, TelegramBadRequest) as e:
+        logger.warning(f"⚠️ Qrupa yazmaq olmadı ({chat.title} | {chat.id}): {e}")
+    except Exception as e:
+        logger.error(f"❌ Qrupa göndərmə xətası ({chat.id}): {e}")
+        return "failed"
+
+    if not user or user.is_bot:
+        return "failed"
+    try:
+        note = no_rights_note(chat.title or "qrup")
+        if welcome:
+            await send_welcome(bot, user.id, note + text, keyboard)
+        else:
+            await bot.send_message(user.id, note + text, parse_mode="HTML", reply_markup=keyboard,
+                                   disable_web_page_preview=True)
+        logger.info(f"📩 Qrup mesajı şəxsidə göndərildi: {user.id} ({chat.title})")
+        return "private"
+    except TelegramForbiddenError:
+        # İstifadəçi botu heç vaxt /start etməyibsə və ya bloklayıbsa bot ona ilk yaza bilməz
+        logger.warning(f"⚠️ {user.id} botu start etməyib/bloklayıb — şəxsiyə də yazmaq olmadı")
+    except Exception as e:
+        logger.error(f"❌ Şəxsiyə göndərmə xətası ({user.id}): {e}")
+    return "failed"
+
+
 async def send_start_message(message: types.Message, text: str, bot: Bot):
     try:
         bot_username = (await bot.me()).username
@@ -475,10 +535,11 @@ async def start_command(message: types.Message):
             logger.error(f"Yetki yoxlanışı xətası: {e}")
             username = (await bot.me()).username
             rights = {key: False for key, _ in REQUIRED_RIGHTS}
-        await message.reply(
+        await deliver(
+            bot, message.chat, message.from_user,
             build_group_text(message.chat.title or "qrup", username, rights),
-            parse_mode="HTML",
-            reply_markup=rights_keyboard(username, rights),
+            rights_keyboard(username, rights),
+            welcome=False, reply_to=message.message_id,
         )
 
 
@@ -497,13 +558,15 @@ async def on_bot_added(event: ChatMemberUpdated, bot: Bot):
         rights = rights_status(event.new_chat_member)
         adder = event.from_user.mention_html() if event.from_user else None
 
-        await send_group_welcome(
-            bot, event.chat.id,
+        result = await deliver(
+            bot, event.chat, event.from_user,
             build_group_text(event.chat.title or "qrup", username, rights, adder_html=adder),
             rights_keyboard(username, rights),
         )
         _last_notice[event.chat.id] = missing_keys(rights)
-        logger.info(f"✅ Qrup salam mesajı göndərildi: {event.chat.title}")
+        if result == "private":
+            _pending_welcome.add(event.chat.id)
+        logger.info(f"✅ Qrup salam mesajı: {result} | {event.chat.title}")
 
     except Exception as e:
         logger.error(f"❌ Qrup salam mesajı göndərilmədi: {str(e)}")
@@ -512,6 +575,7 @@ async def on_bot_added(event: ChatMemberUpdated, bot: Bot):
 
 @router.my_chat_member(ChatMemberUpdatedFilter((MEMBER | RESTRICTED) >> ADMINISTRATOR))
 @router.my_chat_member(ChatMemberUpdatedFilter(ADMINISTRATOR >> ADMINISTRATOR))
+@router.my_chat_member(ChatMemberUpdatedFilter(RESTRICTED >> MEMBER))
 async def on_bot_rights_changed(event: ChatMemberUpdated, bot: Bot):
     """Bot admin edildikdə və ya yetkiləri dəyişdikdə: çatışmayanları bildirir / təşəkkür edir."""
     if event.chat.type not in ["group", "supergroup"]:
@@ -521,6 +585,19 @@ async def on_bot_rights_changed(event: ChatMemberUpdated, bot: Bot):
         username = (await bot.me()).username
         rights = rights_status(event.new_chat_member)
         missing = missing_keys(rights)
+
+        # Salam əvvəl yetki olmadığı üçün şəxsidə göndərilmişdisə — indi qrupun özünə göndər
+        if event.chat.id in _pending_welcome:
+            result = await deliver(
+                bot, event.chat, None,
+                build_group_text(event.chat.title or "qrup", username, rights),
+                rights_keyboard(username, rights),
+            )
+            if result == "group":
+                _pending_welcome.discard(event.chat.id)
+                _last_notice[event.chat.id] = missing
+                logger.info(f"✅ Gecikmiş qrup salamı göndərildi: {event.chat.title}")
+                return
 
         # Eyni vəziyyəti təkrar bildirmə
         if _last_notice.get(event.chat.id) == missing:
@@ -543,8 +620,8 @@ async def on_bot_rights_changed(event: ChatMemberUpdated, bot: Bot):
                 [InlineKeyboardButton(text="🛡 Yetkiləri ver", url=admin_request_url(username))],
             ])
 
-        await bot.send_message(chat_id=event.chat.id, text=text, parse_mode="HTML", reply_markup=keyboard)
-        logger.info(f"🔐 Yetki bildirişi göndərildi: {event.chat.title} | çatışmayan: {missing}")
+        result = await deliver(bot, event.chat, event.from_user, text, keyboard, welcome=False)
+        logger.info(f"🔐 Yetki bildirişi ({result}): {event.chat.title} | çatışmayan: {missing}")
 
     except Exception as e:
         logger.error(f"❌ Yetki bildirişi göndərilmədi: {e}")

@@ -20,10 +20,17 @@ müqayisə olunur. Dəyişiklik varsa creator-a:
   5) ☑️ Seçərək göndər — hansı faylların gedəcəyini özün seçirsən (fayl və ya qovluq üzrə).
   6) ⚙️ GitHub Quraşdırma Paneli — repo yoxdursa başlatmaq, remote URL, token və müəllif
      məlumatlarını birbaşa Telegram interfeysindən daxil etmək.
+  7) ⬇️ GitHub-dan yeniləmə — `git fetch` ilə GitHub-dakı yeni commit-ləri yoxlayır, gələn
+     commit və faylları göstərir, pull (fast-forward / rebase / stash) edir, sintaksisi yoxlayır,
+     lazım olsa pip install, ⏪ geri qaytarma və 🔁 botu yenidən başlatma.
+     Fonda hər GITHUB_CHECK_INTERVAL dəqiqədən bir yoxlanır və yeni commit varsa creator-a yazır.
 
 GitHub ayarları (verilənlər bazasında və ya config.env-də):
   GITHUB_REMOTE=origin          push ediləcək remote (default: origin)
   GITHUB_TOKEN=ghp_...          HTTPS remote üçün token
+  GITHUB_CHECK_INTERVAL=60      GitHub-dan avtomatik yoxlama intervalı, dəqiqə (0 = söndür)
+  BOT_RESTART=exec              exec = prosesi yerində yenidən başlat, exit = çıx (systemd/docker qaldırır)
+  BOT_RESTART_EXIT_CODE=1       BOT_RESTART=exit olanda çıxış kodu
 """
 import ast
 import asyncio
@@ -38,6 +45,7 @@ import platform
 import re
 import shutil
 import subprocess
+import sys
 import time
 from datetime import datetime, timedelta, timezone
 from html import escape
@@ -536,6 +544,268 @@ def push_update(root: Path, paths: list, message: str) -> dict:
     others = [l for l in git(root, "status", "--porcelain")[1].splitlines() if l.strip()]
     res["others"] = len(others)
     return res
+
+
+# ───────────────────────── GitHub-dan yeniləmə (fetch + pull) ─────────────────────────
+DEP_FILES = {"requirements.txt", "requirements-dev.txt", "pyproject.toml", "setup.py", "setup.cfg"}
+MAX_COMMITS = 10
+MAX_INCOMING_FILES = 12
+KIND_BY_CODE = {"A": "new", "C": "new", "D": "deleted", "R": "renamed"}
+
+
+def git_ident(root: Path) -> list:
+    """Repoda müəllif yoxdursa stash/rebase üçün müvəqqəti müəllif."""
+    ident = []
+    if not git(root, "config", "user.name")[1]:
+        ident += ["-c", "user.name=DLLMaster Bot"]
+    if not git(root, "config", "user.email")[1]:
+        ident += ["-c", "user.email=bot@dllmaster.local"]
+    return ident
+
+
+def upstream_ref(root: Path):
+    """Cari branch-ın izlədiyi uzaq branch (məs. origin/main). Upstream qurulmayıbsa remote/branch."""
+    rc, up, _ = git(root, "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}")
+    if rc == 0 and up:
+        return up
+    rc, branch, _ = git(root, "rev-parse", "--abbrev-ref", "HEAD")
+    if rc != 0 or branch == "HEAD":
+        return None
+    ref = f"{os.getenv('GITHUB_REMOTE', 'origin')}/{branch}"
+    if git(root, "rev-parse", "--verify", "--quiet", f"refs/remotes/{ref}")[0] == 0:
+        return ref
+    return None
+
+
+def dirty_paths(root: Path) -> set:
+    changes, excluded = working_changes(root)
+    return {p for _, p in changes + excluded}
+
+
+def parse_name_status(out: str) -> list:
+    """`git diff --name-status -z` çıxışı → [(kind, path, old_path)]"""
+    items, res, i = out.split("\0"), [], 0
+    while i < len(items):
+        status = items[i]
+        i += 1
+        if not status:
+            continue
+        code = status[0]
+        if code in "RC" and i + 1 < len(items):
+            old, new = items[i], items[i + 1]
+            i += 2
+            res.append((KIND_BY_CODE[code], new, old if code == "R" else None))
+        elif i < len(items):
+            res.append((KIND_BY_CODE.get(code, "modified"), items[i], None))
+            i += 1
+    return res
+
+
+def syntax_errors(root: Path, paths) -> list:
+    errors = []
+    for p in paths:
+        f = root / p
+        if not p.endswith(".py") or not f.is_file():
+            continue
+        try:
+            ast.parse(f.read_text(encoding="utf-8", errors="replace"), filename=p)
+        except SyntaxError as e:
+            errors.append((p, f"{e.msg} (sətir {e.lineno})"))
+    return errors
+
+
+def remote_updates(root: Path, fetch: bool = True) -> dict:
+    """GitHub-da lokalda olmayan commit-ləri, gələn faylları və mümkün toqquşmaları tapır."""
+    info = {"ok": False, "error": "", "hint": "", "behind": 0, "ahead": 0,
+            "commits": [], "files": [], "conflicts": [], "deps": [], "plus": 0, "minus": 0}
+    if git(root, "rev-parse", "--is-inside-work-tree")[0] != 0:
+        info["error"] = "Layihə git repo deyil."
+        info["hint"] = "<b>⚙️ Quraşdırma</b> panelindən reponu başladın və Remote URL əlavə edin."
+        return info
+    remote = os.getenv("GITHUB_REMOTE", "origin")
+    rc, url, _ = git(root, "remote", "get-url", remote)
+    if rc != 0:
+        info["error"] = f"'{remote}' remote-u tapılmadı."
+        info["hint"] = "<b>⚙️ Quraşdırma</b> panelindən Remote URL əlavə edin."
+        return info
+    info["web"] = github_web_url(url)
+
+    if fetch:
+        rc, _, err = git(root, "fetch", "--prune", remote, timeout=60, auth=True)
+        if rc != 0:
+            info["error"] = f"git fetch:\n{short_error(err)}"
+            info["hint"] = push_hint(err)
+            return info
+
+    up = upstream_ref(root)
+    if not up:
+        info["error"] = "Uzaq branch tapılmadı."
+        info["hint"] = "GitHub-da bu adda branch yoxdur — əvvəlcə bir dəfə push edin."
+        return info
+    info["upstream"] = up
+    info["branch"] = git(root, "rev-parse", "--abbrev-ref", "HEAD")[1]
+    info["head"] = git(root, "rev-parse", "HEAD")[1]
+    info["remote_head"] = git(root, "rev-parse", up)[1]
+
+    rc, counts, _ = git(root, "rev-list", "--left-right", "--count", f"{up}...HEAD")
+    if rc == 0 and counts:
+        info["behind"], info["ahead"] = (int(x) for x in counts.split())
+
+    if info["behind"]:
+        _, log, _ = git(root, "log", f"-n{MAX_COMMITS}", "--format=%h%x1f%an%x1f%ct%x1f%s", f"HEAD..{up}")
+        for line in log.splitlines():
+            parts = line.split("\x1f")
+            if len(parts) == 4:
+                info["commits"].append({"hash": parts[0], "author": parts[1],
+                                        "ts": int(parts[2]), "subject": parts[3]})
+        _, out, _ = git(root, "diff", "--name-status", "-z", f"HEAD...{up}", raw=True)
+        info["files"] = parse_name_status(out)
+        _, num, _ = git(root, "diff", "--numstat", f"HEAD...{up}")
+        for line in num.splitlines():
+            a, b = (line.split("\t") + ["", ""])[:2]
+            info["plus"] += int(a) if a.isdigit() else 0
+            info["minus"] += int(b) if b.isdigit() else 0
+        incoming = {p for _, p, _ in info["files"]} | {o for _, _, o in info["files"] if o}
+        info["conflicts"] = sorted(dirty_paths(root) & incoming)
+        info["deps"] = sorted(p for p in incoming if Path(p).name in DEP_FILES)
+
+    info["ok"] = True
+    return info
+
+
+def pull_from_github(root: Path, stash: bool = False, rebase: bool = False) -> dict:
+    """Artıq fetch edilmiş uzaq branch-ı tətbiq edir (ff-only və ya rebase, istəyə görə stash)."""
+    res = {"ok": False, "error": "", "hint": "", "stashed": False}
+    up = upstream_ref(root)
+    if not up:
+        res["error"] = "Uzaq branch tapılmadı."
+        return res
+    old = git(root, "rev-parse", "HEAD")[1]
+    res["old"] = old
+    ident = git_ident(root)
+
+    def fail(error: str, hint: str = "") -> dict:
+        if res["stashed"]:
+            rc, _, err = git(root, "stash", "pop")
+            if rc != 0:
+                hint += ("\n" if hint else "") + "Stash geri qaytarılmadı, serverdə <code>git stash list</code> yoxlayın."
+        res.update(error=error, hint=hint)
+        return res
+
+    if stash:
+        label = f"dllmaster-autostash {datetime.now(get_tz()).strftime('%d.%m.%Y %H:%M')}"
+        rc, out, err = git(root, *ident, "stash", "push", "-u", "-m", label)
+        if rc != 0:
+            return fail(f"git stash:\n{short_error(err)}")
+        res["stashed"] = "No local changes" not in out
+
+    if rebase:
+        rc, _, err = git(root, *ident, "rebase", up, timeout=120)
+        if rc != 0:
+            git(root, "rebase", "--abort")
+            return fail(f"git rebase:\n{short_error(err)}",
+                        "Konflikt var — rebase ləğv edildi. Serverdə əl ilə həll etmək lazımdır.")
+    else:
+        rc, _, err = git(root, "merge", "--ff-only", up, timeout=120)
+        if rc != 0:
+            e = err.lower()
+            hint = ""
+            if "would be overwritten" in e or "untracked working tree" in e:
+                hint = "Lokal dəyişikliklər gələn fayllarla toqquşur — <b>🗄 Stash et və yenilə</b> seçin."
+            elif "fast-forward" in e or "diverg" in e:
+                hint = "Lokal və GitHub tarixçəsi ayrılıb — <b>🔀 Rebase edib yenilə</b> seçin."
+            return fail(f"git merge:\n{short_error(err)}", hint)
+
+    new = git(root, "rev-parse", "HEAD")[1]
+    _, names, _ = git(root, "diff", "--name-only", "-z", old, new, raw=True)
+    changed = [p for p in names.split("\0") if p]
+    count = git(root, "rev-list", "--count", f"{old}..{up}")[1]
+    res.update(
+        ok=True, new=new, files=changed,
+        count=int(count) if count.isdigit() else 0,
+        errors=syntax_errors(root, changed),
+        deps=sorted(p for p in changed if Path(p).name in DEP_FILES),
+    )
+    if res["stashed"]:
+        res["stash_ref"] = git(root, "stash", "list", "-n1", "--format=%gd")[1] or "stash@{0}"
+    return res
+
+
+def rollback_pull(root: Path, old: str, new: str) -> dict:
+    if git(root, "rev-parse", "HEAD")[1] != new:
+        return {"ok": False, "error": "HEAD artıq dəyişib — avtomatik geri qaytarmaq təhlükəlidir."}
+    rc, _, err = git(root, "reset", "--keep", old)
+    if rc != 0:
+        return {"ok": False, "error": f"git reset:\n{short_error(err)}"}
+    return {"ok": True}
+
+
+def install_requirements(root: Path):
+    req = root / "requirements.txt"
+    if not req.is_file():
+        return False, "requirements.txt tapılmadı"
+    try:
+        r = subprocess.run([sys.executable, "-m", "pip", "install", "-r", str(req)],
+                           capture_output=True, text=True, timeout=900)
+    except subprocess.TimeoutExpired:
+        return False, "pip: vaxt bitdi (15 dəq.)"
+    out = (r.stdout + "\n" + r.stderr).strip()
+    return r.returncode == 0, "\n".join(out.splitlines()[-8:])[-800:]
+
+
+def restart_process():
+    for h in logging.getLogger().handlers:
+        try:
+            h.flush()
+        except Exception:
+            pass
+    if os.getenv("BOT_RESTART", "exec").lower() == "exit":
+        os._exit(int(os.getenv("BOT_RESTART_EXIT_CODE", "1")))
+    os.execv(sys.executable, [sys.executable, *sys.argv])
+
+
+def incoming_text(info: dict, compact: bool = False) -> str:
+    lines = [f"🌿 <code>{escape(info.get('branch') or '—')}</code> ← <code>{escape(info.get('upstream') or '—')}</code>"]
+    if not info["behind"]:
+        lines.append("\n✅ <b>Bot ən son versiyadadır.</b>")
+        if info["ahead"]:
+            lines.append(f"⬆️ <i>Lokalda GitHub-a göndərilməmiş {info['ahead']} commit var.</i>")
+        return "\n".join(lines)
+
+    lines.append(f"\n🆕 <b>GitHub-da {info['behind']} yeni commit</b> · 📃 <b>+{info['plus']}</b> / <b>−{info['minus']}</b>")
+    web = info.get("web")
+    commits = info["commits"][:3] if compact else info["commits"]
+    for c in commits:
+        h = f'<a href="{web}/commit/{c["hash"]}">{c["hash"]}</a>' if web else f"<code>{c['hash']}</code>"
+        lines.append(f"• {h} {escape(c['subject'][:70])} — <i>{escape(c['author'])}, {fmt_time(c['ts'])}</i>")
+    if info["behind"] > len(commits):
+        lines.append(f"<i>… və daha {info['behind'] - len(commits)} commit</i>")
+
+    files = info["files"]
+    if files:
+        counts = {}
+        for kind, _, _ in files:
+            counts[kind] = counts.get(kind, 0) + 1
+        summary = " · ".join(f"{STATUS_ICONS[k]} {v}" for k, v in counts.items())
+        lines.append(f"\n📁 <b>Fayllar:</b> {len(files)} ({summary})")
+        if not compact:
+            for kind, path, old in files[:MAX_INCOMING_FILES]:
+                extra = f" ← <code>{escape(old)}</code>" if old else ""
+                lines.append(f"   {STATUS_ICONS[kind]} {kind_icon(path)} <code>{escape(path)}</code>{extra}")
+            if len(files) > MAX_INCOMING_FILES:
+                lines.append(f"   <i>… və daha {len(files) - MAX_INCOMING_FILES} fayl</i>")
+
+    if info["deps"]:
+        lines.append("\n📦 Asılılıqlar dəyişir: " + ", ".join(f"<code>{escape(p)}</code>" for p in info["deps"]))
+    if info["ahead"]:
+        lines.append(f"\n🔀 <b>Tarixçə ayrılıb:</b> lokalda GitHub-da olmayan {info['ahead']} commit var — rebase lazımdır.")
+    if info["conflicts"]:
+        lines.append(f"\n⚠️ <b>Lokal dəyişikliklərlə toqquşur ({len(info['conflicts'])}):</b>")
+        lines += [f"   ✏️ <code>{escape(p)}</code>" for p in info["conflicts"][:6]]
+        if len(info["conflicts"]) > 6:
+            lines.append(f"   <i>… və daha {len(info['conflicts']) - 6}</i>")
+        lines.append("<i>Yeniləmək üçün lokal dəyişikliklər stash-ə qoyulacaq.</i>")
+    return "\n".join(lines)
 
 
 # ───────────────────────── Full update & dəyişikliklər ─────────────────────────
@@ -1247,6 +1517,9 @@ def setup(context):
         if info.get("changes") or info.get("excluded"):
             kb.append([btn("☑️ Seçərək göndər", "ghf:pick")])
         kb.append([btn("🔄 Yenilə", "ghf:open"), btn("📡 GitHub-la yoxla", "ghf:fetch")])
+        if info.get("remote_url"):
+            behind = f" ({info['behind']})" if info.get("behind") else ""
+            kb.append([btn(f"⬇️ GitHub-dan yenilə{behind}", "ghu:check")])
         kb.append([btn("⚙️ GitHub Quraşdırma / Ayarlar", "ghs:menu")])
         kb.append(nav("menu:sys"))
         return "\n".join(lines), InlineKeyboardMarkup(inline_keyboard=kb)
@@ -1543,6 +1816,213 @@ def setup(context):
 
         await cb.answer()
 
+    # ═════════════ ⬇️ GitHub-dan yeniləmə (ghu:) ═════════════
+    def load_json(key):
+        try:
+            return json.loads(get_db().get_setting(key) or "null")
+        except ValueError:
+            return None
+
+    def save_json(key, value):
+        get_db().set_setting(key, json.dumps(value) if value else None)
+
+    async def edit_msg(msg, text: str, kb):
+        try:
+            await msg.edit_text(text, parse_mode="HTML", reply_markup=kb, disable_web_page_preview=True)
+        except Exception as e:
+            if "not modified" not in str(e):
+                logger.warning(f"Yeniləmə paneli yenilənmədi: {e}")
+
+    async def restart_btn(label: str = "🔁 Botu yenidən başlat"):
+        # birdəfəlik açar: restartdan sonra eyni callback təkrar gəlsə, bot ikinci dəfə restart olmasın
+        nonce = os.urandom(4).hex()
+        await asyncio.to_thread(get_db().set_setting, "gh_restart_nonce", nonce)
+        return btn(label, f"ghu:restart:{nonce}")
+
+    def updates_kb(info: dict) -> InlineKeyboardMarkup:
+        kb = []
+        if info.get("ok") and info.get("behind"):
+            mode = ("s" if info["conflicts"] else "") + ("r" if info["ahead"] else "f")
+            label = {"f": "⬇️ Yenilə (pull)", "r": "🔀 Rebase edib yenilə",
+                     "sf": "🗄 Stash et və yenilə", "sr": "🗄 Stash + rebase edib yenilə"}[mode]
+            kb.append([btn(label, f"ghu:pull:{mode}")])
+        row = [btn("🔄 Yenidən yoxla", "ghu:check")]
+        if info.get("ok") and info.get("behind") and info.get("web"):
+            row.append(btn("🔗 Müqayisə", url=f"{info['web']}/compare/{info['head']}...{info['remote_head']}"))
+        kb.append(row)
+        if not info.get("ok"):
+            kb.append([btn("⚙️ GitHub Quraşdırma", "ghs:menu")])
+        kb.append(nav("ghf:open"))
+        return InlineKeyboardMarkup(inline_keyboard=kb)
+
+    async def updates_view(fetch: bool = True):
+        if push_lock.locked():
+            return ("⏳ <i>Başqa git əməliyyatı gedir, bir az sonra yenidən yoxlayın.</i>",
+                    InlineKeyboardMarkup(inline_keyboard=[[btn("🔄 Yenidən yoxla", "ghu:check")], nav("ghf:open")]))
+        async with push_lock:
+            info = await asyncio.to_thread(remote_updates, root, fetch)
+        head = "⬇️ <b>GitHub yeniləmələri</b>\n\n"
+        if not info["ok"]:
+            hint = f"\n\n💡 {info['hint']}" if info.get("hint") else ""
+            return head + f"❌ <code>{escape(info['error'])}</code>{hint}", updates_kb(info)
+        return (head + incoming_text(info))[:4000], updates_kb(info)
+
+    async def pull_result_view(res: dict, title: str, allow_rollback: bool = True):
+        lines = [title,
+                 f"🌿 <code>{escape(res['old'][:7])}</code> → <code>{escape(res['new'][:7])}</code>"
+                 + (f" · {res['count']} commit" if res.get("count") else ""),
+                 f"📁 {len(res.get('files', []))} fayl dəyişdi"]
+        if res.get("stashed"):
+            lines.append(f"🗄 Lokal dəyişikliklər saxlanıldı: <code>{escape(res.get('stash_ref', ''))}</code>\n"
+                         "   <i>Geri qaytarmaq üçün serverdə:</i> <code>git stash pop</code>")
+        if res.get("deps"):
+            lines.append("📦 Asılılıqlar dəyişib: " + ", ".join(f"<code>{escape(p)}</code>" for p in res["deps"]))
+        if res.get("errors"):
+            lines.append("\n🚨 <b>Sintaksis xətaları — yenidən başlatmaq tövsiyə olunmur:</b>")
+            lines += [f"❌ <code>{escape(p)}</code> — <i>{escape(e)}</i>" for p, e in res["errors"][:8]]
+        lines.append("\nℹ️ <i>Yeni kod bot yenidən başlayandan sonra işə düşəcək.</i>")
+        kb = [[await restart_btn("⚠️ Yenə də yenidən başlat" if res.get("errors") else "🔁 Botu yenidən başlat")]]
+        if "requirements.txt" in {Path(p).name for p in res.get("deps", [])}:
+            kb.append([btn("📦 pip install -r requirements.txt", "ghu:pip")])
+        if allow_rollback:
+            kb.append([btn("⏪ Geri qaytar", "ghu:rollback")])
+        kb.append(nav("ghf:open"))
+        return "\n".join(lines)[:4000], InlineKeyboardMarkup(inline_keyboard=kb)
+
+    @dp.callback_query(F.data.startswith("ghu:"))
+    async def gh_update_callback(cb: CallbackQuery):
+        if cb.from_user.id != creator:
+            await cb.answer("⛔ İcazə yoxdur", show_alert=True)
+            return
+        parts = cb.data.split(":")
+        action = parts[1]
+
+        if action == "check":
+            await cb.answer("GitHub yoxlanılır...")
+            await edit_msg(cb.message, "⏳ <i>GitHub yoxlanılır...</i>", None)
+            text, kb = await updates_view(fetch=True)
+            await edit_msg(cb.message, text, kb)
+            return
+
+        if action == "mute":
+            await cb.answer("Bu yeniləmə üçün bir daha xatırladılmayacaq")
+            try:
+                await cb.message.edit_reply_markup(reply_markup=None)
+            except Exception:
+                pass
+            return
+
+        if action in ("pull", "rollback", "pip") and push_lock.locked():
+            await cb.answer("Başqa git əməliyyatı gedir...", show_alert=True)
+            return
+
+        if action == "pull":
+            mode = parts[2] if len(parts) > 2 else "f"
+            await cb.answer("Yenilənir...")
+            async with push_lock:
+                await edit_msg(cb.message, "⏳ <i>GitHub-dan yenilənir...</i>", None)
+                try:
+                    res = await asyncio.to_thread(pull_from_github, root, "s" in mode, "r" in mode)
+                except Exception as e:
+                    logger.error(f"GitHub pull xətası: {e}", exc_info=True)
+                    res = {"ok": False, "error": redact(str(e)), "hint": ""}
+            if res["ok"]:
+                await asyncio.to_thread(save_json, "gh_pull_last", {"old": res["old"], "new": res["new"]})
+                await asyncio.to_thread(save_json, "gh_pulled",
+                                        {"from": res["old"][:7], "to": res["new"][:7], "n": res.get("count", 0)})
+                text, kb = await pull_result_view(res, "✅ <b>GitHub-dan yeniləndi</b>")
+                logger.info(f"⬇️ GitHub pull: {res['old'][:7]} → {res['new'][:7]} ({len(res['files'])} fayl)")
+            else:
+                hint = f"\n\n💡 {res['hint']}" if res.get("hint") else ""
+                text = f"❌ <b>Yenilənmədi</b>\n\n<code>{escape(res['error'])}</code>{hint}"
+                kb = InlineKeyboardMarkup(inline_keyboard=[
+                    [btn("🔄 Yenidən yoxla", "ghu:check")], [btn("⚙️ GitHub Quraşdırma", "ghs:menu")], nav("ghf:open")])
+            await edit_msg(cb.message, text, kb)
+            return
+
+        if action == "rollback":
+            last = await asyncio.to_thread(load_json, "gh_pull_last")
+            if not last:
+                await cb.answer("Geri qaytarılacaq yeniləmə yoxdur", show_alert=True)
+                return
+            async with push_lock:
+                res = await asyncio.to_thread(rollback_pull, root, last["old"], last["new"])
+            if not res["ok"]:
+                await cb.answer(res["error"][:190], show_alert=True)
+                return
+            await cb.answer("Geri qaytarıldı")
+            await asyncio.to_thread(save_json, "gh_pull_last", None)
+            await asyncio.to_thread(save_json, "gh_pulled",
+                                    {"from": last["new"][:7], "to": last["old"][:7], "rollback": True})
+            changed = await asyncio.to_thread(
+                lambda: [p for p in git(root, "diff", "--name-only", "-z", last["old"], last["new"], raw=True)[1]
+                         .split("\0") if p])
+            text, kb = await pull_result_view(
+                {"old": last["new"], "new": last["old"], "files": changed},
+                "⏪ <b>Əvvəlki versiyaya qaytarıldı</b>", allow_rollback=False)
+            await edit_msg(cb.message, text, kb)
+            return
+
+        if action == "pip":
+            await cb.answer("Quraşdırılır...")
+            async with push_lock:
+                await edit_msg(cb.message, "⏳ <i>pip install -r requirements.txt ...</i>", None)
+                ok, out = await asyncio.to_thread(install_requirements, root)
+            text = ("✅ <b>Asılılıqlar quraşdırıldı</b>" if ok else "❌ <b>pip xətası</b>") + \
+                f"\n\n<pre>{escape(redact(out))}</pre>"
+            kb = InlineKeyboardMarkup(inline_keyboard=[[await restart_btn()], nav("ghf:open")])
+            await edit_msg(cb.message, text, kb)
+            return
+
+        if action == "restart":
+            nonce = parts[2] if len(parts) > 2 else ""
+            stored = await asyncio.to_thread(get_db().get_setting, "gh_restart_nonce")
+            if not nonce or stored != nonce:
+                await cb.answer("Bu düymə köhnəlib", show_alert=True)
+                return
+            await asyncio.to_thread(get_db().set_setting, "gh_restart_nonce", None)
+            await cb.answer("Yenidən başladılır...")
+            await edit_msg(cb.message, "🔁 <b>Bot yenidən başladılır...</b>\n"
+                                       "<i>Bir neçə saniyəyə yeniləmə hesabatı gələcək.</i>", None)
+            logger.info("🔁 Creator əmri ilə bot yenidən başladılır")
+            await asyncio.sleep(2)  # polling callback-i təsdiqləsin
+            restart_process()
+            return
+
+        await cb.answer()
+
+    async def periodic_remote_check():
+        try:
+            minutes = float(os.getenv("GITHUB_CHECK_INTERVAL", "60"))
+        except ValueError:
+            minutes = 60
+        if minutes <= 0 or not creator:
+            return
+        await asyncio.sleep(DELAY_AFTER_START + 60)
+        while True:
+            try:
+                if not push_lock.locked():
+                    async with push_lock:
+                        info = await asyncio.to_thread(remote_updates, root, True)
+                    if info["ok"] and info["behind"]:
+                        seen = await asyncio.to_thread(get_db().get_setting, "gh_notified_remote")
+                        if seen != info["remote_head"]:
+                            text = "🔔 <b>GitHub-da yeniləmə var</b>\n\n" + incoming_text(info, compact=True)
+                            kb = InlineKeyboardMarkup(inline_keyboard=[
+                                [btn("⬇️ Bax və yenilə", "ghu:check")],
+                                [btn("🔕 Bu dəfəlik keç", "ghu:mute")],
+                            ])
+                            await bot.send_message(creator, text[:4000], parse_mode="HTML",
+                                                   reply_markup=kb, disable_web_page_preview=True)
+                            await asyncio.to_thread(get_db().set_setting, "gh_notified_remote", info["remote_head"])
+                    elif not info["ok"]:
+                        logger.debug(f"GitHub yoxlaması: {info['error']}")
+            except asyncio.CancelledError:
+                raise
+            except Exception as e:
+                logger.warning(f"GitHub avtomatik yoxlama xətası: {e}")
+            await asyncio.sleep(minutes * 60)
+
     # ═════════════ başlanğıcda yeniləmə yoxlanışı ═════════════
     async def check_updates():
         await asyncio.sleep(DELAY_AFTER_START)
@@ -1567,6 +2047,14 @@ def setup(context):
             env_old = {}
         git_old = db.get_setting("update_git_head")
         env = env_lines(env_old, env_new, git_data, git_old, ram_mb())
+        pulled = await asyncio.to_thread(load_json, "gh_pulled")
+        if pulled:
+            if pulled.get("rollback"):
+                env.insert(0, f"⏪ GitHub yeniləməsi geri qaytarılıb: <code>{escape(pulled['from'])}</code> → "
+                              f"<code>{escape(pulled['to'])}</code>")
+            else:
+                env.insert(0, f"⬇️ GitHub-dan çəkildi: <code>{escape(pulled['from'])}</code> → "
+                              f"<code>{escape(pulled['to'])}</code> ({pulled.get('n', 0)} commit)")
 
         plugin_status = getattr(context, "plugin_status", {}) or {}
         failed = any(v != "ok" for v in plugin_status.values())
@@ -1603,13 +2091,22 @@ def setup(context):
                     if prev:
                         for k in files:
                             files[k] = sorted(set(files[k]) | set(prev["files"].get(k, [])))
-                    pending = {"id": str(int(started)), "files": files,
-                               "message": default_commit_message(files, started), "prev": prev}
+                    # GitHub-dan çəkilmiş (artıq commit-də olan) fayllar göndərmə siyahısına düşmür
+                    dirty = await asyncio.to_thread(dirty_paths, root)
+                    files = {k: [p for p in v if p in dirty] for k, v in files.items()}
+                    if any(files.values()):
+                        pending = {"id": str(int(started)), "files": files,
+                                   "message": default_commit_message(files, started), "prev": prev}
+                    elif prev:
+                        await asyncio.to_thread(save_pending, None)
+                        await set_report_kb(prev, status_kb("✔️ Göndəriləcək dəyişiklik qalmadı"))
             elif env_changed:
                 text = "🔄 <b>Kod dəyişməyib, amma mühit yeniləndi</b>\n" \
                        f"🕒 {fmt_time(started)}\n\n" + "\n".join(env)
             elif failed:
                 text = build_failure_only(plugin_status, started)
+            elif pulled:
+                text = "🔄 <b>Bot yenidən başladı</b>\n" f"🕒 {fmt_time(started)}\n\n" + "\n".join(env)
             else:
                 logger.info("Kodda dəyişiklik yoxdur, yeniləmə bildirişi göndərilmir")
                 return
@@ -1640,6 +2137,9 @@ def setup(context):
         await asyncio.to_thread(db.set_setting, "update_env", json.dumps(env_new))
         if git_data:
             await asyncio.to_thread(db.set_setting, "update_git_head", git_data["hash"])
+        if pulled:
+            await asyncio.to_thread(save_json, "gh_pulled", None)
         logger.info("✅ Yeniləmə bildirişi göndərildi")
 
     context.update_check_task = asyncio.create_task(check_updates())
+    context.remote_check_task = asyncio.create_task(periodic_remote_check())

@@ -1176,8 +1176,25 @@ def setup(context):
                 await retry()
 
     # ── bot qrupa əlavə olunanda ──
-    @dp.my_chat_member()
+    # Handler yox, outer middleware: hadisəni udmur, start_plugin-in salam handler-inə də ötürür.
+    # Asistan işi fonda gedir ki, (sleep, va.start) qrup salamını gecikdirməsin.
+    _bg_tasks = set()
+
+    async def _membership_mw(handler, event, data):
+        task = asyncio.create_task(on_bot_membership(event))
+        _bg_tasks.add(task)
+        task.add_done_callback(_bg_tasks.discard)
+        return await handler(event, data)
+
+    dp.my_chat_member.outer_middleware(_membership_mw)
+
     async def on_bot_membership(upd: types.ChatMemberUpdated):
+        try:
+            await _on_bot_membership(upd)
+        except Exception as e:
+            logger.warning(f"🎙 Asistan qrupa qoşulma yoxlanışı xətası: {e}")
+
+    async def _on_bot_membership(upd: types.ChatMemberUpdated):
         if upd.chat.type not in ("group", "supergroup"):
             return
         new = str(getattr(upd.new_chat_member.status, "value", upd.new_chat_member.status))

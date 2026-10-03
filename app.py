@@ -103,7 +103,11 @@ async def main():
         await load_plugins(context)
 
         logger.info("🚀 Starting polling...")
-        await context.dp.start_polling(context.bot)
+        # my_chat_member daxil olmaqla bütün qeydiyyatdan keçmiş hadisələri aktivləşdiririk
+        await context.dp.start_polling(
+            context.bot,
+            allowed_updates=context.dp.resolve_used_update_types()
+        )
 
         logger.info("🛑 Polling stopped")
 

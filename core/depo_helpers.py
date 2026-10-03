@@ -61,6 +61,8 @@ S_CONV = "depo_helpers:conv"
 CONV_MODES = {"lazy": "🐢 Lazy — yalnız istənəndə", "eager": "⚡ Dərhal — yükləmə anında"}
 INLINE_BUDGET = 2.5               # inline cavab üçün çevirməyə ayrılan vaxt (san.)
 SEND_BUDGET = 30.0                # adi göndərmə üçün
+# ⚡ eager: sink növbəsi bundan uzundursa (flood / çox işçi) mahnı gözləmədən lazy yolla qeyd olunur
+SINK_MAX_WAIT = float(os.getenv("DEPO_SINK_MAX_WAIT") or 20.0)
 WARM_INTERVAL = float(os.getenv("DEPO_WARM_INTERVAL") or 3.0)   # fon çevirici: hər N san. bir mahnı
 # file_id daşıya bilən sorğular (music_plugin-in istifadə etdikləri + ehtiyat)
 FID_METHODS = {"SendAudio", "SendDocument", "SendMediaGroup", "AnswerInlineQuery", "EditMessageMedia",
@@ -458,6 +460,15 @@ class HelperPool:
                 h.cool_until = time.monotonic() + 15        # şəbəkə xətası — qısa fasilə, digərləri işləsin
                 continue
             h.sent += 1
+            sink_wait = self.sink_backlog()
+            if self.conv_mode == "eager" and getattr(msg, "audio", None) and sink_wait > SINK_MAX_WAIT:
+                # sink çatı flood-dadır və ya növbə uzundur — işçini bloklamırıq, lazy kimi qeyd edirik
+                self.stats["sink_skip"] = self.stats.get("sink_skip", 0) + 1
+                if self.stats["sink_skip"] % 50 == 1:
+                    logger.info(f"🤖 sink növbəsi {sink_wait:.0f} san. — eager çevirmə lazy-yə ötürülür")
+                await self.register_foreign(msg)
+                self.stats["helper"] += 1
+                return msg.model_copy().as_(bot)
             if self.conv_mode == "lazy" and getattr(msg, "audio", None):
                 await self.register_foreign(msg)
                 self.stats["helper"] += 1
@@ -480,6 +491,14 @@ class HelperPool:
         self._phase("UP")
         return await make_request(bot, method)
 
+    def sink_backlog(self) -> float:
+        """Ən tez boşalan sink çatına qədər gözləmə (san.) — flood + növbə."""
+        sinks = self.sinks()
+        if not sinks:
+            return 0.0
+        now = time.monotonic()
+        return max(0.0, min(self._sinks.get(c, 0.0) for c in sinks) - now)
+
     async def _sink_slot(self):
         sinks = self.sinks()
         interval = self.sink_interval()
@@ -496,12 +515,14 @@ class HelperPool:
         for _ in range(4):
             chat, wait = await self._sink_slot()
             if wait > 0:
+                self._phase("FWD")                     # monitorda "UP" yox, sink gözləməsi görünsün
                 await asyncio.sleep(wait)
             try:
                 fwd = await bot.forward_message(chat_id=chat, from_chat_id=chat_id,
                                                 message_id=message_id, disable_notification=True)
                 break
             except TelegramRetryAfter as e:
+                logger.warning(f"🤖 sink çatı {chat}: flood {e.retry_after} san.")
                 async with self._sink_lock:
                     self._sinks[chat] = time.monotonic() + e.retry_after + 1
         if fwd is None:
